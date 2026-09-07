@@ -16,8 +16,9 @@ Two details that are easy to get wrong and are asserted in tests:
   constant offset into every embedding, diluting short sequences more than long ones.
 """
 
+import os
 import time
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -32,6 +33,8 @@ MODELS: dict[str, str] = {
 
 DEFAULT_MAX_BATCH_TOKENS = 16_384
 CACHE_SUFFIX = ".npz"
+CACHE_DIR_ENV = "COGNATE_CACHE_DIR"
+SHARED_CACHE_DIRNAME = "cognate-shared"
 
 
 @dataclass(frozen=True)
@@ -162,8 +165,21 @@ def embed_sequences(
     )
 
 
-def cache_path(model_key: str, directory: Path) -> Path:
-    return directory / f"esm2_{model_key}{CACHE_SUFFIX}"
+def default_cache_dir() -> Path:
+    """Where embedding caches live, from ``COGNATE_CACHE_DIR`` or a sibling of the repo.
+
+    The caches run to hundreds of megabytes, so the two fork worktrees must not each hold
+    a copy. Resolving to a sibling directory rather than a path inside the worktree means
+    all three checkouts land on the same files without any of them committing one.
+    """
+    override = os.environ.get(CACHE_DIR_ENV)
+    if override:
+        return Path(override).expanduser()
+    return Path(__file__).resolve().parents[3] / SHARED_CACHE_DIRNAME
+
+
+def cache_path(model_key: str, directory: Path | None = None) -> Path:
+    return (directory or default_cache_dir()) / f"esm2_{model_key}{CACHE_SUFFIX}"
 
 
 def save_cache(cache: EmbeddingCache, path: Path) -> int:
@@ -187,4 +203,140 @@ def load_cache(path: Path) -> EmbeddingCache:
             model_name=str(data["model_name"]),
             sequences=data["sequences"].astype(object),
             layers=data["layers"],
+        )
+
+
+@dataclass(frozen=True)
+class ResidueCache:
+    """Per-residue embeddings for a subset of layers, stored ragged.
+
+    Fork 2 attends across residue positions, so it cannot use the mean-pooled cache. Lengths
+    vary from 5 to 23, so rows are concatenated into one array with an offsets table rather
+    than padded to a rectangle -- padding to the longest CDR3b would waste roughly a third of
+    the file and invite silent bugs where a pad position is treated as a residue.
+
+    Stored float32, not float16. The acceptance check for this cache is that mean-pooling it
+    reproduces the float32 pooled cache to ``atol=1e-5``; float16 carries about three decimal
+    digits and would fail that for precision reasons alone, hiding whether the residues were
+    actually extracted correctly.
+    """
+
+    model_name: str
+    sequences: np.ndarray
+    layer_indices: np.ndarray
+    offsets: np.ndarray
+    residues: np.ndarray
+    index: dict[str, int]
+
+    @property
+    def n_sequences(self) -> int:
+        return len(self.sequences)
+
+    @property
+    def hidden_size(self) -> int:
+        return self.residues.shape[2]
+
+    def _layer_row(self, layer_index: int) -> int:
+        matches = np.flatnonzero(self.layer_indices == layer_index)
+        if not len(matches):
+            raise KeyError(
+                f"layer {layer_index} is not stored; have {self.layer_indices.tolist()}"
+            )
+        return int(matches[0])
+
+    def residues_for(self, sequence: str, layer_index: int) -> np.ndarray:
+        """The ``(length, hidden)`` block for one sequence, BOS and EOS already dropped."""
+        key = str(sequence)
+        if key not in self.index:
+            raise KeyError(f"{key!r} is not in the {self.model_name} residue cache")
+        position = self.index[key]
+        start, stop = int(self.offsets[position]), int(self.offsets[position + 1])
+        return self.residues[self._layer_row(layer_index), start:stop]
+
+    def mean_pooled(self, sequences: Iterable[str], layer_index: int) -> np.ndarray:
+        """Mean over residues, in the order given -- the pooled cache, recomputed."""
+        return np.stack(
+            [self.residues_for(s, layer_index).mean(axis=0) for s in sequences]
+        )
+
+
+def embed_residues(
+    sequences: Iterable[str],
+    model_key: str = "35M",
+    *,
+    layer_indices: Sequence[int] = (6, 10, 12),
+    device: str | None = None,
+    max_batch_tokens: int = DEFAULT_MAX_BATCH_TOKENS,
+    progress_every: int = 20,
+) -> tuple[ResidueCache, float]:
+    """Embed every distinct sequence and keep each residue, for the given layers."""
+    model_name = MODELS.get(model_key, model_key)
+    unique = sorted({str(s) for s in sequences})
+    device = device or pick_device()
+
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModel.from_pretrained(model_name, add_pooling_layer=False)
+    model.eval().to(device)
+
+    lengths = np.array([len(s) for s in unique], dtype=np.int64)
+    offsets = np.zeros(len(unique) + 1, dtype=np.int64)
+    np.cumsum(lengths, out=offsets[1:])
+    residues = np.zeros(
+        (len(layer_indices), int(offsets[-1]), model.config.hidden_size), dtype=np.float32
+    )
+
+    batches = _length_batches(unique, max_batch_tokens)
+    started = time.perf_counter()
+    for batch_number, positions in enumerate(batches, start=1):
+        encoded = tokenizer(
+            [unique[i] for i in positions], return_tensors="pt", padding=True
+        ).to(device)
+        with torch.no_grad():
+            output = model(**encoded, output_hidden_states=True)
+
+        for row, layer_index in enumerate(layer_indices):
+            hidden = output.hidden_states[layer_index].float().cpu().numpy()
+            for batch_row, position in enumerate(positions):
+                length = int(lengths[position])
+                residues[row, offsets[position] : offsets[position + 1]] = hidden[
+                    batch_row, 1 : 1 + length
+                ]
+
+        if progress_every and batch_number % progress_every == 0:
+            print(f"  batch {batch_number}/{len(batches)}", flush=True)
+
+    cache = ResidueCache(
+        model_name=model_name,
+        sequences=np.array(unique, dtype=object),
+        layer_indices=np.array(list(layer_indices), dtype=np.int64),
+        offsets=offsets,
+        residues=residues,
+        index={s: i for i, s in enumerate(unique)},
+    )
+    return cache, time.perf_counter() - started
+
+
+def save_residue_cache(cache: ResidueCache, path: Path) -> int:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez(
+        path,
+        model_name=np.array(cache.model_name),
+        sequences=cache.sequences.astype(str),
+        layer_indices=cache.layer_indices,
+        offsets=cache.offsets,
+        residues=cache.residues,
+    )
+    return path.stat().st_size
+
+
+def load_residue_cache(path: Path) -> ResidueCache:
+    with np.load(path, allow_pickle=False) as data:
+        sequences = data["sequences"].astype(object)
+        return ResidueCache(
+            model_name=str(data["model_name"]),
+            sequences=sequences,
+            layer_indices=data["layer_indices"],
+            offsets=data["offsets"],
+            residues=data["residues"],
+            index={str(s): i for i, s in enumerate(sequences)},
         )

@@ -10,18 +10,17 @@ import time
 import warnings
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 from cognate.data import load_solutions, load_train
-from cognate.embed import cache_path, load_cache
+from cognate.embed import cache_path, default_cache_dir, load_cache
 from cognate.features import build_features
 from cognate.metrics import macro_auc01
 from cognate.negatives import make_negatives
 from cognate.split import component_split
 from cognate.train_head import fit_logistic, logistic_scores
 
-CACHE_DIR = Path(__file__).resolve().parents[1] / "data" / "embeddings"
+CACHE_DIR = default_cache_dir()
 RESULTS = Path(__file__).resolve().parents[1] / "data" / "layer_sweep.json"
 NEGATIVE_RATIO = 5.0
 NEGATIVE_STRATEGY = "matched"

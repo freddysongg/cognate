@@ -34,7 +34,7 @@ import numpy as np
 import pandas as pd
 
 from cognate.data import load_train
-from cognate.embed import cache_path, load_cache
+from cognate.embed import cache_path, default_cache_dir, load_cache
 from cognate.features import build_features
 from cognate.metrics import auroc, macro_auc01
 from cognate.negatives import make_negatives
@@ -42,7 +42,7 @@ from cognate.split import component_split
 from cognate.train_head import fit_logistic, logistic_scores
 
 ROOT = Path(__file__).resolve().parents[1]
-CACHE_DIR = ROOT / "data" / "embeddings"
+CACHE_DIR = default_cache_dir()
 VDJDB_CACHE = CACHE_DIR / "esm2_35M_vdjdb.npz"
 EVAL_CSV = ROOT / "data" / "vdjdb_eval.csv"
 OUT_JSON = ROOT / "data" / "vdjdb_probes.json"

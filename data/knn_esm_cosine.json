@@ -1,0 +1,408 @@
+{
+  "config": {
+    "seed": 0,
+    "configs": [
+      {
+        "model": "35M",
+        "layer": 12,
+        "label": "35M last"
+      },
+      {
+        "model": "35M",
+        "layer": 10,
+        "label": "35M layer10 (headline)"
+      },
+      {
+        "model": "35M",
+        "layer": 6,
+        "label": "35M middle"
+      },
+      {
+        "model": "8M",
+        "layer": 6,
+        "label": "8M last"
+      },
+      {
+        "model": "8M",
+        "layer": 3,
+        "label": "8M middle"
+      }
+    ]
+  },
+  "scores": {
+    "edit/seen": {
+      "macro_auc01": {
+        "point": 0.5654,
+        "lo": 0.5461,
+        "hi": 0.5849
+      },
+      "auroc": {
+        "point": 0.5804,
+        "lo": 0.5515,
+        "hi": 0.6136
+      },
+      "auprc": {
+        "point": 0.2626,
+        "lo": 0.224,
+        "hi": 0.3172
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "edit/unseen": {
+      "macro_auc01": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auroc": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auprc": {
+        "point": 0.1667,
+        "lo": 0.1632,
+        "hi": 0.1702
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": true
+    },
+    "35M last/seen": {
+      "macro_auc01": {
+        "point": 0.5352,
+        "lo": 0.5235,
+        "hi": 0.5481
+      },
+      "auroc": {
+        "point": 0.5463,
+        "lo": 0.5273,
+        "hi": 0.5692
+      },
+      "auprc": {
+        "point": 0.2143,
+        "lo": 0.1893,
+        "hi": 0.252
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "35M last/unseen": {
+      "macro_auc01": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auroc": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auprc": {
+        "point": 0.1667,
+        "lo": 0.1632,
+        "hi": 0.1702
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": true
+    },
+    "35M layer10 (headline)/seen": {
+      "macro_auc01": {
+        "point": 0.5358,
+        "lo": 0.523,
+        "hi": 0.5498
+      },
+      "auroc": {
+        "point": 0.5454,
+        "lo": 0.5256,
+        "hi": 0.5689
+      },
+      "auprc": {
+        "point": 0.2222,
+        "lo": 0.1925,
+        "hi": 0.2646
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "35M layer10 (headline)/unseen": {
+      "macro_auc01": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auroc": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auprc": {
+        "point": 0.1667,
+        "lo": 0.1632,
+        "hi": 0.1702
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": true
+    },
+    "35M middle/seen": {
+      "macro_auc01": {
+        "point": 0.5434,
+        "lo": 0.5291,
+        "hi": 0.5586
+      },
+      "auroc": {
+        "point": 0.5515,
+        "lo": 0.5316,
+        "hi": 0.5761
+      },
+      "auprc": {
+        "point": 0.2371,
+        "lo": 0.2009,
+        "hi": 0.2877
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "35M middle/unseen": {
+      "macro_auc01": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auroc": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auprc": {
+        "point": 0.1667,
+        "lo": 0.1632,
+        "hi": 0.1702
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": true
+    },
+    "8M last/seen": {
+      "macro_auc01": {
+        "point": 0.5362,
+        "lo": 0.5239,
+        "hi": 0.5501
+      },
+      "auroc": {
+        "point": 0.5467,
+        "lo": 0.5275,
+        "hi": 0.5704
+      },
+      "auprc": {
+        "point": 0.2195,
+        "lo": 0.1914,
+        "hi": 0.2608
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "8M last/unseen": {
+      "macro_auc01": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auroc": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auprc": {
+        "point": 0.1667,
+        "lo": 0.1632,
+        "hi": 0.1702
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": true
+    },
+    "8M middle/seen": {
+      "macro_auc01": {
+        "point": 0.5442,
+        "lo": 0.5297,
+        "hi": 0.5605
+      },
+      "auroc": {
+        "point": 0.5553,
+        "lo": 0.5348,
+        "hi": 0.5803
+      },
+      "auprc": {
+        "point": 0.2347,
+        "lo": 0.2004,
+        "hi": 0.2834
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "8M middle/unseen": {
+      "macro_auc01": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auroc": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auprc": {
+        "point": 0.1667,
+        "lo": 0.1632,
+        "hi": 0.1702
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": true
+    }
+  },
+  "degeneracy": {
+    "edit/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 122,
+      "constant_groups": 0
+    },
+    "edit/unseen": {
+      "is_degenerate": true,
+      "distinct_scores": 1,
+      "constant_groups": 40
+    },
+    "35M last/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 66762,
+      "constant_groups": 0
+    },
+    "35M last/unseen": {
+      "is_degenerate": true,
+      "distinct_scores": 1,
+      "constant_groups": 40
+    },
+    "35M layer10 (headline)/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 63037,
+      "constant_groups": 0
+    },
+    "35M layer10 (headline)/unseen": {
+      "is_degenerate": true,
+      "distinct_scores": 1,
+      "constant_groups": 40
+    },
+    "35M middle/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 60693,
+      "constant_groups": 0
+    },
+    "35M middle/unseen": {
+      "is_degenerate": true,
+      "distinct_scores": 1,
+      "constant_groups": 40
+    },
+    "8M last/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 67285,
+      "constant_groups": 0
+    },
+    "8M last/unseen": {
+      "is_degenerate": true,
+      "distinct_scores": 1,
+      "constant_groups": 40
+    },
+    "8M middle/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 63394,
+      "constant_groups": 0
+    },
+    "8M middle/unseen": {
+      "is_degenerate": true,
+      "distinct_scores": 1,
+      "constant_groups": 40
+    }
+  },
+  "comparisons": {
+    "35M last_minus_edit/seen": {
+      "point": -0.0301,
+      "lo": -0.0426,
+      "hi": -0.0187,
+      "p": 0.0,
+      "n_peptides": 48
+    },
+    "35M last_minus_edit/unseen": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "p": 1.0,
+      "n_peptides": 40
+    },
+    "35M layer10 (headline)_minus_edit/seen": {
+      "point": -0.0296,
+      "lo": -0.0415,
+      "hi": -0.0188,
+      "p": 0.0,
+      "n_peptides": 48
+    },
+    "35M layer10 (headline)_minus_edit/unseen": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "p": 1.0,
+      "n_peptides": 40
+    },
+    "35M middle_minus_edit/seen": {
+      "point": -0.022,
+      "lo": -0.0327,
+      "hi": -0.0129,
+      "p": 0.0,
+      "n_peptides": 48
+    },
+    "35M middle_minus_edit/unseen": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "p": 1.0,
+      "n_peptides": 40
+    },
+    "8M last_minus_edit/seen": {
+      "point": -0.0292,
+      "lo": -0.0411,
+      "hi": -0.0186,
+      "p": 0.0,
+      "n_peptides": 48
+    },
+    "8M last_minus_edit/unseen": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "p": 1.0,
+      "n_peptides": 40
+    },
+    "8M middle_minus_edit/seen": {
+      "point": -0.0212,
+      "lo": -0.0305,
+      "hi": -0.0129,
+      "p": 0.0,
+      "n_peptides": 48
+    },
+    "8M middle_minus_edit/unseen": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "p": 1.0,
+      "n_peptides": 40
+    }
+  }
+}

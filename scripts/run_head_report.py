@@ -13,7 +13,7 @@ import pandas as pd
 
 from cognate.baseline_knn import score_by_nearest_positive
 from cognate.data import load_solutions, load_train
-from cognate.embed import cache_path, load_cache
+from cognate.embed import cache_path, default_cache_dir, load_cache
 from cognate.features import build_features
 from cognate.metrics import compare_macro_auc01, diagnose_scores, evaluate, report_table
 from cognate.negatives import make_negatives
@@ -21,7 +21,7 @@ from cognate.split import component_split
 from cognate.train_head import fit_logistic, fit_mlp, logistic_scores, mlp_scores
 
 ROOT = Path(__file__).resolve().parents[1]
-CACHE_DIR = ROOT / "data" / "embeddings"
+CACHE_DIR = default_cache_dir()
 SWEEP = ROOT / "data" / "layer_sweep.json"
 STRATEGY = "matched"
 RATIO = 5.0

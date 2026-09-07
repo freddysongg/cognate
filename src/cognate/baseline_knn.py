@@ -19,12 +19,15 @@ v1 uses normalised Levenshtein similarity on ``CDR3b``. The BLOSUM62 k-mer kerne
 published spec is deliberately not implemented.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
 from rapidfuzz.distance import Levenshtein
 from rapidfuzz.process import cdist
+
+from cognate.embed import EmbeddingCache
 
 DEFAULT_SCORE = 0.0
 EXACT_MATCH_SIMILARITY = 1.0
@@ -33,6 +36,38 @@ PEPTIDE_KEY = "Peptide"
 SEQUENCE_KEY = "CDR3b"
 TARGET_KEY = "Target"
 
+
+SimilarityFn = Callable[[np.ndarray, np.ndarray], np.ndarray]
+
+def edit_similarity(queries: np.ndarray, entries: np.ndarray) -> np.ndarray:
+    """Normalised Levenshtein similarity, the v1 default."""
+    return cdist(
+        queries, entries, scorer=Levenshtein.normalized_similarity, workers=-1
+    )
+
+def _unit_rows(matrix: np.ndarray) -> np.ndarray:
+    return matrix / np.linalg.norm(matrix, axis=1, keepdims=True)
+
+def cosine_similarity(
+    query_cache: EmbeddingCache,
+    layer_index: int,
+    database_cache: EmbeddingCache | None = None,
+) -> SimilarityFn:
+    """Cosine over mean-pooled ESM-2 embeddings, as a drop-in for ``edit_similarity``.
+
+    Queries and database entries are looked up in separate caches because the evaluation
+    TCRs are disjoint from the training TCRs by construction, so no single cache holds
+    both. Swapping only this function isolates the representation: the database, the
+    max-over-database operator, the metric and the evaluation set are untouched.
+    """
+    entry_cache = database_cache if database_cache is not None else query_cache
+
+    def similarity(queries: np.ndarray, entries: np.ndarray) -> np.ndarray:
+        left = _unit_rows(query_cache.lookup(queries, layer_index))
+        right = _unit_rows(entry_cache.lookup(entries, layer_index))
+        return left @ right.T
+
+    return similarity
 
 @dataclass(frozen=True)
 class KnnResult:
@@ -87,6 +122,7 @@ def score_by_nearest_positive(
     default_score: float = DEFAULT_SCORE,
     leave_out_exact_matches: bool = False,
     top_k: int = 1,
+    similarity_fn: SimilarityFn | None = None,
 ) -> KnnResult:
     """Score every test row by its similarity to the nearest training binder of its peptide.
 
@@ -95,6 +131,11 @@ def score_by_nearest_positive(
     second-nearest neighbour instead of scoring 1.0. This asks a different question from
     dropping those rows at evaluation time: it keeps the row in the denominator and tests
     whether the method can still rank it.
+
+    ``similarity_fn`` replaces the sequence-similarity measure. It receives the query
+    sequences and the database entries for one peptide and returns their similarity
+    matrix. The default is normalised edit distance; ``cosine_similarity`` swaps in
+    mean-pooled ESM-2 cosine without changing anything else about the method.
 
     ``top_k`` averages the k highest similarities instead of taking the single maximum.
     Unlike rescaling scores within a peptide, this changes the within-peptide *ranking*
@@ -119,12 +160,7 @@ def score_by_nearest_positive(
             continue
         rows = np.flatnonzero(peptides == peptide)
         entries = database[peptide]
-        similarity = cdist(
-            sequences[rows],
-            entries,
-            scorer=Levenshtein.normalized_similarity,
-            workers=-1,
-        )
+        similarity = (similarity_fn or edit_similarity)(sequences[rows], entries)
         if leave_out_exact_matches:
             similarity = np.where(
                 similarity >= EXACT_MATCH_SIMILARITY, -np.inf, similarity

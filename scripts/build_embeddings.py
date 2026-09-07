@@ -5,14 +5,13 @@ and ~820 distinct peptides, so embedding unique strings and joining back by stri
 roughly an order of magnitude less work than embedding rows.
 """
 
-from pathlib import Path
 
 import numpy as np
 
 from cognate.data import load_solutions, load_train
-from cognate.embed import MODELS, cache_path, embed_sequences, pick_device, save_cache
+from cognate.embed import MODELS, cache_path, default_cache_dir, embed_sequences, pick_device, save_cache
 
-CACHE_DIR = Path(__file__).resolve().parents[1] / "data" / "embeddings"
+CACHE_DIR = default_cache_dir()
 
 
 def collect_sequences() -> np.ndarray:

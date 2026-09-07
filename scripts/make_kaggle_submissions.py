@@ -50,7 +50,7 @@ def main() -> None:
         [split.train, make_negatives(split.train, STRATEGY, RATIO, SEED)],
         ignore_index=True,
     )
-    cache = load_cache(cache_path(MODEL_KEY, ROOT / "data" / "embeddings"))
+    cache = load_cache(cache_path(MODEL_KEY))
     model = fit_logistic(
         build_features(train, cache, LAYER), train["Target"].to_numpy(), seed=SEED
     )
