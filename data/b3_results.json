@@ -1,0 +1,477 @@
+{
+  "config": {
+    "model": "35M",
+    "layer": 10,
+    "strategy": "matched",
+    "ratio": 5.0,
+    "seed": 0,
+    "well_supported_min_positives": 100
+  },
+  "composition": {
+    "n_peptides": 88,
+    "n_seen_peptides": 48,
+    "n_unseen_peptides": 40,
+    "n_rows": 116658
+  },
+  "scores": {
+    "random/all": {
+      "macro_auc01": {
+        "point": 0.5012,
+        "lo": 0.4989,
+        "hi": 0.5042
+      },
+      "auroc": {
+        "point": 0.5018,
+        "lo": 0.4959,
+        "hi": 0.5075
+      },
+      "auprc": {
+        "point": 0.1674,
+        "lo": 0.1641,
+        "hi": 0.171
+      },
+      "n_rows": 116658,
+      "n_positive": 19443,
+      "n_peptides": 88,
+      "is_degenerate": false
+    },
+    "random/seen": {
+      "macro_auc01": {
+        "point": 0.5009,
+        "lo": 0.498,
+        "hi": 0.5048
+      },
+      "auroc": {
+        "point": 0.5009,
+        "lo": 0.4939,
+        "hi": 0.5088
+      },
+      "auprc": {
+        "point": 0.1675,
+        "lo": 0.1635,
+        "hi": 0.1725
+      },
+      "n_rows": 73440,
+      "n_positive": 12240,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "random/unseen": {
+      "macro_auc01": {
+        "point": 0.5015,
+        "lo": 0.4973,
+        "hi": 0.5066
+      },
+      "auroc": {
+        "point": 0.5033,
+        "lo": 0.4927,
+        "hi": 0.5138
+      },
+      "auprc": {
+        "point": 0.1674,
+        "lo": 0.1612,
+        "hi": 0.1746
+      },
+      "n_rows": 43218,
+      "n_positive": 7203,
+      "n_peptides": 40,
+      "is_degenerate": false
+    },
+    "k-NN/all": {
+      "macro_auc01": {
+        "point": 0.5357,
+        "lo": 0.5243,
+        "hi": 0.5497
+      },
+      "auroc": {
+        "point": 0.5319,
+        "lo": 0.517,
+        "hi": 0.5528
+      },
+      "auprc": {
+        "point": 0.227,
+        "lo": 0.1998,
+        "hi": 0.2651
+      },
+      "n_rows": 116658,
+      "n_positive": 19443,
+      "n_peptides": 88,
+      "is_degenerate": true
+    },
+    "k-NN/seen": {
+      "macro_auc01": {
+        "point": 0.5654,
+        "lo": 0.5461,
+        "hi": 0.5849
+      },
+      "auroc": {
+        "point": 0.5804,
+        "lo": 0.5515,
+        "hi": 0.6136
+      },
+      "auprc": {
+        "point": 0.2626,
+        "lo": 0.224,
+        "hi": 0.3172
+      },
+      "n_rows": 73440,
+      "n_positive": 12240,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "k-NN/unseen": {
+      "macro_auc01": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auroc": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auprc": {
+        "point": 0.1667,
+        "lo": 0.1632,
+        "hi": 0.1702
+      },
+      "n_rows": 43218,
+      "n_positive": 7203,
+      "n_peptides": 40,
+      "is_degenerate": true
+    },
+    "logistic/all": {
+      "macro_auc01": {
+        "point": 0.5057,
+        "lo": 0.5003,
+        "hi": 0.513
+      },
+      "auroc": {
+        "point": 0.5109,
+        "lo": 0.4971,
+        "hi": 0.5258
+      },
+      "auprc": {
+        "point": 0.1727,
+        "lo": 0.1653,
+        "hi": 0.1836
+      },
+      "n_rows": 116658,
+      "n_positive": 19443,
+      "n_peptides": 88,
+      "is_degenerate": false
+    },
+    "logistic/seen": {
+      "macro_auc01": {
+        "point": 0.5107,
+        "lo": 0.5021,
+        "hi": 0.5228
+      },
+      "auroc": {
+        "point": 0.521,
+        "lo": 0.5005,
+        "hi": 0.5448
+      },
+      "auprc": {
+        "point": 0.1827,
+        "lo": 0.168,
+        "hi": 0.2045
+      },
+      "n_rows": 73440,
+      "n_positive": 12240,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "logistic/unseen": {
+      "macro_auc01": {
+        "point": 0.4997,
+        "lo": 0.4951,
+        "hi": 0.5061
+      },
+      "auroc": {
+        "point": 0.498,
+        "lo": 0.485,
+        "hi": 0.5109
+      },
+      "auprc": {
+        "point": 0.1647,
+        "lo": 0.1593,
+        "hi": 0.1717
+      },
+      "n_rows": 43218,
+      "n_positive": 7203,
+      "n_peptides": 40,
+      "is_degenerate": false
+    },
+    "MLP/all": {
+      "macro_auc01": {
+        "point": 0.5058,
+        "lo": 0.5012,
+        "hi": 0.5116
+      },
+      "auroc": {
+        "point": 0.5166,
+        "lo": 0.502,
+        "hi": 0.5325
+      },
+      "auprc": {
+        "point": 0.1792,
+        "lo": 0.1686,
+        "hi": 0.1926
+      },
+      "n_rows": 116658,
+      "n_positive": 19443,
+      "n_peptides": 88,
+      "is_degenerate": false
+    },
+    "MLP/seen": {
+      "macro_auc01": {
+        "point": 0.5114,
+        "lo": 0.5038,
+        "hi": 0.521
+      },
+      "auroc": {
+        "point": 0.526,
+        "lo": 0.5035,
+        "hi": 0.5496
+      },
+      "auprc": {
+        "point": 0.1871,
+        "lo": 0.1717,
+        "hi": 0.2044
+      },
+      "n_rows": 73440,
+      "n_positive": 12240,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "MLP/unseen": {
+      "macro_auc01": {
+        "point": 0.4991,
+        "lo": 0.4954,
+        "hi": 0.5046
+      },
+      "auroc": {
+        "point": 0.5005,
+        "lo": 0.4872,
+        "hi": 0.5141
+      },
+      "auprc": {
+        "point": 0.1668,
+        "lo": 0.1612,
+        "hi": 0.1743
+      },
+      "n_rows": 43218,
+      "n_positive": 7203,
+      "n_peptides": 40,
+      "is_degenerate": false
+    }
+  },
+  "degeneracy": {
+    "random/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 73440,
+      "constant_groups": 0
+    },
+    "random/unseen": {
+      "is_degenerate": false,
+      "distinct_scores": 43218,
+      "constant_groups": 0
+    },
+    "k-NN/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 122,
+      "constant_groups": 0
+    },
+    "k-NN/unseen": {
+      "is_degenerate": true,
+      "distinct_scores": 1,
+      "constant_groups": 40
+    },
+    "logistic/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 73288,
+      "constant_groups": 0
+    },
+    "logistic/unseen": {
+      "is_degenerate": false,
+      "distinct_scores": 43181,
+      "constant_groups": 0
+    },
+    "MLP/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 73140,
+      "constant_groups": 0
+    },
+    "MLP/unseen": {
+      "is_degenerate": false,
+      "distinct_scores": 43118,
+      "constant_groups": 0
+    }
+  },
+  "comparisons": {
+    "knn_minus_logistic/seen": {
+      "point": 0.0546,
+      "lo": 0.0386,
+      "hi": 0.0737,
+      "p": 0.0,
+      "n_peptides": 48
+    },
+    "knn_minus_MLP/seen": {
+      "point": 0.054,
+      "lo": 0.0368,
+      "hi": 0.0726,
+      "p": 0.0,
+      "n_peptides": 48
+    },
+    "knn_minus_logistic/unseen": {
+      "point": 0.0003,
+      "lo": -0.0061,
+      "hi": 0.0049,
+      "p": 0.994,
+      "n_peptides": 40
+    },
+    "knn_minus_MLP/unseen": {
+      "point": 0.0009,
+      "lo": -0.0046,
+      "hi": 0.0046,
+      "p": 0.9,
+      "n_peptides": 40
+    }
+  },
+  "correlations": {
+    "knn_auc01_vs_distance_seen": {
+      "label": "2  k-NN AUC0.1 vs median distance to training (seen)",
+      "n_points": 48,
+      "r": {
+        "point": -0.3588,
+        "lo": -0.6026,
+        "hi": -0.0242
+      },
+      "spans_zero": false,
+      "leave_one_out_min": -0.4496,
+      "leave_one_out_max": -0.2496,
+      "n_well_supported": 33,
+      "r_well_supported": {
+        "point": -0.4106,
+        "lo": -0.717,
+        "hi": 0.01
+      },
+      "r_support_weighted": -0.3905
+    },
+    "knn_auc01_vs_distance_all": {
+      "label": "2b k-NN AUC0.1 vs median distance to training (all 88)",
+      "n_points": 88,
+      "r": {
+        "point": -0.2815,
+        "lo": -0.4645,
+        "hi": -0.0538
+      },
+      "spans_zero": false,
+      "leave_one_out_min": -0.3371,
+      "leave_one_out_max": -0.2044,
+      "n_well_supported": 54,
+      "r_well_supported": {
+        "point": -0.322,
+        "lo": -0.5762,
+        "hi": 0.0165
+      },
+      "r_support_weighted": -0.3306
+    },
+    "head_auc01_vs_support_seen": {
+      "label": "3  logistic AUC0.1 vs log10(training support) (seen)",
+      "n_points": 48,
+      "r": {
+        "point": 0.2287,
+        "lo": 0.0431,
+        "hi": 0.5926
+      },
+      "spans_zero": false,
+      "leave_one_out_min": 0.1664,
+      "leave_one_out_max": 0.3799,
+      "n_well_supported": 33,
+      "r_well_supported": {
+        "point": 0.5002,
+        "lo": 0.232,
+        "hi": 0.6975
+      },
+      "r_support_weighted": 0.3343
+    },
+    "knn_auc01_vs_support_seen": {
+      "label": "3b k-NN AUC0.1 vs log10(training support) (seen)",
+      "n_points": 48,
+      "r": {
+        "point": 0.0244,
+        "lo": -0.2631,
+        "hi": 0.3041
+      },
+      "spans_zero": true,
+      "leave_one_out_min": -0.0641,
+      "leave_one_out_max": 0.0947,
+      "n_well_supported": 33,
+      "r_well_supported": {
+        "point": -0.1179,
+        "lo": -0.4964,
+        "hi": 0.25
+      },
+      "r_support_weighted": -0.0441
+    },
+    "knn_mean_score_vs_support_seen": {
+      "label": "5  k-NN mean raw score vs log10(training support) (seen)",
+      "n_points": 48,
+      "r": {
+        "point": 0.9728,
+        "lo": 0.963,
+        "hi": 0.982
+      },
+      "spans_zero": false,
+      "leave_one_out_min": 0.9716,
+      "leave_one_out_max": 0.9755,
+      "n_well_supported": 33,
+      "r_well_supported": {
+        "point": 0.9769,
+        "lo": 0.9671,
+        "hi": 0.9872
+      },
+      "r_support_weighted": 0.9787
+    },
+    "head_auc01_vs_distance_seen": {
+      "label": "-  logistic AUC0.1 vs median distance to training (seen)",
+      "n_points": 48,
+      "r": {
+        "point": -0.1445,
+        "lo": -0.3587,
+        "hi": 0.2388
+      },
+      "spans_zero": true,
+      "leave_one_out_min": -0.1908,
+      "leave_one_out_max": -0.0129,
+      "n_well_supported": 33,
+      "r_well_supported": {
+        "point": -0.0243,
+        "lo": -0.3746,
+        "hi": 0.4189
+      },
+      "r_support_weighted": -0.0813
+    }
+  },
+  "correlation_difference": {
+    "description": "corr(log support, logistic AUC0.1) - corr(log support, k-NN AUC0.1)",
+    "difference": {
+      "point": 0.2044,
+      "lo": -0.118,
+      "hi": 0.7067
+    },
+    "p_two_sided": 0.206,
+    "n_peptides": 48,
+    "spans_zero": true
+  },
+  "invariance": {
+    "macro_auc01_raw": 0.5356597979372727,
+    "macro_auc01_zscored": 0.5356597979372727,
+    "macro_auc01_rank_normalised": 0.5356597979372727,
+    "pooled_auroc_raw": 0.5318589783009666,
+    "pooled_auroc_zscored": 0.5685114378241196,
+    "pooled_auroc_rank_normalised": 0.5663191413023669
+  }
+}

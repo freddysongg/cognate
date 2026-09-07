@@ -1,0 +1,210 @@
+{
+  "config": {
+    "layer": 10,
+    "model": "35M",
+    "ratio": 5.0,
+    "seed": 0,
+    "strategy": "matched"
+  },
+  "correlations": {
+    "head_vs_support": 0.6743,
+    "knn_vs_distance": -0.8775,
+    "knn_vs_distance_drop_max": -0.8438,
+    "knn_vs_support": 0.1088
+  },
+  "degeneracy": {
+    "auc01_of_constant_column": 0.5,
+    "head_unseen_distinct_scores": 1019,
+    "knn_unseen_distinct_scores": 1
+  },
+  "head/seen": {
+    "auprc": {
+      "hi": 0.6582,
+      "lo": 0.1891,
+      "point": 0.4468
+    },
+    "auroc": {
+      "hi": 0.7845,
+      "lo": 0.5336,
+      "point": 0.6697
+    },
+    "degenerate": false,
+    "macro_auc01": {
+      "hi": 0.6467,
+      "lo": 0.5124,
+      "point": 0.571
+    },
+    "n": 2418
+  },
+  "head/seen_exact_excluded": {
+    "auprc": {
+      "hi": 0.2832,
+      "lo": 0.1703,
+      "point": 0.2134
+    },
+    "auroc": {
+      "hi": 0.6487,
+      "lo": 0.524,
+      "point": 0.584
+    },
+    "degenerate": false,
+    "macro_auc01": {
+      "hi": 0.5993,
+      "lo": 0.5104,
+      "point": 0.5496
+    },
+    "n": 2303
+  },
+  "head/unseen": {
+    "auprc": {
+      "hi": 0.2611,
+      "lo": 0.1556,
+      "point": 0.1933
+    },
+    "auroc": {
+      "hi": 0.6289,
+      "lo": 0.5053,
+      "point": 0.5751
+    },
+    "degenerate": false,
+    "macro_auc01": {
+      "hi": 0.5352,
+      "lo": 0.4815,
+      "point": 0.5019
+    },
+    "n": 1066
+  },
+  "knn/seen": {
+    "auprc": {
+      "hi": 0.6957,
+      "lo": 0.2833,
+      "point": 0.5083
+    },
+    "auroc": {
+      "hi": 0.7833,
+      "lo": 0.5837,
+      "point": 0.6853
+    },
+    "degenerate": false,
+    "macro_auc01": {
+      "hi": 0.7239,
+      "lo": 0.5687,
+      "point": 0.6414
+    },
+    "n": 2418
+  },
+  "knn/seen_exact_excluded": {
+    "auprc": {
+      "hi": 0.3657,
+      "lo": 0.1913,
+      "point": 0.2609
+    },
+    "auroc": {
+      "hi": 0.6497,
+      "lo": 0.5066,
+      "point": 0.5807
+    },
+    "degenerate": false,
+    "macro_auc01": {
+      "hi": 0.6464,
+      "lo": 0.5446,
+      "point": 0.5905
+    },
+    "n": 2303
+  },
+  "knn/unseen": {
+    "auprc": {
+      "hi": 0.1917,
+      "lo": 0.1446,
+      "point": 0.167
+    },
+    "auroc": {
+      "hi": 0.5,
+      "lo": 0.5,
+      "point": 0.5
+    },
+    "degenerate": true,
+    "macro_auc01": {
+      "hi": 0.5,
+      "lo": 0.5,
+      "point": 0.5
+    },
+    "n": 1066
+  },
+  "knn_exact_row_ablation": {
+    "hi": 0.107,
+    "lo": 0.0053,
+    "point": 0.0509
+  },
+  "knn_minus_head/seen": {
+    "hi": 0.1419,
+    "lo": 0.0115,
+    "n_peptides": 13,
+    "p": 0.016,
+    "point": 0.0704
+  },
+  "knn_minus_head/unseen": {
+    "hi": 0.0185,
+    "lo": -0.0352,
+    "n_peptides": 7,
+    "p": 0.888,
+    "point": -0.0019
+  },
+  "random/seen": {
+    "auprc": {
+      "hi": 0.215,
+      "lo": 0.1527,
+      "point": 0.1786
+    },
+    "auroc": {
+      "hi": 0.5509,
+      "lo": 0.465,
+      "point": 0.5048
+    },
+    "degenerate": false,
+    "macro_auc01": {
+      "hi": 0.54,
+      "lo": 0.493,
+      "point": 0.5112
+    },
+    "n": 2418
+  },
+  "random/seen_exact_excluded": {
+    "auprc": {
+      "hi": 0.1987,
+      "lo": 0.1114,
+      "point": 0.1464
+    },
+    "auroc": {
+      "hi": 0.5661,
+      "lo": 0.4716,
+      "point": 0.5147
+    },
+    "degenerate": false,
+    "macro_auc01": {
+      "hi": 0.5436,
+      "lo": 0.4942,
+      "point": 0.5144
+    },
+    "n": 2303
+  },
+  "random/unseen": {
+    "auprc": {
+      "hi": 0.2208,
+      "lo": 0.1409,
+      "point": 0.1687
+    },
+    "auroc": {
+      "hi": 0.5429,
+      "lo": 0.4138,
+      "point": 0.4895
+    },
+    "degenerate": false,
+    "macro_auc01": {
+      "hi": 0.5353,
+      "lo": 0.4841,
+      "point": 0.5035
+    },
+    "n": 1066
+  }
+}

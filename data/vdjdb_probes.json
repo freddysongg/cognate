@@ -1,0 +1,64 @@
+{
+  "config": {
+    "model": "35M",
+    "layer": 10,
+    "strategy": "matched",
+    "ratio": 5.0,
+    "seed": 0,
+    "pass_band": 0.55
+  },
+  "probes": [
+    {
+      "probe": "peptide_only / train",
+      "pooled_auroc": 0.5847,
+      "macro_auc01": 0.4995,
+      "distinct_scores": 340
+    },
+    {
+      "probe": "peptide_only / eval",
+      "pooled_auroc": 0.5,
+      "macro_auc01": 0.5,
+      "distinct_scores": 128
+    },
+    {
+      "probe": "tcr_only / train",
+      "pooled_auroc": 0.5,
+      "macro_auc01": 0.5352,
+      "distinct_scores": 5940
+    },
+    {
+      "probe": "tcr_only / eval",
+      "pooled_auroc": 0.5004,
+      "macro_auc01": 0.5004,
+      "distinct_scores": 12894
+    },
+    {
+      "probe": "interactions / train",
+      "pooled_auroc": 0.7411,
+      "macro_auc01": 0.5851,
+      "distinct_scores": 46534
+    },
+    {
+      "probe": "interactions / eval",
+      "pooled_auroc": 0.5109,
+      "macro_auc01": 0.5057,
+      "distinct_scores": 116330
+    },
+    {
+      "probe": "tcr frequency / eval",
+      "pooled_auroc": 0.3889,
+      "macro_auc01": 0.4883,
+      "distinct_scores": 16
+    },
+    {
+      "probe": "cdr3b length / eval",
+      "pooled_auroc": 0.4968,
+      "macro_auc01": 0.4989,
+      "distinct_scores": 20
+    }
+  ],
+  "largest_eval_shortcut_macro_deviation": 0.0117,
+  "largest_eval_shortcut_pooled_deviation": 0.1111,
+  "full_model_train_gap": 0.156,
+  "verdict": "PASS"
+}

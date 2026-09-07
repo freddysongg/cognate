@@ -1,0 +1,28 @@
+# Secrets
+.env
+.env.*
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# macOS
+.DS_Store
+
+# Embedding caches -- resolved via COGNATE_CACHE_DIR, see scripts/
+data/*.npz
+data/*.npy
+data/embeddings/
+
+# Raw datasets -- reproducible via scripts/fetch_data.sh
+data/IMMREP23-main/
+data/vdjdb-2026-06-03/
+data/immrep23.zip
+
+# Regenerable submission outputs
+data/submissions/
+
+# Notebooks kept local
+notebooks/
