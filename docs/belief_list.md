@@ -153,3 +153,77 @@ is once again arithmetic: 1 distinct score over 43,218 rows, 40 constant groups,
 stated, and the paired k-NN-minus-head comparisons on unseen peptides are +0.000 [−0.006, +0.005],
 p = 0.994 and +0.001 [−0.005, +0.005], p = 0.900 — the two arms are indistinguishable because
 neither is doing anything.
+
+---
+
+# Phase D additions
+
+**Locked at n = 88 evaluation peptides (48 seen / 40 unseen), 2026-09-07, end of Phase D.**
+
+Three further claims, written after Phase D's numbers existed but before any widening of the
+evaluation set, before any hyperparameter sweep, and before the backbone is unfrozen. The overturn
+lines below are the record against which the next phase gets judged. Same rule as above: none of
+these has a CI spanning zero except where the claim is explicitly *about* an interval spanning
+zero, which ⑦ is.
+
+Supporting numbers: [`fork1_results.json`](../data/fork1_results.json),
+[`fork2_results.json`](../data/fork2_results.json),
+[`knn_esm_cosine.json`](../data/knn_esm_cosine.json), `findings.md` §7.
+
+---
+
+## ⑥ Learned representations over frozen ESM-2 do not beat edit distance on seen peptides
+
+> Across five independent constructions — cosine over frozen embeddings, a contrastively trained
+> TCR metric, a two-tower peptide↔TCR alignment, a residue cross-attention model, and its
+> mean-pool control — every one scores below a max-similarity edit-distance lookup on the 48 seen
+> peptides, and every paired interval excludes zero. I believe the sign and the ordering. I do not
+> believe this generalises past a frozen backbone.
+
+| | |
+|---|---|
+| **Evidence** | Paired bootstrap over the same 48 seen peptides, same database, same max-over-database operator, same metric, same evaluation set. Best learned variant is 1a at 0.5320; baseline is 0.5654. |
+| **Interval** | 1a **−0.034 [−0.048, −0.023]**; 1b −0.057 [−0.077, −0.037]; 2a −0.061 [−0.081, −0.043]; 2b −0.056 [−0.075, −0.039]. All p < 0.001. |
+| **Strongest objection** | One hyperparameter configuration per fork, one frozen backbone, one layer for the learned variants. A critic can say the ceiling was set by choices nobody swept, not by the representation. |
+| **Best answer to that objection** | The Phase 0 arm requires no hyperparameters at all — cosine over frozen embeddings is parameter-free and loses at five model/layer configurations. And 1a's trained projection (0.5320) does not beat its own *untrained* random projection (0.5341), which bounds how much the training configuration could have been at fault. |
+| **What would overturn it** | Any learned representation clearing 0.5654 with a paired CI excluding zero on these 48 peptides. **Weakened** if a hyperparameter sweep or an unfrozen backbone closes most of the gap without clearing it, since that would relocate the cause from the representation to the training budget. |
+
+## ⑦ Cross-attention over residues adds nothing over mean-pooling them
+
+> Attending across peptide and TCR residue positions, rather than averaging them first, does not
+> change performance. The point estimate is slightly negative and the interval spans zero. This is
+> a claim that a difference is absent, and it is only worth anything because the control was
+> validated first.
+
+| | |
+|---|---|
+| **Evidence** | 2a and 2b are the same architecture, optimiser, split, negatives and seeds; `use_attention` is the only difference. 2b reproduced its independent target, scoring 0.5093 against the Phase 1 head's 0.511. |
+| **Interval** | **Δ = −0.005 [−0.016, +0.005], p = 0.366** over 48 peptides. Seed spread 0.0019 / 0.0025, both below CI width. |
+| **Strongest objection** | Absence of evidence. A 1–2 head, 1–2 layer block at width 64 is small; a bigger attention stack, more layers, or a different pooling might find something. And a CI spanning zero cannot distinguish "no effect" from "underpowered". |
+| **Best answer to that objection** | The interval is tight — ±0.016 against a baseline gap of 0.056 — so an effect large enough to matter for the headline question is excluded even though zero is not. The mechanism is independently predicted: Session 4 measured effective rank 20–33 against 480 nominal dimensions in the pooled embeddings, so there was little for attention to recover. Attention also lowered validation loss at every seed while lowering validation macro AUC0.1, which is what added capacity without added signal looks like. |
+| **What would overturn it** | A larger attention stack, or attention over an unfrozen backbone, producing 2a − 2b with a CI excluding zero on these 48 peptides. **Weakened** if the interval merely tightens around a small positive value without clearing zero. Note the asymmetry: this claim is cheap to overturn and should be attacked first if Fork 2 is revisited. |
+
+## ⑧ Nothing in this project has scored above chance on unseen peptides
+
+> Across every method built — baseline, heads, cosine k-NN, both forks, both variants each — no
+> construction scores above chance on the 40 peptides absent from training. The failures are not
+> all the same kind, and the distinction is the useful part.
+
+| | |
+|---|---|
+| **Evidence** | k-NN and every cosine variant are *structurally* unable to score: the per-peptide database is empty, every row takes `default_score`, and a constant column is exactly 0.5 by arithmetic. 1a inherits this because it is evaluated with the same operator. The heads, 1b, 2a and 2b all produce varied scores and land at chance anyway. |
+| **Interval** | 1b **0.5018 [0.4974, 0.5070]**, the only variant with both a mechanism and a non-degenerate score column (~43,190 distinct values). 2b 0.5022 [0.5000, 0.5129]; 2a 0.4985 [0.4907, 0.4999]; logistic 0.4997; MLP 0.4991. |
+| **Strongest objection** | 2a's interval sits fractionally below 0.5, which under a two-sided reading is as exploitable as being above it. Reporting the whole set as "at chance" glosses that. |
+| **Best answer to that objection** | 2a's per-seed values are [0.4947, 0.4972, 0.5037] — one seed above 0.5 — and its seed spread (0.0090) matches its CI width (0.0092). By the project's own rule, seed variation is the dominant uncertainty there, so "at chance" is the defensible reading and "below chance" is not. |
+| **What would overturn it** | Any method scoring unseen peptides with a CI whose lower bound clears 0.5 on these 40 peptides. The two-tower construction is the only current candidate with a mechanism, so it is where to look. **Partially overturned** — and worth reporting loudly — if a method clears chance on unseen while still losing on seen, since nothing in the project has separated those two axes yet. |
+
+---
+
+## What Phase D says about Phase C
+
+Phase C asked whether a negative sampler changes the margin over a model sitting 0.010 above
+chance. Phase D moves the answer: the best learned model anywhere in the project is 2b at 0.5093,
+still 0.056 below the baseline, and Fork 1 reached its ceiling with **no negative sampler at all**.
+The binding constraint is the representation, not the sampler. Keeping C deferred is the reading
+the evidence supports; the condition that would revive it is ⑥ being weakened by an unfrozen
+backbone, which would mean there is finally a model with room for a sampler to move.

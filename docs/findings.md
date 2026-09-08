@@ -339,3 +339,125 @@ uv run python scripts/run_all.py        # writes data/headline.json
 output. Full command list and layout in [`README.md`](../README.md). Negative-sampling decisions
 and the Session 5 correction in [`negative_sampling.md`](negative_sampling.md). Session-by-session
 working, including material superseded by later sessions, in [`session_log.md`](session_log.md).
+
+---
+
+## 7. Phase D — two forks, and what learned representations bought
+
+**Run 2026-09-07 on the frozen n = 88 evaluation set.** Two independent forks were built from one
+shared foundation, in separate worktrees off commit `d7a6275`, with the comparison below
+pre-registered before either ran. Their merge-base is exactly that commit: neither fork saw the
+other's code. Results: [`fork1_results.json`](../data/fork1_results.json),
+[`fork2_results.json`](../data/fork2_results.json),
+[`knn_esm_cosine.json`](../data/knn_esm_cosine.json).
+
+### 7a. The table
+
+| Model | seen (48) | unseen (40) |
+|---|---|---|
+| random predictor | 0.5009 [0.498, 0.505] | 0.5015 |
+| **k-NN, edit distance** | **0.5654 [0.546, 0.585]** | 0.5000 *(degenerate)* |
+| logistic head, mean-pooled | 0.5107 [0.502, 0.523] | 0.4997 |
+| MLP head | 0.5114 [0.504, 0.521] | 0.4991 |
+| ESM-2 cosine k-NN, 35M layer 6 | 0.5434 [0.529, 0.559] | 0.5000 *(degenerate)* |
+| ESM-2 cosine k-NN, 35M layer 10 | 0.5358 [0.523, 0.550] | 0.5000 *(degenerate)* |
+| fork 1 · 1a, TCR metric learning | 0.5320 [0.519, 0.545] | 0.5000 *(degenerate)* |
+| fork 1 · 1b, two-tower alignment | 0.5075 [0.502, 0.517] | 0.5018 |
+| fork 2 · 2a, cross-attention | 0.5039 [0.499, 0.510] | 0.4985 |
+| fork 2 · 2b, mean-pool control | 0.5093 [0.501, 0.522] | 0.5022 |
+
+Every learned variant is below the baseline, and every paired CI excludes zero:
+
+| Comparison | Δ | p |
+|---|---|---|
+| 1a − edit k-NN | −0.034 [−0.048, −0.023] | < 0.001 |
+| 1b − edit k-NN | −0.057 [−0.077, −0.037] | < 0.001 |
+| 2a − edit k-NN | −0.061 [−0.081, −0.043] | < 0.001 |
+| 2b − edit k-NN | −0.056 [−0.075, −0.039] | < 0.001 |
+| **2a − 2b (attention ablation)** | **−0.005 [−0.016, +0.005]** | **0.366** |
+| 1a − 2b (best of each fork) | +0.022 [+0.012, +0.032] | < 0.001 |
+
+### 7b. Phase 0 — removing the representation/algorithm confound
+
+Phase 1 compared an edit-distance k-NN against an ESM-2 head, so algorithm and representation
+differed at once. Holding the algorithm fixed and swapping only the similarity function settles
+it: **ESM-2 cosine loses to edit distance at every model size and depth tested** — 35M and 8M,
+last and middle layers, five configurations, all five paired CIs excluding zero.
+
+The sharpest detail is a resolution argument that runs the wrong way. Edit distance produces
+**122 distinct scores** across 73,440 seen rows; ESM-2 cosine produces **60,000–67,000**. The far
+coarser measure ranks better, so this is not a tie-handling or degeneracy artifact.
+
+Middle layers beat last layers at both model sizes, independently reproducing the Session 4 norm
+collapse: measured mean L2 norm is **7.20** at layer 12 against **87.74** at layer 10.
+
+### 7c. Fork 1 — the objective was not the bottleneck
+
+The premise was that binary classification forces negatives the data does not contain, and that a
+contrastive objective would dissolve the problem. It did dissolve it — no negative sampler appears
+anywhere in Fork 1's training — and it bought nothing.
+
+**1a is indistinguishable from not training at all.** An *untrained* random projection of the same
+embeddings scores 0.5341; the trained projection scores 0.5320, against frozen cosine at the same
+layer at 0.5358. A learning-curve sweep peaks at 0.5380 around epoch 4 and decays to 0.5257 by
+epoch 40. Even an oracle selecting the best epoch by test score stays far below 0.5654. With the
+backbone frozen, a projection can only reweight dimensions the pooled embedding already has; it
+cannot recreate what pooling discarded.
+
+**1b learns, and what it learns does not generalise.** Seen improves +0.023 over an untrained
+model across 40 epochs while unseen stays at chance and validation loss rises monotonically the
+whole time. Validation peptides are disjoint by construction and 48 of the 88 evaluation "seen"
+peptides were trained on, so the gain is peptide-specific memorisation. The component-split
+validation loss detects that and early stopping declines to bank it.
+
+**1b is nonetheless the only construction here with a mechanism on unseen peptides.** It produces
+~43,190 distinct scores where the k-NN produces exactly 1. That distinction is worth keeping: the
+k-NN *structurally cannot* score an unseen peptide because its database is empty, whereas 1b can
+and the answer it gives is chance. A missing mechanism and a measured absence of signal are
+different findings.
+
+### 7d. Fork 2 — attention recovers nothing that pooling destroyed
+
+The premise was that mean-pooling ~15 residue vectors destroys exactly the contact information
+binding depends on. The control was built first and reproduced its target: **2b scores 0.5093
+against the 0.511 reference**, which is what makes the ablation readable at all.
+
+**2a − 2b = −0.005 [−0.016, +0.005], p = 0.366.** Cross-attention makes no measurable difference.
+The direction is consistent across all three seeds, but the magnitude sits well inside the paired
+CI, so seed-consistency does not upgrade it to an effect.
+
+One diagnostic detail: attention lowered validation *loss* at every seed while lowering validation
+*macro AUC0.1*. The extra capacity fit the binary objective without improving the per-peptide
+ordering the metric measures.
+
+2b is not merely similar to the Phase 1 head — masked mean-pooling commutes with a linear
+projection (`mean(Wx + b) == W·mean(x) + b`), so 2b **is** that head with a learned input
+projection in front. That is why it lands on 0.511 rather than near it by luck.
+
+### 7e. What this adds up to
+
+Five independent approaches now sit between 0.504 and 0.544 while counting letter differences
+gets 0.5654. The pre-registered reading for this outcome was written before any of them ran:
+*consistent with the k-NN's advantage being intrinsic to the operator, not the representation.*
+
+The stronger statement the evidence supports is about the representation rather than the
+operator. Mean-pooled ESM-2 on short TCR sequences is a worse similarity measure than raw
+sequence identity, and neither a learned metric over it nor attention beneath it recovers the
+difference. Session 4's effective rank of 20–33 against 480 nominal dimensions predicted this.
+
+**No method in this project has scored above chance on unseen peptides.** Every unseen CI in the
+table above contains or abuts 0.5.
+
+### 7f. What would make this wrong
+
+- **One hyperparameter configuration per fork.** No sweep was run. The claim is that these
+  configurations fail and that the frozen-backbone argument explains why the ceiling is low, not
+  that contrastive learning or cross-attention cannot work here.
+- **The backbone was frozen throughout.** LoRA or full fine-tuning is untested and is the single
+  most likely thing to change the answer.
+- **The component split leaves only 275 of 808 peptides in Fork 1's training arm.** That is a real
+  constraint on what any objective could learn, imposed by the frozen splitter.
+- **CDR3β only.** The alpha chain is present in the evaluation set and unused.
+- Cross-fork comparisons in §7a use a group-level paired bootstrap over peptides, because only
+  per-peptide AUC0.1 was persisted. It reproduces the frozen `compare_macro_auc01` point estimates
+  exactly and its intervals to within 0.002 on every comparison where both were run.
