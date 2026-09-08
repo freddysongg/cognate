@@ -1,0 +1,142 @@
+{
+  "config": {
+    "model": "35M",
+    "layer": 10,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "validation_fraction": 0.2,
+    "negative_sampler": null,
+    "probe_strategy": "matched",
+    "probe_ratio": 5.0,
+    "probe_gate": 0.05
+  },
+  "reference": {
+    "edit_knn_seen": 0.5654,
+    "frozen_esm_cosine_seen_layer10": 0.5364,
+    "logistic_head_seen": 0.5107,
+    "random_seen": 0.5009
+  },
+  "results": [
+    {
+      "fork": "contrastive",
+      "variant": "1a",
+      "seen": {
+        "macro_auc01": 0.532,
+        "ci": [
+          0.5195,
+          0.5455
+        ],
+        "ci_from_seed": 0,
+        "n_peptides": 48,
+        "is_degenerate": false
+      },
+      "unseen": {
+        "macro_auc01": 0.5,
+        "ci": [
+          0.5,
+          0.5
+        ],
+        "ci_from_seed": 0,
+        "n_peptides": 40,
+        "is_degenerate": true
+      },
+      "paired_vs_knn_edit": {
+        "delta": -0.0338,
+        "ci": [
+          -0.0478,
+          -0.0226
+        ],
+        "p": 0.0,
+        "n_peptides": 48
+      },
+      "probes": {
+        "peptide_only": 0.5,
+        "tcr_only": 0.4996,
+        "train_pooled_macro_gap": 0.0692,
+        "worst_deviation": 0.0004,
+        "verdict": "PASS"
+      },
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "per_seed_seen": [
+        0.5316,
+        0.5308,
+        0.5337
+      ],
+      "per_seed_unseen": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "seed_spread": 0.0029,
+      "seed_spread_exceeds_ci_width": false,
+      "degenerate_groups": 40,
+      "frozen_contract_changes": []
+    },
+    {
+      "fork": "contrastive",
+      "variant": "1b",
+      "seen": {
+        "macro_auc01": 0.5075,
+        "ci": [
+          0.5023,
+          0.5169
+        ],
+        "ci_from_seed": 2,
+        "n_peptides": 48,
+        "is_degenerate": false
+      },
+      "unseen": {
+        "macro_auc01": 0.5018,
+        "ci": [
+          0.4974,
+          0.507
+        ],
+        "ci_from_seed": 2,
+        "n_peptides": 40,
+        "is_degenerate": false
+      },
+      "paired_vs_knn_edit": {
+        "delta": -0.0568,
+        "ci": [
+          -0.0771,
+          -0.0371
+        ],
+        "p": 0.0,
+        "n_peptides": 48
+      },
+      "probes": {
+        "peptide_only": 0.5001,
+        "tcr_only": 0.5007,
+        "train_pooled_macro_gap": -0.0485,
+        "worst_deviation": 0.0007,
+        "verdict": "PASS"
+      },
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "per_seed_seen": [
+        0.5049,
+        0.5089,
+        0.5086
+      ],
+      "per_seed_unseen": [
+        0.5029,
+        0.5009,
+        0.5016
+      ],
+      "seed_spread": 0.004,
+      "seed_spread_exceeds_ci_width": false,
+      "degenerate_groups": 0,
+      "frozen_contract_changes": []
+    }
+  ]
+}
