@@ -413,7 +413,18 @@ cross-arm deltas in §7a and §8b span four different negative schemes. Recorded
 **⑩ #21's hash-verification item.** Listed above as an unmet acceptance item; it is arguably its
 own issue since it is the only unfinished engineering task in the Phase 0 tree.
 
-### 3e. Close recommendations — for the record, nothing was closed
+### 3e. Close recommendations — ALL EXECUTED at closeout, 2026-09-09
+
+> **Status update.** This section was written as recommendations with nothing closed. At closeout
+> every recommendation below was carried out and the tracker is now **empty: 0 open issues, 30
+> closed.** #6 and #16 were reworded before closing; #10 and #18 closed on the permanent-erratum
+> resolution (`data/errata.json`); #20 became [ADR 0001](ADR/0001-frozen-contract.md); #21's unmet
+> hash verification was run and **PASSED** (`data/frozen_contract_hashes.json`). The seven gaps in
+> §3d below were each filed as an issue (#24–#30) and immediately closed as **not planned**, so a
+> deliberately-abandoned gap is visibly different from an untracked one. See
+> [final_state.md](final_state.md).
+
+The recommendations as originally written:
 
 **Recommend closing, all evidence in §3b:** #1, #2, #3, #4, #5, #7, #8, #9, #11, #12, #13, #14,
 #15, #17, #19. Fifteen issues, every acceptance item satisfied by a named commit, artifact, test

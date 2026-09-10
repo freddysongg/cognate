@@ -234,5 +234,28 @@ not support, and neither is a reason to keep going.
 | [`session_log.md`](session_log.md) | Chronological working record |
 | [`ADR/0001-frozen-contract.md`](ADR/0001-frozen-contract.md) | The four frozen files and the procedure for changing them |
 
+## 7. Tracker state
+
+**0 open, 30 closed.** Issues #1–#21 were the Phase 0 / fork work; #22 and #23 recorded the CD-HIT
+regime and the attenuation interval; **#24–#30 were filed at closeout and immediately closed as
+*not planned*.** That last group is deliberate: each is a real, unresolved gap, and an untracked
+gap is indistinguishable from an abandoned one unless the abandonment is written down. If you are
+reading this repository cold and want to know what is genuinely unfinished, read #24 through #30 —
+they are the honest list.
+
+| # | gap closed as not planned |
+|---|---|
+| 24 | `deviations_from_sceptr` is a completeness assertion with no artifact to check it against |
+| 25 | the evaluation set's definition is an external convention this repository restates and cannot test |
+| 26 | Liao et al.'s predicate and reference set are underspecified |
+| 27 | selection and multiplicity across the sweep's five unique looks are unresolved |
+| 28 | the sub-3 endpoint is sensitive to single-peptide removal (11 of 48 cross zero) |
+| 29 | the cause of the narrowing is unidentified |
+| 30 | normalisation, negative construction and scope are confounded with the labelled cross-arm axis |
+
+The full audit behind these is [`cdhit_and_issues.md`](cdhit_and_issues.md) §3.
+
+---
+
 **Reproducing anything:** `findings.md` §6. A fresh clone needs `bash scripts/fetch_data.sh`
 before the test suite passes — the raw VDJdb and IMMREP23 dumps are gitignored bulk data.
