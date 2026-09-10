@@ -26,3 +26,6 @@ data/submissions/
 
 # Notebooks kept local
 notebooks/
+
+# Derived ESM-2 embedding caches - large, regenerable, not versioned
+/shared/

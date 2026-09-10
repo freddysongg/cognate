@@ -34,7 +34,7 @@ MODELS: dict[str, str] = {
 DEFAULT_MAX_BATCH_TOKENS = 16_384
 CACHE_SUFFIX = ".npz"
 CACHE_DIR_ENV = "COGNATE_CACHE_DIR"
-SHARED_CACHE_DIRNAME = "cognate-shared"
+SHARED_CACHE_DIRNAME = "shared"
 
 
 @dataclass(frozen=True)
@@ -166,16 +166,16 @@ def embed_sequences(
 
 
 def default_cache_dir() -> Path:
-    """Where embedding caches live, from ``COGNATE_CACHE_DIR`` or a sibling of the repo.
+    """Where embedding caches live, from ``COGNATE_CACHE_DIR`` or ``shared/`` in the repo.
 
-    The caches run to hundreds of megabytes, so the two fork worktrees must not each hold
-    a copy. Resolving to a sibling directory rather than a path inside the worktree means
-    all three checkouts land on the same files without any of them committing one.
+    The caches run to gigabytes, so they are gitignored rather than committed. They lived in
+    a sibling directory while the two fork worktrees each needed to reach one shared copy;
+    with those worktrees removed the repo root is the stable anchor.
     """
     override = os.environ.get(CACHE_DIR_ENV)
     if override:
         return Path(override).expanduser()
-    return Path(__file__).resolve().parents[3] / SHARED_CACHE_DIRNAME
+    return Path(__file__).resolve().parents[2] / SHARED_CACHE_DIRNAME
 
 
 def cache_path(model_key: str, directory: Path | None = None) -> Path:
