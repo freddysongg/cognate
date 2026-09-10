@@ -1,0 +1,261 @@
+{
+  "config": {
+    "model": "35M",
+    "layer": 10,
+    "seed": 0,
+    "no_same_length_match_sentinel": 1000000,
+    "cdhit": {
+      "cdhit_95": {
+        "version": "Program: CD-HIT, V4.8.1, Sep 09 2026, 14:23:29",
+        "identity_threshold": 0.95,
+        "word_length": 5,
+        "throw_away_length": 4,
+        "length_asymmetry_s2_default": true,
+        "query_sequences": 18760,
+        "reference_sequences": 8993,
+        "clustered_away": 139,
+        "too_short_to_cluster": [
+          "AGGC",
+          "ASSY"
+        ]
+      },
+      "cdhit_95_relaxed_length": {
+        "version": "Program: CD-HIT, V4.8.1, Sep 09 2026, 14:23:29",
+        "identity_threshold": 0.95,
+        "word_length": 5,
+        "throw_away_length": 4,
+        "length_asymmetry_s2_default": false,
+        "query_sequences": 18760,
+        "reference_sequences": 8993,
+        "clustered_away": 571,
+        "too_short_to_cluster": [
+          "AGGC",
+          "ASSY"
+        ]
+      }
+    },
+    "cdhit_application": "cd-hit-2d with the fixed IMMREP23 load_train() CDR3b set as db1 and the distinct evaluation CDR3b as db2; an evaluation sequence is removed when cd-hit clusters it with any training sequence at >=95% global identity, which cd-hit defines as identical residues over the length of the shorter sequence. Peptide-agnostic, matching the substitution-radius regimes."
+  },
+  "regimes": {
+    "full": {
+      "rows_kept": 73440,
+      "rows_removed_pct": 0.0,
+      "distinct_tcrs_removed_pct": 0.0,
+      "support_min": 52,
+      "support_median": 182.0,
+      "support_max": 500,
+      "scores": {
+        "edit_retrieval": {
+          "point": 0.5654,
+          "lo": 0.5461,
+          "hi": 0.5849
+        },
+        "edit_retrieval_peptides": 48,
+        "esm_retrieval": {
+          "point": 0.5358,
+          "lo": 0.523,
+          "hi": 0.5498
+        },
+        "esm_retrieval_peptides": 48,
+        "svc_per_peptide": {
+          "point": 0.5424,
+          "lo": 0.5301,
+          "hi": 0.5575
+        },
+        "svc_per_peptide_peptides": 48
+      },
+      "representation_effect": {
+        "point": -0.0296,
+        "lo": -0.0415,
+        "hi": -0.0188,
+        "p": 0.0,
+        "n_peptides": 48,
+        "spans_zero": false
+      }
+    },
+    "cdhit_95": {
+      "rows_kept": 72899,
+      "rows_removed_pct": 0.74,
+      "distinct_tcrs_removed_pct": 0.74,
+      "support_min": 52,
+      "support_median": 181.5,
+      "support_max": 500,
+      "scores": {
+        "edit_retrieval": {
+          "point": 0.5659,
+          "lo": 0.5469,
+          "hi": 0.5861
+        },
+        "edit_retrieval_peptides": 48,
+        "esm_retrieval": {
+          "point": 0.5356,
+          "lo": 0.5231,
+          "hi": 0.5499
+        },
+        "esm_retrieval_peptides": 48,
+        "svc_per_peptide": {
+          "point": 0.5421,
+          "lo": 0.5301,
+          "hi": 0.5567
+        },
+        "svc_per_peptide_peptides": 48
+      },
+      "representation_effect": {
+        "point": -0.0303,
+        "lo": -0.0436,
+        "hi": -0.0193,
+        "p": 0.0,
+        "n_peptides": 48,
+        "spans_zero": false
+      }
+    },
+    "cdhit_95_relaxed_length": {
+      "rows_kept": 71182,
+      "rows_removed_pct": 3.07,
+      "distinct_tcrs_removed_pct": 3.04,
+      "support_min": 50,
+      "support_median": 177.5,
+      "support_max": 499,
+      "scores": {
+        "edit_retrieval": {
+          "point": 0.5649,
+          "lo": 0.5456,
+          "hi": 0.5886
+        },
+        "edit_retrieval_peptides": 48,
+        "esm_retrieval": {
+          "point": 0.5346,
+          "lo": 0.5237,
+          "hi": 0.5478
+        },
+        "esm_retrieval_peptides": 48,
+        "svc_per_peptide": {
+          "point": 0.5405,
+          "lo": 0.5285,
+          "hi": 0.5554
+        },
+        "svc_per_peptide_peptides": 48
+      },
+      "representation_effect": {
+        "point": -0.0303,
+        "lo": -0.0452,
+        "hi": -0.0183,
+        "p": 0.0,
+        "n_peptides": 48,
+        "spans_zero": false
+      }
+    }
+  },
+  "support_matched_control": {
+    "cdhit_95": {
+      "n_subsets": 2000,
+      "seed": 20260909,
+      "random_edit": 0.56538,
+      "random_esm": 0.53578,
+      "random_mean_difference": -0.0296,
+      "subset_range_lo": -0.02995,
+      "subset_range_hi": -0.02924,
+      "monte_carlo_se": 4e-06,
+      "observed_difference": -0.0303
+    },
+    "cdhit_95_relaxed_length": {
+      "n_subsets": 2000,
+      "seed": 20260909,
+      "random_edit": 0.56541,
+      "random_esm": 0.53578,
+      "random_mean_difference": -0.02963,
+      "subset_range_lo": -0.03044,
+      "subset_range_hi": -0.02883,
+      "monte_carlo_se": 9e-06,
+      "observed_difference": -0.0303
+    }
+  },
+  "attenuation": {
+    "n_draws": 20000,
+    "seed": 20260909,
+    "peptide_skip_rate": {
+      "full": 0.0,
+      "sub_1": 0.0,
+      "sub_2": 0.0,
+      "sub_3": 1.0416666666666667e-06
+    },
+    "regimes": {
+      "sub_1": {
+        "delta": {
+          "point": -0.02606057481281082,
+          "lo": -0.040091553340848414,
+          "hi": -0.014015023727451685,
+          "n_replicates": 20000,
+          "p": 0.0
+        },
+        "attenuation_absolute": {
+          "point": -0.0035436732225857803,
+          "lo": -0.007923840702291796,
+          "hi": 0.00015029295325748912,
+          "n_replicates": 20000
+        },
+        "attenuation_proportion": {
+          "point": 0.11970151102465953,
+          "lo": -0.004831354054389283,
+          "hi": 0.30823739516173276,
+          "n_replicates": 20000
+        },
+        "attenuation_p": 0.0598,
+        "replicates_with_delta_full_above_zero": 0
+      },
+      "sub_2": {
+        "delta": {
+          "point": -0.02256635912135389,
+          "lo": -0.03890797172191743,
+          "hi": -0.00832068083007898,
+          "n_replicates": 20000,
+          "p": 0.0008
+        },
+        "attenuation_absolute": {
+          "point": -0.007037888914042712,
+          "lo": -0.016037134068401532,
+          "hi": 0.0019327782350617422,
+          "n_replicates": 20000
+        },
+        "attenuation_proportion": {
+          "point": 0.2377323992701248,
+          "lo": -0.06387369618037786,
+          "hi": 0.6184800585585941,
+          "n_replicates": 20000
+        },
+        "attenuation_p": 0.1199,
+        "replicates_with_delta_full_above_zero": 0
+      },
+      "sub_3": {
+        "delta": {
+          "point": -0.015480160927944237,
+          "lo": -0.03229990519051656,
+          "hi": -0.0004120339546854042,
+          "n_replicates": 20000,
+          "p": 0.0439
+        },
+        "attenuation_absolute": {
+          "point": -0.014124087107452365,
+          "lo": -0.027742287583757092,
+          "hi": 3.546785440231497e-05,
+          "n_replicates": 20000
+        },
+        "attenuation_proportion": {
+          "point": 0.4770966345966554,
+          "lo": -0.0014353759208630729,
+          "hi": 0.9821014095591044,
+          "n_replicates": 20000
+        },
+        "attenuation_p": 0.0511,
+        "replicates_with_delta_full_above_zero": 0
+      }
+    },
+    "delta_full": {
+      "point": -0.029604248035396602,
+      "lo": -0.04285602890412737,
+      "hi": -0.018481081785037018,
+      "n_replicates": 20000,
+      "p": 0.0
+    }
+  }
+}

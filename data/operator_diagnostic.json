@@ -1,0 +1,400 @@
+{
+  "config": {
+    "model": "35M",
+    "layer": 10,
+    "strategy": "matched",
+    "ratio": 5.0,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "headline_seed": 0,
+    "n_background": 1000,
+    "probe_tolerance": 0.05
+  },
+  "seen": {
+    "edit_retrieval/seen": {
+      "macro_auc01": {
+        "point": 0.5654,
+        "lo": 0.5461,
+        "hi": 0.5849
+      },
+      "auroc": {
+        "point": 0.5804,
+        "lo": 0.5515,
+        "hi": 0.6136
+      },
+      "auprc": {
+        "point": 0.2626,
+        "lo": 0.224,
+        "hi": 0.3172
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "esm_retrieval/seen": {
+      "macro_auc01": {
+        "point": 0.5358,
+        "lo": 0.523,
+        "hi": 0.5498
+      },
+      "auroc": {
+        "point": 0.5454,
+        "lo": 0.5256,
+        "hi": 0.5689
+      },
+      "auprc": {
+        "point": 0.2222,
+        "lo": 0.1925,
+        "hi": 0.2646
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "logistic_global/seen": {
+      "macro_auc01": {
+        "point": 0.5107,
+        "lo": 0.5021,
+        "hi": 0.5228
+      },
+      "auroc": {
+        "point": 0.521,
+        "lo": 0.5005,
+        "hi": 0.5448
+      },
+      "auprc": {
+        "point": 0.1827,
+        "lo": 0.168,
+        "hi": 0.2045
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "svc_global/seen": {
+      "macro_auc01": {
+        "point": 0.5078,
+        "lo": 0.5002,
+        "hi": 0.5179
+      },
+      "auroc": {
+        "point": 0.5213,
+        "lo": 0.5026,
+        "hi": 0.544
+      },
+      "auprc": {
+        "point": 0.1779,
+        "lo": 0.1669,
+        "hi": 0.192
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    },
+    "svc_per_peptide/seen": {
+      "macro_auc01": {
+        "point": 0.5424,
+        "lo": 0.5301,
+        "hi": 0.5575
+      },
+      "auroc": {
+        "point": 0.5701,
+        "lo": 0.548,
+        "hi": 0.5983
+      },
+      "auprc": {
+        "point": 0.2163,
+        "lo": 0.1934,
+        "hi": 0.2488
+      },
+      "n_rows": 73440,
+      "n_peptides": 48,
+      "is_degenerate": false
+    }
+  },
+  "unseen": {
+    "edit_retrieval/unseen": {
+      "macro_auc01": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auroc": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auprc": {
+        "point": 0.1667,
+        "lo": 0.1632,
+        "hi": 0.1702
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": true
+    },
+    "esm_retrieval/unseen": {
+      "macro_auc01": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auroc": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auprc": {
+        "point": 0.1667,
+        "lo": 0.1632,
+        "hi": 0.1702
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": true
+    },
+    "logistic_global/unseen": {
+      "macro_auc01": {
+        "point": 0.4997,
+        "lo": 0.4951,
+        "hi": 0.5061
+      },
+      "auroc": {
+        "point": 0.498,
+        "lo": 0.485,
+        "hi": 0.5109
+      },
+      "auprc": {
+        "point": 0.1647,
+        "lo": 0.1593,
+        "hi": 0.1717
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": false
+    },
+    "svc_global/unseen": {
+      "macro_auc01": {
+        "point": 0.4994,
+        "lo": 0.4948,
+        "hi": 0.5053
+      },
+      "auroc": {
+        "point": 0.4984,
+        "lo": 0.4865,
+        "hi": 0.5107
+      },
+      "auprc": {
+        "point": 0.1652,
+        "lo": 0.16,
+        "hi": 0.1723
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": false
+    },
+    "svc_per_peptide/unseen": {
+      "macro_auc01": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auroc": {
+        "point": 0.5,
+        "lo": 0.5,
+        "hi": 0.5
+      },
+      "auprc": {
+        "point": 0.1667,
+        "lo": 0.1632,
+        "hi": 0.1702
+      },
+      "n_rows": 43218,
+      "n_peptides": 40,
+      "is_degenerate": true
+    }
+  },
+  "paired": {
+    "esm_retrieval_minus_logistic_global/seen": {
+      "point": 0.025,
+      "lo": 0.0116,
+      "hi": 0.0411,
+      "p": 0.0,
+      "n_peptides": 48,
+      "spans_zero": false
+    },
+    "svc_per_peptide_minus_esm_retrieval/seen": {
+      "point": 0.0067,
+      "lo": -0.0006,
+      "hi": 0.0142,
+      "p": 0.076,
+      "n_peptides": 48,
+      "spans_zero": true
+    },
+    "svc_global_minus_logistic_global/seen": {
+      "point": -0.0029,
+      "lo": -0.0054,
+      "hi": -0.0009,
+      "p": 0.006,
+      "n_peptides": 48,
+      "spans_zero": false
+    },
+    "svc_per_peptide_minus_svc_global/seen": {
+      "point": 0.0346,
+      "lo": 0.0223,
+      "hi": 0.0482,
+      "p": 0.0,
+      "n_peptides": 48,
+      "spans_zero": false
+    },
+    "svc_per_peptide_minus_edit_retrieval/seen": {
+      "point": -0.023,
+      "lo": -0.0347,
+      "hi": -0.0122,
+      "p": 0.0,
+      "n_peptides": 48,
+      "spans_zero": false
+    },
+    "esm_retrieval_minus_edit_retrieval/seen": {
+      "point": -0.0296,
+      "lo": -0.0415,
+      "hi": -0.0188,
+      "p": 0.0,
+      "n_peptides": 48,
+      "spans_zero": false
+    }
+  },
+  "probes": [
+    {
+      "probe": "svc_global peptide_only / eval seen",
+      "macro_auc01": 0.5001,
+      "deviation": 0.0001,
+      "pass": true
+    },
+    {
+      "probe": "svc_global tcr_only / eval seen",
+      "macro_auc01": 0.5,
+      "deviation": 0.0,
+      "pass": true
+    },
+    {
+      "probe": "svc_per_peptide shifted reference / eval seen",
+      "macro_auc01": 0.5053,
+      "deviation": 0.0053,
+      "pass": true
+    }
+  ],
+  "probe_verdict": "PASS",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "seed_spread": {
+    "svc_global": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "values": [
+        0.5078,
+        0.5076,
+        0.5067
+      ],
+      "mean": 0.5074,
+      "spread": 0.0011
+    },
+    "logistic_global": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "values": [
+        0.5107,
+        0.51,
+        0.5091
+      ],
+      "mean": 0.5099,
+      "spread": 0.0017
+    },
+    "svc_per_peptide": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "values": [
+        0.5424,
+        0.5416,
+        0.5427
+      ],
+      "mean": 0.5422,
+      "spread": 0.001
+    }
+  },
+  "degenerate_groups": {
+    "edit_retrieval/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 122,
+      "constant_groups": 0
+    },
+    "edit_retrieval/unseen": {
+      "is_degenerate": true,
+      "distinct_scores": 1,
+      "constant_groups": 40
+    },
+    "esm_retrieval/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 63037,
+      "constant_groups": 0
+    },
+    "esm_retrieval/unseen": {
+      "is_degenerate": true,
+      "distinct_scores": 1,
+      "constant_groups": 40
+    },
+    "logistic_global/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 73288,
+      "constant_groups": 0
+    },
+    "logistic_global/unseen": {
+      "is_degenerate": false,
+      "distinct_scores": 43181,
+      "constant_groups": 0
+    },
+    "svc_global/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 73440,
+      "constant_groups": 0
+    },
+    "svc_global/unseen": {
+      "is_degenerate": false,
+      "distinct_scores": 43218,
+      "constant_groups": 0
+    },
+    "svc_per_peptide/seen": {
+      "is_degenerate": false,
+      "distinct_scores": 73440,
+      "constant_groups": 0
+    },
+    "svc_per_peptide/unseen": {
+      "is_degenerate": true,
+      "distinct_scores": 1,
+      "constant_groups": 40
+    }
+  },
+  "frozen_contract_changes": [],
+  "deviations_from_sceptr": [
+    "SCEPTR benchmarked 6 pMHCs by AUROC over reference sets of 1-200 TCRs; this scores 48 seen peptides by macro AUC0.1 over their full training databases.",
+    "SCEPTR used paired alpha-beta TCRs reconstructed to full chains via Stitchr; this uses CDR3b only, in the IMMREP23 stripped-core convention.",
+    "SCEPTR's ESM-2 was T6 8M final layer; this is 35M layer 10, the config the rest of the project reports.",
+    "SCEPTR's negatives were 1000 background TCRs from an unlabelled repertoire; this samples 1000 from the training positives of other peptides, because the project has no unlabelled repertoire.",
+    "SCEPTR's retrieval arm was nearest-neighbour over the reference set; this is max-over-database, which is the same operator at top_k=1."
+  ]
+}

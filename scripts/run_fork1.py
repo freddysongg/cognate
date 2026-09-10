@@ -333,7 +333,7 @@ def main() -> None:
                    "negative_sampler": None,
                    "probe_strategy": PROBE_STRATEGY, "probe_ratio": PROBE_RATIO,
                    "probe_gate": PROBE_GATE},
-        "reference": {"edit_knn_seen": 0.5654, "frozen_esm_cosine_seen_layer10": 0.5364,
+        "reference": {"edit_knn_seen": 0.5654, "frozen_esm_cosine_seen_layer10": 0.5358,
                       "logistic_head_seen": 0.5107, "random_seen": 0.5009},
         "results": results,
     }, indent=2) + "\n")

@@ -336,7 +336,7 @@ def main() -> None:
                    "negative_strategy": STRATEGY, "negative_ratio": RATIO,
                    "probe_gate": PROBE_GATE},
         "reference": {"edit_knn_seen": 0.5654, "logistic_head_seen": 0.5107,
-                      "frozen_esm_cosine_seen_layer10": 0.5364, "random_seen": 0.5009,
+                      "frozen_esm_cosine_seen_layer10": 0.5358, "random_seen": 0.5009,
                       "inherited_train_gap": 0.156},
         "attention_ablation": {
             "mean_difference": ablation,

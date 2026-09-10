@@ -314,6 +314,18 @@ For the record, the internally computed predictions were, on the split Kaggle wo
 | k-NN, edit distance | 0.5922 |
 | ESM-2 + logistic head | 0.5474 |
 
+**Nothing published exists to compare the unseen column against.** A deep-research pass
+([outlook.md](outlook.md) Part C) retrieved **no unseen-epitope result reported in macro AUC0.1
+anywhere in the literature**, so our unseen numbers are uncomparable to published work by
+construction rather than by choice. Separately, **no published evaluation of ESM-C or ESM-3 on TCR
+specificity, CDR3 representation, or short-peptide representation was retrieved** (outlook.md B4),
+so "a newer protein language model would do better" is untested rather than refuted. Both are
+absences of retrieved evidence, not demonstrated absences.
+
+**The deduplication standard is a moving external convention, not a property of this repository.**
+Every number here is computed after exact CDR3β removal, which was the weakest of the three
+published 2025–2026 standards. See §11 instance 4 and [outlook.md](outlook.md) Part D.
+
 **Two structural caveats on the test set:**
 - 17.9% of test positives appear verbatim in training (§3d).
 - 8 test rows labelled 0 are positives in the training file — unwinnable by anything that trusts
@@ -353,10 +365,16 @@ other's code. Results: [`fork1_results.json`](../data/fork1_results.json),
 
 ### 7a. The table
 
+**Deduplication standard: exact CDR3β match against the IMMREP23 training set, and nothing
+stricter.** Every number in this table is regime-dependent and none of them is a fixed constant.
+Under the strictest published criterion (Liao et al., three CDR3β substitutions) the baseline is
+**0.5302 [0.5175, 0.5486]**, not 0.5654. The full curve is in [outlook.md Part D](outlook.md) and
+the CD-HIT row is in [cdhit_and_issues.md](cdhit_and_issues.md).
+
 | Model | seen (48) | unseen (40) |
 |---|---|---|
 | random predictor | 0.5009 [0.498, 0.505] | 0.5015 |
-| **k-NN, edit distance** | **0.5654 [0.546, 0.585]** | 0.5000 *(degenerate)* |
+| **k-NN, edit distance** | **0.5654 [0.546, 0.585]** *(exact-match regime; 0.5302 at sub 3)* | 0.5000 *(degenerate)* |
 | logistic head, mean-pooled | 0.5107 [0.502, 0.523] | 0.4997 |
 | MLP head | 0.5114 [0.504, 0.521] | 0.4991 |
 | ESM-2 cosine k-NN, 35M layer 6 | 0.5434 [0.529, 0.559] | 0.5000 *(degenerate)* |
@@ -400,7 +418,8 @@ anywhere in Fork 1's training — and it bought nothing.
 **1a is indistinguishable from not training at all.** An *untrained* random projection of the same
 embeddings scores 0.5341; the trained projection scores 0.5320, against frozen cosine at the same
 layer at 0.5358. A learning-curve sweep peaks at 0.5380 around epoch 4 and decays to 0.5257 by
-epoch 40. Even an oracle selecting the best epoch by test score stays far below 0.5654. With the
+epoch 40. Even an oracle selecting the best epoch by test score stays far below 0.5654 (the
+exact-match-regime baseline; 0.5302 at sub 3). With the
 backbone frozen, a projection can only reweight dimensions the pooled embedding already has; it
 cannot recreate what pooling discarded.
 
@@ -437,7 +456,8 @@ projection in front. That is why it lands on 0.511 rather than near it by luck.
 ### 7e. What this adds up to
 
 Five independent approaches now sit between 0.504 and 0.544 while counting letter differences
-gets 0.5654. The pre-registered reading for this outcome was written before any of them ran:
+gets 0.5654 in the exact-match regime, 0.5302 at sub 3. The pre-registered reading for this
+outcome was written before any of them ran:
 *consistent with the k-NN's advantage being intrinsic to the operator, not the representation.*
 
 The stronger statement the evidence supports is about the representation rather than the
@@ -461,3 +481,386 @@ table above contains or abuts 0.5.
 - Cross-fork comparisons in §7a use a group-level paired bootstrap over peptides, because only
   per-peptide AUC0.1 was persisted. It reproduces the frozen `compare_macro_auc01` point estimates
   exactly and its intervals to within 0.002 on every comparison where both were run.
+
+## 8. The operator diagnostic — the 2×2's operator axis was measuring scope
+
+Phase D closed with a 2×2 read as *representation × operator*:
+
+| | retrieval | parametric head |
+|---|---|---|
+| edit distance | **0.5654** *(exact-match regime; 0.5302 at sub 3)* | *empty* |
+| ESM-2 (35M L10) | 0.5358 | 0.5107 |
+
+The literature check found the representation half already published — Nagano et al.,
+*Cell Systems* 16(1):101165 (2025), highlight ①: *"Existing language models underperform sequence
+alignment for predicting TCR specificity."* Their Fig. S6 ran the closest thing to our operator
+axis and got **the opposite sign**: a linear SVC fitted on ESM-2 features beat ESM-2
+nearest-neighbour. Ours lost. That disagreement, plus the fact that our operator effect was a
+difference of two point estimates with no paired interval, is what this diagnostic exists to
+resolve. `scripts/run_operator_diagnostic.py`, `data/operator_diagnostic.json`.
+
+### 8a. The missing interval
+
+**esm_retrieval − logistic_global = +0.0250 [+0.0116, +0.0411], p < 0.001, n = 48.** `observed`.
+
+The interval clears zero. The operator effect, as the 2×2 defined it, is real — so the first
+possible reading (that it was noise) is refused outright.
+
+### 8b. It is not an operator effect
+
+The 2×2's operator axis changed two things at once, and only one of them is the operator:
+
+* **estimator** — a max-over-similarities rule versus a fitted linear model.
+* **scope** — retrieval fits *one model per peptide* (`score_by_nearest_positive` builds a
+  separate database for each). The head fits **one global model across all peptides**.
+
+Nothing in the original design separated these. Two new arms do:
+
+| arm | what it changes | seen macro AUC0.1 |
+|---|---|---|
+| `edit_retrieval` | — | 0.5654 [0.5461, 0.5849] *(exact-match regime)* |
+| **`svc_per_peptide`** | per-peptide linear SVC on ESM-2 (SCEPTR-matched) | **0.5424 [0.5301, 0.5575]** |
+| `esm_retrieval` | — | 0.5358 [0.5230, 0.5498] |
+| `logistic_global` | — | 0.5107 [0.5021, 0.5228] |
+| `svc_global` | SVC estimator, still global | 0.5078 [0.5002, 0.5179] |
+
+The +0.0250 decomposes **exactly**:
+
+| term | comparison | Δ | reading |
+|---|---|---|---|
+| scope | `svc_per_peptide − svc_global` | **+0.0346 [+0.0223, +0.0482]**, p < 0.001 | the whole effect |
+| estimator | `svc_global − logistic_global` | −0.0029 [−0.0054, −0.0009], p = 0.006 | negligible |
+| operator | `svc_per_peptide − esm_retrieval` | +0.0067 [−0.0006, +0.0142], p = 0.076 | **spans zero** |
+
+−0.0067 + 0.0346 − 0.0029 = +0.0250. `observed`.
+
+Per-peptide win counts agree with the intervals: `svc_per_peptide` beats `esm_retrieval` on
+**26 of 48** peptides (a coin flip, as the spanning CI implies), beats `svc_global` on **37 of
+48**, and loses to `edit_retrieval` on **40 of 48**.
+
+**Given the same per-peptide scope retrieval always had, the parametric operator closes the entire
+gap** and lands statistically indistinguishable from ESM-2 retrieval, with the point estimate on
+SCEPTR's side of zero rather than ours. The operator axis of the 2×2 dissolves; what it was
+measuring was scope.
+
+Against the pre-registered outcomes: the row-1 condition (*SVC beats ESM-2 retrieval, CI clears
+zero*) is **not** met — p = 0.076, the interval touches zero, so the narrow question "does a
+parametric operator beat retrieval here" lands in **row 3, underpowered, no side picked**. The
+diagnostic's actual question — *was the head the problem* — is answered by the scope row, and the
+answer is yes. Seed spread is 0.0010 over three seeds, so this is not seed noise.
+
+### 8c. What survives — rewritten at closeout
+
+> **This section previously read "What survives, and is now stronger". That title is withdrawn.**
+> It was written before Phase F measured the effect's dependence on the deduplication convention
+> and before the red team ([redteam.md](redteam.md) §0b, [redteam_curve.md](redteam_curve.md) §2,
+> §4). "Stronger" was never supported by anything the diagnostic ran; it described the *number of
+> estimators agreeing*, which is not a measure of strength. The supported version follows.
+
+**What survives.** In the exact-match deduplication regime, on the 48 seen peptides, edit-distance
+retrieval outscores mean-pooled ESM-2 35M layer-10 retrieval by
+**−0.0296 [−0.0415, −0.0188]**, p < 0.001. This run reproduced the frozen Phase D value to the
+digit against `data/knn_esm_cosine.json`. `observed`.
+
+It also outscores the per-peptide parametric arm: `svc_per_peptide − edit_retrieval` =
+**−0.0230 [−0.0347, −0.0122]**, p < 0.001. So the ordering does not depend on which of the two
+estimators is used. `observed`.
+
+**Four qualifications, each of which the original section lacked.**
+
+1. **Regime-dependent, and the dependence is the story.** −0.0296 is the exact-match number. Under
+   Liao et al.'s three-substitution standard the same comparison on the same 48 peptides is
+   **−0.0155 [−0.0329, −0.0012]**, p = 0.024 at the saved 1,000 draws and **0.0439** at 20,000
+   synchronised draws. It still clears zero; it clears it barely. The full curve is
+   [outlook.md](outlook.md) Part D.
+2. **The attenuation between those two numbers is not established.** The magnitude falls 47.7%,
+   but the paired interval on that attenuation is **[−0.1%, 98.2%], p = 0.0511** — indistinguishable
+   from no attenuation and from complete attenuation alike
+   ([cdhit_and_issues.md](cdhit_and_issues.md) Part 2). "Roughly halves" is a point estimate with
+   no support and is withdrawn wherever it appears.
+3. **"Under two operators" is retired as a description.** `svc_per_peptide` standardises features
+   per dimension while `esm_retrieval` L2-normalises, so the contrast changes normalisation as
+   well as estimator ([redteam.md](redteam.md) §0b). The arithmetic above stands; the word
+   "operator" does not, and §8e's framing goes with it.
+4. **Sensitive to peptide composition and to inference choices.** Leave-one-peptide-out at sub 3:
+   11 of 48 omissions give an interval crossing zero, worst case dropping `RFPLTFGWCF` →
+   −0.0113 [−0.0247, +0.0020], p = 0.108. Bonferroni across the five unique looks in the sweep puts
+   the sub-3 p at 0.120 ([redteam_curve.md](redteam_curve.md) §4).
+
+The `edit distance × parametric` cell stays empty and is not fillable by this route — an edit
+distance has no feature vector to fit a linear model on. SCEPTR has the same hole for the same
+reason: their SVC was fitted on PLM embeddings only, never on TCRdist or CDR3 Levenshtein.
+
+### 8d. Probes and degeneracy
+
+All three shortcut probes pass the two-sided |macro − 0.5| ≤ 0.05 gate:
+
+| probe | macro AUC0.1 | deviation |
+|---|---|---|
+| `svc_global` peptide_only | 0.5001 | 0.0001 |
+| `svc_global` tcr_only | 0.5000 | 0.0000 |
+| `svc_per_peptide` shifted reference set | 0.5053 | 0.0053 |
+
+The third is the new one: rotating each peptide onto a *different* peptide's binder set collapses
+the per-peptide SVC to chance, which is what makes 0.5424 attributable to the reference set rather
+than to anything structural in the eval rows.
+
+`svc_per_peptide` is **degenerate on unseen peptides** (1 distinct score, 40 constant groups) for
+the same structural reason retrieval is: no training binders means no model to fit. Its 0.500 is
+arithmetic, not measurement. Note that the *global* arms are non-degenerate on unseen and still
+score 0.4995–0.5107 — a mechanism that produces 43,000 distinct scores and lands at chance is a
+different finding from no mechanism at all.
+
+### 8e. What this changes
+
+- The 2×2 should no longer be presented as representation × operator. Its operator axis was
+  confounded with scope, and with scope controlled the operator term does not clear zero.
+- The apparent disagreement with Nagano et al. Fig. S6 was our design, not their result. It is
+  **dissolved rather than resolved in their favour**: their SVC advantage is scoped to k = 1–200
+  reference TCRs against a fixed background, which this run does not occupy, so +0.0067 neither
+  reproduces nor contradicts them (§8f).
+- The project's remaining claim is the representation effect, which is a **replication** of a
+  published finding on a broader evaluation (48 seen peptides, paired bootstrap) than the original
+  (6 pMHCs, binomial test), now shown to be operator-independent.
+- **No arm scores above chance on unseen peptides.** That is unchanged and unchallenged.
+
+### 8f. What would make this wrong
+
+- **`svc_per_peptide` uses the full training database as its positive set**, matching what
+  retrieval queries, whereas the global arms use the component split's training arm. Scope and
+  training-set size are therefore not fully separated; a per-peptide arm restricted to the split
+  would separate them.
+- **Background negatives come from other peptides' binders**, because the project has no unlabelled
+  repertoire. SCEPTR sampled from one. This is the `matched`-negative assumption again.
+- **One hyperparameter setting** (`C = 1.0`, 1000 background TCRs, balanced class weights). No
+  sweep was run.
+- **The +0.0067 is out of SCEPTR's regime, and therefore neither reproduces nor contradicts
+  them.** Their SVC advantage is scoped explicitly to the low-data case — *"in the low data
+  regime typical of most pMHCs, misalignment of pre-training to downstream tasks can only be
+  partially remediated by training on reference TCRs"* — and their reference sets run k = 1–200
+  TCRs per pMHC. `svc_per_peptide` fits on each peptide's **full** training database. Whether a
+  parametric operator beats retrieval at k = 1–200 is a different question from whether it does
+  at full support, and this run answers only the second. Agreement in sign is not a replication
+  and disagreement would not have been a refutation.
+- **The regime gap is narrower than that framing implies, and the framing should be read with
+  these numbers.** Training support for the 48 seen peptides: min 1, median 25.5, max 1,818,
+  quartiles [4, 25, 231]. **35 of 48 (73%) sit at or below SCEPTR's k = 200 ceiling**; 30 of 48
+  are below 50 and 20 of 48 below 20. So most peptides entering the macro average are *inside*
+  their sampled range by support count. What is still out of regime is the design, not the
+  support: SCEPTR *controlled* k as an independent variable against a fixed background set,
+  while this takes whatever support each peptide has and resamples the background per peptide.
+  "Out of regime" is a statement about a controlled sweep versus an uncontrolled one, and it is
+  weaker than the raw support numbers would let anyone assume. `observed`.
+- Deviations from SCEPTR's setup are recorded under `deviations_from_sceptr` in
+  `data/operator_diagnostic.json`. Their benchmark was 6 pMHCs by AUROC over reference sets of
+  1–200 paired-chain TCRs; this is 48 peptides by macro AUC0.1 over full databases, CDR3β only.
+  The comparison is directional, not a replication. Two deviations were missing from the list as
+  first written and are added in §10a: SCEPTR used one shared background set where this
+  resamples per peptide, and normalisation is not held fixed across the operator contrast.
+
+## 9. Retired — closed, not deferred
+
+Both entries below are **closed**. They are not parked, not blocked on capacity, and not
+waiting for a better idea. Nothing in a future session should revive them on the grounds that
+they were merely postponed.
+
+### 9a. The empty 2×2 cell — a head on edit-distance-derived features
+
+**Closed.** It existed to complete a *representation × operator* grid. §8 shows that grid's
+operator axis was measuring scope, not operator: once a parametric arm is given the same
+per-peptide scope retrieval has, the operator term is +0.0067 [−0.0006, +0.0142] and does not
+clear zero. Filling the cell would estimate an interaction on an axis that has no established
+main effect, so the number it produced would not answer any question that is still open.
+
+The secondary reason stands on its own: an edit distance has no feature vector, so any such
+head would score a *derived* representation — kernel embedding, distance-to-landmarks, k-NN
+features — which is a third representation, not the edit distance. The cell as specified is not
+constructible. SCEPTR has the same hole for the same reason; their SVC was fitted on PLM
+embeddings only, never on TCRdist or CDR3 Levenshtein.
+
+### 9b. The 2×2 as a novel contribution
+
+**Closed.** Superseded twice over.
+
+The representation half is a replication: Nagano et al., *Cell Systems* 16(1):101165 (2025),
+highlight ① — *"Existing language models underperform sequence alignment for predicting TCR
+specificity"* — holds nearest-neighbour fixed and swaps only the similarity function across six
+representations including ESM-2, on VDJdb, with the same sign. Also stated at abstract level by
+IMMREP22 (Meysman et al. 2023) and in TITAN's own abstract (Weber et al. 2021). Our baseline is
+itself a published method: `baseline_knn.py:4` documents it as adapted from IMMREP23's TCRbase.
+
+The operator half is not a finding but a **confound**, and is retained only as a methodology
+note in §8: a per-peptide retrieval rule compared against a globally fitted head charges the
+operator axis for a scope change. That note is the useful residue. It is not a contribution
+about TCR binding.
+
+What the project still has is a replication on a broader evaluation than the original — 48 seen
+peptides with a paired bootstrap, against 6 pMHCs with a binomial test — now shown to hold under
+two estimators rather than one. That is worth stating accurately and is not worth extending.
+
+> **Closeout amendment.** "Two operators" is corrected to "two estimators": the second arm changes
+> normalisation as well as estimator ([redteam.md](redteam.md) §0b), so the contrast was never a
+> clean operator swap. And the replication is regime-dependent — it holds at exact-match dedup and
+> at Liao's three-substitution standard, the latter at p = 0.024 (0.0439 at 20,000 draws), with
+> 11 of 48 leave-one-peptide-out intervals crossing zero. See §8c as rewritten.
+
+## 10. Erratum — `frozen_esm_cosine_seen_layer10`
+
+> **RESOLVED PERMANENTLY at closeout, 2026-09-09. This erratum stands; the artifacts will not be
+> regenerated or edited.** Machine-readable record: [`data/errata.json`](../data/errata.json).
+> Pinned by `tests/test_reference_constants.py::test_committed_fork_artifacts_still_carry_the_erratum`,
+> so the divergence cannot widen silently and 0.5364 cannot later be mistaken for a live number.
+>
+> **Why not regenerated.** Regenerating either JSON means re-running a fork driver, which trains
+> models — forbidden at closeout, and it would also change the `results` block, which is correct.
+> Hand-editing the scalar in place would leave a results artifact that is the output of no script,
+> which is precisely the restatement failure mode §11 exists to document. The value is inert:
+> nothing reads it, and no delta, interval or conclusion is computed from it. Both drivers carry
+> the correct 0.5358 as of the closeout commit, and that is what the next run would write.
+>
+> Closes issues #10 and #18.
+
+**Field:** `reference.frozen_esm_cosine_seen_layer10`
+**Files:** `data/fork1_results.json:18`, `data/fork2_results.json:18`
+**Reported:** 0.5364 · **Correct:** **0.5358**
+
+Both fork result artifacts report the frozen ESM-2 cosine k-NN at 35M layer 10, seen slice, as
+0.5364. The correct value is 0.5358 — `data/knn_esm_cosine.json`, key
+`35M layer10 (headline)/seen`, which has held 0.5358 at every commit it has existed, and which
+`data/operator_diagnostic.json` (`esm_retrieval/seen`) independently reproduced. Nothing has
+ever computed 0.5364.
+
+It was a hand-typed literal in `scripts/run_fork1.py` and `scripts/run_fork2.py`, entering at
+`8c7a03d` / `16a050c`. The other three constants in the same block — `edit_knn_seen` 0.5654,
+`logistic_head_seen` 0.5107, `random_seen` 0.5009 — match their sources exactly, which is what
+kept the fourth invisible.
+
+**Nothing downstream moves.** The `reference` block is context only; every fork delta, interval
+and p-value in §7 is computed from score vectors, not from these constants. The error is 0.0006,
+inside the CI [0.5230, 0.5498].
+
+**The two JSONs were left uncorrected, deliberately.** Regenerating them means retraining six
+models (two forks × three seeds), which is outside the audit's read-only scope; hand-editing
+them would make them the output of no script and destroy the only thing a result artifact is
+for. The drivers are fixed, so the next genuine run writes 0.5358 and this erratum retires with
+it. Until then the artifacts are wrong in this one field and this section is the correction.
+
+`tests/test_reference_constants.py` now parses the `reference` dict literal out of each driver
+and asserts every constant equals its source artifact. `failure-proven`: run against
+`git show HEAD:scripts/run_fork{1,2}.py` it reports
+`{'frozen_esm_cosine_seen_layer10': (0.5364, 0.5358)}` for both, and passes after the fix.
+
+### Corrections owed to the strategy handoff
+
+The handoff is not a repository artifact, so these cannot be applied here and are recorded for
+whoever writes the next one:
+
+1. **2×2, ESM-2 retrieval cell: 0.5434 → 0.5358.** 0.5434 is `35M middle` (layer 6) in
+   `data/knn_esm_cosine.json`; the head it was being compared against is layer 10. As written,
+   the handoff's operator comparison crossed two layers and did not hold representation fixed.
+   The layer-10 value is 0.5358.
+2. **Cache environment variable: `TCRBENCH_CACHE_DIR` → `COGNATE_CACHE_DIR`**
+   (`src/cognate/embed.py:36`). The former appears nowhere in the repository and is read by
+   nothing.
+3. **The 2×2 should not be described as representation × operator at all** (§8e).
+
+### 10a. Erratum — `deviations_from_sceptr` was incomplete
+
+> **RESOLVED PERMANENTLY at closeout, 2026-09-09, on the same terms as §10.** The committed
+> `data/operator_diagnostic.json` keeps the five-entry list; the full seven are below and are the
+> authoritative version. Regenerating the artifact would mean re-fitting 48 SVCs, and editing it
+> by hand would make it the output of no script. Unlike §10 this one cannot be pinned by a test:
+> the erratum is a claim of *completeness*, and no artifact holds the true list. Treat the list as
+> `claimed`, always. §11 instance 3.
+
+**Field:** `deviations_from_sceptr` · **File:** `data/operator_diagnostic.json`
+**Reported:** 5 entries · **Correct:** **7**
+
+The list is an assertion of completeness, and it was wrong. Two departures were missing:
+
+6. **Background set.** SCEPTR used *one shared* 1000-TCR background set across every pMHC,
+   stated in their methods §III.4 as being for consistency. `fit_per_peptide_svc` draws a fresh
+   sample per peptide from a shared RNG, adding per-peptide noise SCEPTR deliberately removed.
+   Seed spread is 0.0010, so the effect looks small, but it was undeclared.
+7. **Normalisation.** `svc_per_peptide` standardises features per dimension; `esm_retrieval`
+   L2-normalises. The operator contrast therefore carries a normalisation change as well as an
+   operator change. Residual direction unknown. Internal to this project, not a SCEPTR
+   departure — it belongs in the list because the list is what a reader checks the contrast
+   against.
+
+Both were found by reading the SCEPTR methods and the audit table in `docs/redteam.md` §0b,
+not by any check. Nothing computed changes: the list is documentation, and no score, interval or
+p-value reads it.
+
+**The JSON was left uncorrected, same treatment and same reason as §10.** Regenerating it means
+re-running the diagnostic; hand-editing makes it the output of no script. `deviations_from_sceptr`
+in `scripts/run_operator_diagnostic.py` now carries all seven, so the next run writes them and
+this erratum retires with it.
+
+## 11. Methodology note — restatement drift
+
+Three errors in this project share one mechanism, and it is not arithmetic. In each case a value
+established in one place was **restated by hand** somewhere else, and nothing compared the copy
+to the original. All three were found by accident or by a sweep looking for something else.
+
+| # | restated value | copy | source | how found |
+|---|---|---|---|---|
+| 1 | ESM-2 retrieval cell of the 2×2 | 0.5434 (layer 6) | 0.5358 (layer 10) | noticed while setting up the operator diagnostic |
+| 2 | `frozen_esm_cosine_seen_layer10` | 0.5364, in two fork drivers and their JSONs | 0.5358 in `knn_esm_cosine.json` | contract sweep for instances of #1 |
+| 3 | `deviations_from_sceptr` | 5 entries | 7 | reading the SCEPTR methods for a different question |
+| 4 | "the 48 seen peptides" | a fixed evaluation set | whatever the current external dedup standard says it is | Part A/D dedup recomputation |
+| 5 | "frozen ESM-2 cosine at 0.544", in issue #6 | 0.544 (8M layer 3) | 0.5358 (35M layer 10) | issue audit at closeout |
+
+**Instance 4** is recorded in full in [belief_list.md](belief_list.md) Phase F. **Instance 5** is
+recorded in [cdhit_and_issues.md](cdhit_and_issues.md) §3c ② and was fixed in the issue body at
+closeout; it is the same shape as #1 — a labelled row collapsed into an unlabelled target that
+dropped the discriminator making it correct — and it is the first instance found in a tracker
+rather than in code or a document.
+
+#1 is the sharpest of the three because **the source was not ambiguous**. §7a lists both rows,
+each labelled with its layer — `ESM-2 cosine k-NN, 35M layer 6` at 0.5434 and
+`ESM-2 cosine k-NN, 35M layer 10` at 0.5358. The error happened in the act of collapsing two
+labelled rows into one unlabelled 2×2 cell. Nothing about the source needed fixing; the copy
+dropped the discriminator that made the source correct.
+
+None was caught by a test, a CI, or a review of the number itself. Each copy was individually
+plausible: #1 is a real number from the same artifact, #2 is wrong by 0.0006 and sits inside
+its own interval, #3 is a list that looks complete because a list always does. Correctness of
+the *source* is what everything here was set up to check; **agreement between a source and its
+restatements was checked by nothing.**
+
+This is the same shape as the MISATTRIBUTED verdict in `belief_list.md`. A pre-registered
+overturn condition checks whether a number is right. It does not check whether the number is
+the one the sentence is about, or whether a copy of it elsewhere still matches. Both failures
+live in the gap between a value and its description.
+
+### What is now covered, and what is not
+
+`tests/test_reference_constants.py` closes the restated-scalar case. It parses the `reference`
+dict literal out of each fork driver with `ast`, maps every constant to a named source artifact,
+and fails on a mismatch or on a restated key with no source. `failure-proven` against
+`git show HEAD:scripts/run_fork{1,2}.py`, which reports
+`{'frozen_esm_cosine_seen_layer10': (0.5364, 0.5358)}` for both.
+
+**It does not cover instances #3, #4 or #5, and no test here does.** #1 and #2 are restated *values*: there
+is an authoritative number to compare against, so equality is checkable. #3 is an assertion of
+*completeness* — a claim that a list of deviations contains every deviation. There is no
+artifact holding the true list, because the true list is whatever a careful reading of another
+paper and our own code turns up. A test could assert the list has seven entries; it could not
+assert seven is right, and pinning the count would make the next omission harder to see rather
+than easier.
+
+**This gap is named and left open deliberately.** No test is being built for the completeness
+class. The mitigation available is not automation: it is that a list asserting completeness
+should be treated as `claimed` under the project's evidence scale no matter how carefully it was
+assembled, and re-derived from source whenever it is load-bearing — which is how #3 was found.
+
+**Instances 4 and 5 are uncatchable by an internal test, and for a sharper reason than #3.** #3 is
+at least about objects this repository owns; a sufficiently patient reader could in principle
+enumerate them. #4 and #5 are not. #4's authoritative answer — what "deduplicated" currently means
+— lives in other groups' Methods sections and changed while this project was running. #5's
+authoritative answer lived in a GitHub issue body, outside the repository the test suite can see.
+**A test can only compare two things the repository holds.** When the authority is external,
+consistency testing has nothing to compare against, and the only mitigation is the standing
+literature check ([lessons.md](lessons.md)) — which is what caught #4, and which at closeout fired
+*before* drafting rather than after.

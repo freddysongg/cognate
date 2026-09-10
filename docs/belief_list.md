@@ -182,11 +182,11 @@ Supporting numbers: [`fork1_results.json`](../data/fork1_results.json),
 
 | | |
 |---|---|
-| **Evidence** | Paired bootstrap over the same 48 seen peptides, same database, same max-over-database operator, same metric, same evaluation set. Best learned variant is 1a at 0.5320; baseline is 0.5654. |
+| **Evidence** | Paired bootstrap over the same 48 seen peptides, same database, same max-over-database operator, same metric, same evaluation set. Best learned variant is 1a at 0.5320; baseline is 0.5654 *(exact-match regime; 0.5302 at sub 3)*. |
 | **Interval** | 1a **−0.034 [−0.048, −0.023]**; 1b −0.057 [−0.077, −0.037]; 2a −0.061 [−0.081, −0.043]; 2b −0.056 [−0.075, −0.039]. All p < 0.001. |
 | **Strongest objection** | One hyperparameter configuration per fork, one frozen backbone, one layer for the learned variants. A critic can say the ceiling was set by choices nobody swept, not by the representation. |
 | **Best answer to that objection** | The Phase 0 arm requires no hyperparameters at all — cosine over frozen embeddings is parameter-free and loses at five model/layer configurations. And 1a's trained projection (0.5320) does not beat its own *untrained* random projection (0.5341), which bounds how much the training configuration could have been at fault. |
-| **What would overturn it** | Any learned representation clearing 0.5654 with a paired CI excluding zero on these 48 peptides. **Weakened** if a hyperparameter sweep or an unfrozen backbone closes most of the gap without clearing it, since that would relocate the cause from the representation to the training budget. |
+| **What would overturn it** | Any learned representation clearing 0.5654 *(the exact-match-regime baseline — see the Phase F note on why this target is not a fixed number)* with a paired CI excluding zero on these 48 peptides. **Weakened** if a hyperparameter sweep or an unfrozen backbone closes most of the gap without clearing it, since that would relocate the cause from the representation to the training budget. |
 
 ## ⑦ Cross-attention over residues adds nothing over mean-pooling them
 
@@ -227,3 +227,249 @@ still 0.056 below the baseline, and Fork 1 reached its ceiling with **no negativ
 The binding constraint is the representation, not the sampler. Keeping C deferred is the reading
 the evidence supports; the condition that would revive it is ⑥ being weakened by an unfrozen
 backbone, which would mean there is finally a model with room for a sampler to move.
+
+---
+
+# Phase E adjudication — the operator diagnostic and the red-team audit
+
+Verdicts against `docs/findings.md` §8 (operator diagnostic), §10/§10a (errata) and
+`docs/redteam.md` (audit). Claim wording above is untouched, as before.
+
+## A new verdict category: MISATTRIBUTED
+
+**REFUTED** means the claim's own stated overturn condition was tested and the claim failed.
+
+**MISATTRIBUTED** means the claim is about a different axis than its wording asserts. It was not
+shown false. It was shown to be a comparison of one thing wearing the label of another.
+
+The standing note, which is the reason this category had to be invented: **a pre-registered
+overturn condition tests whether a claim is true, not whether it is about what it says it is
+about.** Every claim here named a number and a condition under which that number would change
+its mind. None named a condition under which the *quantity being measured* was not the quantity
+in the title. Claim ① passed its own overturn test twice — at n = 13 and at n = 48, tightening
+fourfold — while measuring something other than what it said. No amount of narrowing the
+interval would have caught that, because the interval was around the right number for the wrong
+quantity. Future claims should carry an attribution line, not only an overturn line.
+
+## Verdicts
+
+| claim | verdict | basis |
+|---|---|---|
+| ① lookup beats the ESM-2 head on seen | **MISATTRIBUTED** | two independent grounds, below |
+| ② baseline limited by distance to training | not addressed | no new evidence; B3's WEAKENED stands |
+| ③ head limited by per-peptide training support | not addressed | no new evidence; B3 verdict stands |
+| ④ macro AUC0.1 blind to within-peptide rescaling | **HELD**, and load-bearing | below |
+| ⑤ baseline's raw score level is database size | not addressed | no new evidence; B3 verdict stands |
+| ⑥ learned representations do not beat edit distance on seen | **HELD**, strengthened | below |
+| ⑦ cross-attention adds nothing over mean-pooling | **UNEXAMINED** | below |
+| ⑧ nothing scores above chance on unseen | **HELD** | below |
+
+### ① — MISATTRIBUTED, on two independent grounds
+
+Not refuted. Its overturn line said the paired Δ would span zero or flip at 50–100 peptides. It
+did neither: +0.055 [+0.039, +0.074] at n = 48. The number is right. The attribution is not.
+
+**Ground 1 — it is a scope comparison wearing an operator label.** The claim reads the k-NN↔head
+gap as what "the pretrained representation bought", i.e. representation plus operator. §8b
+decomposes the operator half and finds it is scope: retrieval fits one model *per peptide*, the
+head fits *one global model*. Given the same per-peptide scope, the parametric operator closes
+the whole gap — operator term +0.0067 [−0.0006, +0.0142], p = 0.076, spanning zero, against a
+scope term of +0.0346 [+0.0223, +0.0482]. The representation effect is real and separately
+established at −0.0296 [−0.0415, −0.0188], but it is roughly half of the +0.055 the claim
+attributes to it. The remainder is a design choice about model scope, not a fact about ESM-2.
+
+**Ground 2 — it was benchmarked against a published claim whose regime it does not occupy.** The
+comparison to Nagano et al. Fig. S6 is what made the operator disagreement look like a finding.
+Their SVC advantage is scoped explicitly to the low-data case, with reference sets swept over
+k = 1–200 against a fixed background; `svc_per_peptide` takes whatever support each peptide has
+and resamples the background per peptide. The +0.0067 therefore neither reproduces nor
+contradicts them (findings.md §8f). Measured support qualifies how wide that gap is: 35 of 48
+seen peptides sit at or below k = 200, median 25.5, so the mismatch is a controlled sweep versus
+an uncontrolled one rather than a large difference in data volume.
+
+### ④ — HELD, and load-bearing for the diagnostic
+
+Not merely intact but relied upon. `svc_per_peptide` scores with `decision_function`, an
+unbounded per-peptide margin on a different scale for every peptide; `esm_retrieval` scores with
+a cosine in [−1, 1]. They are only comparable because macro AUC0.1 is exactly invariant to
+monotone within-peptide rescaling. Under pooled AUROC the comparison would have been meaningless.
+
+### ⑥ — HELD, and strengthened beyond its original evidence
+
+Every learned construction still loses to edit distance on the 48 seen peptides. §8c adds
+something the claim did not have: the representation result no longer depends on the operator.
+Edit distance beats ESM-2 under retrieval (−0.0296 [−0.0415, −0.0188]) *and* under the
+per-peptide parametric arm (−0.0230 [−0.0347, −0.0122]), both clearing zero. Nagano et al.
+established this under nearest-neighbour only.
+
+The claim's strongest objection — one hyperparameter configuration, one frozen backbone —
+is untouched and still stands.
+
+### ⑦ — UNEXAMINED, not held
+
+Audit sections 1–3 did not run; section 0 stopped at a class-(A) finding and only section 4 ran
+afterwards. The claim's own flagged vulnerability — that a CI spanning zero cannot distinguish
+"no effect" from "underpowered", and that the attention stack is small — was therefore never
+examined. Nothing in Phase E tested 2a or 2b. Recording this as HELD would convert an absence of
+scrutiny into evidence, which is the failure mode this document exists to prevent. It is
+**UNEXAMINED**: the B3 numbers stand unrefuted and also unchallenged.
+
+Note the claim itself says this is the cheapest thing on the list to overturn and should be
+attacked first if Fork 2 is revisited. That instruction is still outstanding.
+
+### ⑧ — HELD
+
+Two new arms, no change. `svc_per_peptide` is structurally degenerate on unseen peptides — no
+training binders means no model to fit, so all 43,218 rows take one constant score and 0.500 is
+arithmetic, not measurement. `svc_global` produces 43,218 distinct scores and lands at
+0.499 [0.495, 0.505]. The claim's distinction between a missing mechanism and a measured absence
+of signal survives intact, with `svc_per_peptide` in the first category and `svc_global` in the
+second.
+
+---
+
+# Phase F adjudication — deduplication sensitivity
+
+Against `docs/outlook.md` Parts A and D, `data/dedup_recheck.json`, `data/dedup_sensitivity.json`.
+
+## ⑥ — HELD at every published standard, magnitude roughly halved
+
+> Across five independent constructions … every one scores below a max-similarity edit-distance
+> lookup on the 48 seen peptides, and every paired interval excludes zero.
+
+**Verdict: HELD, with a mandatory qualifier the claim does not currently carry.**
+
+Every interval in the claim was computed under exact-match deduplication. Re-scored under
+stricter standards on the same 48 peptides, the representation effect
+(`esm_retrieval − edit_retrieval`) behaves as follows:
+
+| deduplication | rows removed | effect | p |
+|---|---|---|---|
+| exact match (as claimed) | 0% | −0.0296 [−0.0415, −0.0188] | <0.001 |
+| 1 substitution | 12.7% | −0.0261 [−0.0394, −0.0142] | <0.001 |
+| 2 substitutions | 40.3% | −0.0226 [−0.0373, −0.0091] | <0.001 |
+| **3 substitutions** (Liao et al. 2026) | **68.6%** | **−0.0155 [−0.0329, −0.0012]** | **0.024** |
+| Levenshtein ≤ 3 (beyond any published standard) | 80.9% | −0.0138 [−0.0300, +0.0027] | 0.110 |
+
+The claim holds at the strictest **published** criterion. It does not hold one step beyond it.
+The qualifier the claim must now carry is that its margin is roughly halved by that criterion and
+its p-value moves from <0.001 to 0.024, so the interval quoted in any writeup should be the
+sub-3 one. `edit_retrieval` itself falls 0.5654 → 0.5302 over the same sweep.
+
+No peptide falls below 5 surviving positives at any radius, and all 48 remain scorable
+throughout, so none of this is a small-sample artifact.
+
+## The overturn condition anticipated the wrong direction
+
+⑥'s **What would overturn it** line reads: *"Any learned representation clearing 0.5654 with a
+paired CI excluding zero on these 48 peptides."*
+
+It anticipated a **learned model rising to meet the baseline**. It did not anticipate **the
+baseline itself falling**, because it treated 0.5654 as a fixed target rather than as a quantity
+that depends on how the evaluation set is defined. Under 3-substitution deduplication the
+baseline is 0.5302, and a learned model "clearing 0.5654" is not the relevant event at all — the
+number it was told to clear does not exist at that standard.
+
+Nothing about the condition was badly written. It is a well-formed test of the comparison. It
+simply is not a test of the evaluation set the comparison is computed on, and that is the axis
+the result moved along.
+
+## Fourth instance of the §11 restatement pattern — and the most consequential
+
+`findings.md` §11 records three instances of a label not matching what it measured: the 2×2's
+ESM-2 cell (layer 6 labelled as the layer-10 comparison), `frozen_esm_cosine_seen_layer10`
+(0.5364 restating a 0.5358 source), and `deviations_from_sceptr` (5 entries asserting
+completeness over 7). The MISATTRIBUTED verdict on ① is the same shape at claim level.
+
+**This is the fourth, and it differs from the others in scope.** The first three are internal:
+a copy disagreeing with its source inside this repository, catchable by comparing two things we
+own — which is what `tests/test_reference_constants.py` now does for the scalar case. ⑥'s failure
+is external. The label "beats edit distance on seen peptides" was accurate about the comparison
+and silent about the fact that *"the 48 seen peptides"* is not one fixed object; it is whatever
+the deduplication standard says it is, and that standard is set outside this project and has
+moved since the eval set was frozen.
+
+That makes it the most consequential of the four. The first three moved no conclusion: 0.0006 sits
+inside its own interval, the layer error was caught before it propagated, the deviations list is
+documentation. This one moves the project's only surviving claim from p < 0.001 to p = 0.024, and
+one step further would move it to p = 0.110. An internal consistency test cannot catch it, because
+there is no artifact in this repository holding the right answer — the right answer is a
+convention in the literature.
+
+**Standing addition to the note in the Phase E section.** A pre-registered overturn condition
+tests whether a claim is true, and does not test whether it is about what it says it is about.
+Extend that: it also does not test whether the *evaluation set the claim is computed on* is still
+the one the field would accept. Future claims should carry both an attribution line and a
+statement of the deduplication standard their intervals assume.
+
+## A methodological correction, recorded rather than quietly fixed
+
+`docs/outlook.md` Part A first reported this result as a collapse, using Levenshtein ≤ 3. That is
+not Liao et al.'s criterion — they specify substitutions, which excludes indels. The Levenshtein
+numbers were correctly computed and were labelled an upper bound at the time, but the conclusion
+drawn from them ("the writeup's central comparison does not hold") was reported before the cited
+criterion had been run, and it is wrong. Under substitutions-only at radius 3 the effect survives.
+Part D carries the correction; Part A retains its numbers with the reading marked as superseded.
+
+
+---
+
+# Final verdicts — project closeout, 2026-09-09
+
+Against the **full** record: Phase B3, Phase D, Phase F, the operator diagnostic
+([findings.md](findings.md) §8), both red-team passes ([redteam.md](redteam.md),
+[redteam_curve.md](redteam_curve.md)), the CD-HIT regime and attenuation interval
+([cdhit_and_issues.md](cdhit_and_issues.md)), and the literature check
+([cdhit_litcheck.md](cdhit_litcheck.md)).
+
+**No claim below was edited to fit the outcome.** The wording locked at n = 20 and at Phase D
+stands above; these are verdicts on it.
+
+| # | claim, in short | final verdict | what moved it |
+|---|---|---|---|
+| ① | lookup beats the ESM-2 head on seen peptides | **HELD, and the reason was misattributed** | The sign and interval survive at n = 88. But the original framing charged the difference to *representation vs head* when the arms also differed in operator and scope; §8b decomposes it and the scope term is the whole effect. MISATTRIBUTED, not wrong. |
+| ② | baseline is limited by distance to the training set | **HELD, and it is now the central fact rather than a side finding** | Phase F made it quantitative: the baseline falls 0.5654 → 0.5302 → 0.5246 as the dedup radius grows. What was a correlation over 13 peptides is a measured curve. |
+| ③ | head is limited by per-peptide training data | **HELD on its asserted half; the half it refused to assert is dead** | Unchanged since B3. Leave-one-out already killed the head-vs-distance correlation as leverage-driven. |
+| ④ | macro AUC0.1 is blind to within-peptide level shifts | **HELD exactly** | Analytic, true by definition. Nothing can move it. |
+| ⑤ | baseline's score level is made of database size | **HELD unchanged** | Nothing in Phases D–F bears on it. |
+| ⑥ | learned representations do not beat edit distance on seen peptides | **HELD, regime-dependent, and materially weaker than the Phase F wording** | See below. This is the only verdict that changed at closeout. |
+| ⑦ | cross-attention adds nothing over mean-pooling | **HELD — the cleanest result in the project** | Δ = −0.005 [−0.016, +0.005], p = 0.366, control validated against an independent target first. A tight null with a working control. Untouched by everything since. |
+| ⑧ | nothing scored above chance on unseen peptides | **HELD, and unchallenged by anything since** | No arm, no regime, no red-team pass produced an unseen interval clearing 0.5. The strongest and least interesting finding here. |
+
+## ⑥ — the Phase F verdict is amended
+
+Phase F recorded **"HELD at every published standard, magnitude roughly halved"**. Both halves of
+that title need correcting, and neither correction reverses the claim.
+
+**"At every published standard" was true only in the sense that all three had been named.** At
+Phase F, one of the three — Lu et al.'s CD-HIT >95% — had never been run. It has now been:
+[cdhit_and_issues.md](cdhit_and_issues.md) Part 1. It removes **0.74%** of seen rows, every removal
+sits at exactly 100.00% identity, and **not one is a substitution** — at CDR3β length the criterion
+cannot express a substitution at all. The effect under it is −0.0303 [−0.0436, −0.0193], which is
+the full-regime answer. So the standard is satisfied and contributes essentially nothing. Counting
+it as support overstates the coverage; the honest form is *"held at the two published standards
+that can discriminate at this sequence length, and at a third that cannot."*
+
+**"Magnitude roughly halved" is a point estimate with no interval, and the interval does not
+support it.** The attenuation from full to sub 3 is 47.7%, and its paired 95% interval over 20,000
+synchronised draws is **[−0.1%, 98.2%], p = 0.0511** — indistinguishable from no attenuation and
+from complete attenuation alike ([cdhit_and_issues.md](cdhit_and_issues.md) Part 2). The phrase is
+**withdrawn** everywhere it appears. What survives is that the point estimates are monotone across
+the curve and that the sub-3 interval still clears zero.
+
+**Final wording for ⑥.** *On this VDJdb-derived evaluation's 48 IMMREP23-seen peptides, using
+CDR3β only, fixed IMMREP23 positive databases and macro standardized AUC0.1, five learned
+constructions over frozen ESM-2 all score below normalized-Levenshtein nearest-positive retrieval,
+with paired intervals excluding zero under exact-match deduplication. The gap narrows as the
+deduplication radius grows and still clears zero at Liao et al.'s three-substitution standard
+(−0.0155 [−0.0329, −0.0012], p = 0.024; 0.0439 at 20,000 draws), where it is sensitive to the
+removal of any single peptide (11 of 48 leave-one-out intervals cross zero) and does not survive
+Bonferroni correction across the sweep's five unique looks (p = 0.120). The size of the narrowing
+is not established.*
+
+## What the overturn conditions got right and wrong
+
+Every one of the eight is a well-formed test of whether its claim is *true*. Not one of them tests
+whether the claim is *about what it says it is about*, and that is where ① and ⑥ actually moved —
+① to a misattributed cause, ⑥ to an evaluation set defined by a convention outside this
+repository. Pre-registration is necessary and is not sufficient; see [lessons.md](lessons.md).

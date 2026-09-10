@@ -1,0 +1,82 @@
+{
+  "verified": "2026-09-09",
+  "verdict": "PASS",
+  "closes": "https://github.com/freddysongg/cognate/issues/21",
+  "frozen_contract": [
+    "src/cognate/metrics.py",
+    "src/cognate/split.py",
+    "src/cognate/features.py",
+    "data/vdjdb_eval.csv"
+  ],
+  "frozen_contract_source": "issue #20: metrics.py, the splitter, vdjdb_eval.csv, probe definitions",
+  "sha256_by_commit": {
+    "d7a62754f714a1e8e7719e2021b0282ae8604467": {
+      "subject": "shared foundation, merge-base of both forks",
+      "files": {
+        "src/cognate/metrics.py": "071cb6cb4d98570c1b100a9428833ddecd439880989b57a3d2b7dfb253ad148d",
+        "src/cognate/split.py": "46e114630819766429d339162ae9e3d826fc4de910713ef36ce2ceea8e7cee7f",
+        "src/cognate/features.py": "a9bb3c5e1c34fddce4154207ae8428e10822608ac181518dacb38a60c47b1e7d",
+        "data/vdjdb_eval.csv": "5e03531b974a25f29e55436402ab23c641a50449b4aaae83c74dba6e7c81ab22"
+      }
+    },
+    "8c7a03de1ab268285bae9ba06c0d34211fbd0c18": {
+      "subject": "fork/contrastive tip",
+      "files": {
+        "src/cognate/metrics.py": "071cb6cb4d98570c1b100a9428833ddecd439880989b57a3d2b7dfb253ad148d",
+        "src/cognate/split.py": "46e114630819766429d339162ae9e3d826fc4de910713ef36ce2ceea8e7cee7f",
+        "src/cognate/features.py": "a9bb3c5e1c34fddce4154207ae8428e10822608ac181518dacb38a60c47b1e7d",
+        "data/vdjdb_eval.csv": "5e03531b974a25f29e55436402ab23c641a50449b4aaae83c74dba6e7c81ab22"
+      }
+    },
+    "16a050c4b163d4083e193d6ea07e032a945aabfc": {
+      "subject": "fork/crossattn tip",
+      "files": {
+        "src/cognate/metrics.py": "071cb6cb4d98570c1b100a9428833ddecd439880989b57a3d2b7dfb253ad148d",
+        "src/cognate/split.py": "46e114630819766429d339162ae9e3d826fc4de910713ef36ce2ceea8e7cee7f",
+        "src/cognate/features.py": "a9bb3c5e1c34fddce4154207ae8428e10822608ac181518dacb38a60c47b1e7d",
+        "data/vdjdb_eval.csv": "5e03531b974a25f29e55436402ab23c641a50449b4aaae83c74dba6e7c81ab22"
+      }
+    },
+    "d7722937e0a037e8f8994baf1a921dfa11f674b8": {
+      "subject": "main after both merges",
+      "files": {
+        "src/cognate/metrics.py": "071cb6cb4d98570c1b100a9428833ddecd439880989b57a3d2b7dfb253ad148d",
+        "src/cognate/split.py": "46e114630819766429d339162ae9e3d826fc4de910713ef36ce2ceea8e7cee7f",
+        "src/cognate/features.py": "a9bb3c5e1c34fddce4154207ae8428e10822608ac181518dacb38a60c47b1e7d",
+        "data/vdjdb_eval.csv": "5e03531b974a25f29e55436402ab23c641a50449b4aaae83c74dba6e7c81ab22"
+      }
+    }
+  },
+  "sha256_by_worktree_on_disk": {
+    "cognate": {
+      "src/cognate/metrics.py": "071cb6cb4d98570c1b100a9428833ddecd439880989b57a3d2b7dfb253ad148d",
+      "src/cognate/split.py": "46e114630819766429d339162ae9e3d826fc4de910713ef36ce2ceea8e7cee7f",
+      "src/cognate/features.py": "a9bb3c5e1c34fddce4154207ae8428e10822608ac181518dacb38a60c47b1e7d",
+      "data/vdjdb_eval.csv": "5e03531b974a25f29e55436402ab23c641a50449b4aaae83c74dba6e7c81ab22"
+    },
+    "cognate-contrastive": {
+      "src/cognate/metrics.py": "071cb6cb4d98570c1b100a9428833ddecd439880989b57a3d2b7dfb253ad148d",
+      "src/cognate/split.py": "46e114630819766429d339162ae9e3d826fc4de910713ef36ce2ceea8e7cee7f",
+      "src/cognate/features.py": "a9bb3c5e1c34fddce4154207ae8428e10822608ac181518dacb38a60c47b1e7d",
+      "data/vdjdb_eval.csv": "5e03531b974a25f29e55436402ab23c641a50449b4aaae83c74dba6e7c81ab22"
+    },
+    "cognate-crossattn": {
+      "src/cognate/metrics.py": "071cb6cb4d98570c1b100a9428833ddecd439880989b57a3d2b7dfb253ad148d",
+      "src/cognate/split.py": "46e114630819766429d339162ae9e3d826fc4de910713ef36ce2ceea8e7cee7f",
+      "src/cognate/features.py": "a9bb3c5e1c34fddce4154207ae8428e10822608ac181518dacb38a60c47b1e7d",
+      "data/vdjdb_eval.csv": "5e03531b974a25f29e55436402ab23c641a50449b4aaae83c74dba6e7c81ab22"
+    }
+  },
+  "shared_embedding_cache": {
+    "path": "/Users/freddy/Documents/repos/cognate-shared",
+    "note": "All three worktrees resolve COGNATE_CACHE_DIR to this one directory, verified by running cognate.embed.default_cache_dir() in each. Cache identity across forks is therefore true by shared path, not by independent copies agreeing. These sha256 are of the files as they stand on 2026-09-09; no hash was recorded at run time, so they attest to the current contents, NOT retroactively to what each fork read in September 2026. scripts/verify_residue_cache.py is the only content check that predates this record.",
+    "sha256": {
+      "esm2_35M_eval_residues.npz": "f8716e852b5db69ec3c0516d967a2e3fdde19273c157b57548c231a9e4f4632e",
+      "esm2_35M_train_residues.npz": "a2e0f41a5592e8985a10d8553710155aa348367b8edf7791acb7f8621f542950",
+      "esm2_35M_vdjdb.npz": "4174e998359b9257e303b0b0a08902c0838a96fdf9ce86367b8d170dd2b884ca",
+      "esm2_35M.npz": "2684f786ce0c9c8d24677dfd86811eb115729965706d05921d6c3f6875b31ef4",
+      "esm2_8M_vdjdb.npz": "d99bbd25ec3706e9092cb9a3d45c0e866daee55e03d1820d753da49152f52a9e",
+      "esm2_8M.npz": "e4da13616b993556dd7678717bb77a5c44b38ba464f4f5425c6655f8931c2489"
+    }
+  }
+}

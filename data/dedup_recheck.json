@@ -1,0 +1,149 @@
+{
+  "config": {
+    "model": "35M",
+    "layer": 10,
+    "seed": 0,
+    "dedup_radius_levenshtein": 3,
+    "unstable_positive_threshold": 5,
+    "note": "Removal criterion is Levenshtein <= 3 to any training CDR3b, which admits indels. A substitutions-only radius would remove fewer rows."
+  },
+  "removal": {
+    "all": {
+      "rows": 116658,
+      "rows_removed": 94170,
+      "rows_removed_pct": 80.7,
+      "distinct_tcrs": 18760,
+      "distinct_tcrs_removed": 15164,
+      "distinct_tcrs_removed_pct": 80.8,
+      "peptides": 88
+    },
+    "seen": {
+      "rows": 73440,
+      "rows_removed": 59435,
+      "rows_removed_pct": 80.9,
+      "distinct_tcrs": 18566,
+      "distinct_tcrs_removed": 15006,
+      "distinct_tcrs_removed_pct": 80.8,
+      "peptides": 48
+    },
+    "unseen": {
+      "rows": 43218,
+      "rows_removed": 34735,
+      "rows_removed_pct": 80.4,
+      "distinct_tcrs": 17255,
+      "distinct_tcrs_removed": 13917,
+      "distinct_tcrs_removed_pct": 80.7,
+      "peptides": 40
+    }
+  },
+  "scores": {
+    "edit_retrieval": {
+      "full": {
+        "point": 0.5654,
+        "lo": 0.5461,
+        "hi": 0.5849
+      },
+      "full_peptides": 48,
+      "deduped": {
+        "point": 0.5246,
+        "lo": 0.5127,
+        "hi": 0.5432
+      },
+      "deduped_peptides": 48,
+      "deduped_is_degenerate": false,
+      "delta": -0.0407
+    },
+    "esm_retrieval": {
+      "full": {
+        "point": 0.5358,
+        "lo": 0.523,
+        "hi": 0.5498
+      },
+      "full_peptides": 48,
+      "deduped": {
+        "point": 0.5108,
+        "lo": 0.5027,
+        "hi": 0.526
+      },
+      "deduped_peptides": 48,
+      "deduped_is_degenerate": false,
+      "delta": -0.025
+    },
+    "svc_per_peptide": {
+      "full": {
+        "point": 0.5424,
+        "lo": 0.5301,
+        "hi": 0.5575
+      },
+      "full_peptides": 48,
+      "deduped": {
+        "point": 0.5129,
+        "lo": 0.5039,
+        "hi": 0.5268
+      },
+      "deduped_peptides": 48,
+      "deduped_is_degenerate": false,
+      "delta": -0.0296
+    }
+  },
+  "paired": {
+    "edit_minus_esm/deduped_seen": {
+      "point": 0.0138,
+      "lo": -0.0027,
+      "hi": 0.03,
+      "p": 0.11,
+      "n_peptides": 48,
+      "spans_zero": true
+    },
+    "svc_per_peptide_minus_esm/deduped_seen": {
+      "point": 0.002,
+      "lo": -0.0134,
+      "hi": 0.0171,
+      "p": 0.828,
+      "n_peptides": 48,
+      "spans_zero": true
+    },
+    "svc_per_peptide_minus_edit/deduped_seen": {
+      "point": -0.0118,
+      "lo": -0.0311,
+      "hi": 0.0036,
+      "p": 0.144,
+      "n_peptides": 48,
+      "spans_zero": true
+    },
+    "edit_retrieval_deduped_minus_full/seen": {
+      "point": -0.0407,
+      "lo": -0.0609,
+      "hi": -0.0174,
+      "p": 0.0,
+      "n_peptides": 48,
+      "spans_zero": false
+    },
+    "esm_retrieval_deduped_minus_full/seen": {
+      "point": -0.025,
+      "lo": -0.0401,
+      "hi": -0.0068,
+      "p": 0.004,
+      "n_peptides": 48,
+      "spans_zero": false
+    },
+    "svc_per_peptide_deduped_minus_full/seen": {
+      "point": -0.0296,
+      "lo": -0.0428,
+      "hi": -0.0136,
+      "p": 0.0,
+      "n_peptides": 48,
+      "spans_zero": false
+    }
+  },
+  "surviving_support": {
+    "seen_peptides": 48,
+    "below_threshold": 0,
+    "below_threshold_peptides": [],
+    "no_longer_scorable": 0,
+    "no_longer_scorable_peptides": [],
+    "positives_after_min": 5,
+    "positives_after_median": 32.5,
+    "positives_after_max": 174
+  }
+}

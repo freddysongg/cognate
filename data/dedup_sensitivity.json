@@ -1,0 +1,240 @@
+{
+  "config": {
+    "model": "35M",
+    "layer": 10,
+    "seed": 0,
+    "substitution_radii": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "levenshtein_radius": 3,
+    "unequal_length_rule": "substitution distance is undefined across lengths; an eval CDR3b is compared only to training CDR3b of the same length and survives every finite radius if none exists",
+    "unstable_positive_threshold": 5
+  },
+  "regimes": {
+    "full": {
+      "rows_kept": 73440,
+      "rows_removed_pct": 0.0,
+      "distinct_tcrs_removed_pct": 0.0,
+      "support_min": 52,
+      "support_median": 182.0,
+      "support_max": 500,
+      "peptides_below_threshold": 0,
+      "scores": {
+        "edit_retrieval": {
+          "point": 0.5654,
+          "lo": 0.5461,
+          "hi": 0.5849
+        },
+        "edit_retrieval_peptides": 48,
+        "esm_retrieval": {
+          "point": 0.5358,
+          "lo": 0.523,
+          "hi": 0.5498
+        },
+        "esm_retrieval_peptides": 48,
+        "svc_per_peptide": {
+          "point": 0.5424,
+          "lo": 0.5301,
+          "hi": 0.5575
+        },
+        "svc_per_peptide_peptides": 48
+      },
+      "representation_effect": {
+        "point": -0.0296,
+        "lo": -0.0415,
+        "hi": -0.0188,
+        "p": 0.0,
+        "n_peptides": 48,
+        "spans_zero": false
+      }
+    },
+    "sub_0": {
+      "rows_kept": 73440,
+      "rows_removed_pct": 0.0,
+      "distinct_tcrs_removed_pct": 0.0,
+      "support_min": 52,
+      "support_median": 182.0,
+      "support_max": 500,
+      "peptides_below_threshold": 0,
+      "scores": {
+        "edit_retrieval": {
+          "point": 0.5654,
+          "lo": 0.5461,
+          "hi": 0.5849
+        },
+        "edit_retrieval_peptides": 48,
+        "esm_retrieval": {
+          "point": 0.5358,
+          "lo": 0.523,
+          "hi": 0.5498
+        },
+        "esm_retrieval_peptides": 48,
+        "svc_per_peptide": {
+          "point": 0.5424,
+          "lo": 0.5301,
+          "hi": 0.5575
+        },
+        "svc_per_peptide_peptides": 48
+      },
+      "representation_effect": {
+        "point": -0.0296,
+        "lo": -0.0415,
+        "hi": -0.0188,
+        "p": 0.0,
+        "n_peptides": 48,
+        "spans_zero": false
+      }
+    },
+    "sub_1": {
+      "rows_kept": 64108,
+      "rows_removed_pct": 12.7,
+      "distinct_tcrs_removed_pct": 12.3,
+      "support_min": 41,
+      "support_median": 162.5,
+      "support_max": 488,
+      "peptides_below_threshold": 0,
+      "scores": {
+        "edit_retrieval": {
+          "point": 0.5494,
+          "lo": 0.5338,
+          "hi": 0.5687
+        },
+        "edit_retrieval_peptides": 48,
+        "esm_retrieval": {
+          "point": 0.5234,
+          "lo": 0.5143,
+          "hi": 0.5346
+        },
+        "esm_retrieval_peptides": 48,
+        "svc_per_peptide": {
+          "point": 0.531,
+          "lo": 0.5211,
+          "hi": 0.5444
+        },
+        "svc_per_peptide_peptides": 48
+      },
+      "representation_effect": {
+        "point": -0.0261,
+        "lo": -0.0394,
+        "hi": -0.0142,
+        "p": 0.0,
+        "n_peptides": 48,
+        "spans_zero": false
+      }
+    },
+    "sub_2": {
+      "rows_kept": 43831,
+      "rows_removed_pct": 40.3,
+      "distinct_tcrs_removed_pct": 39.8,
+      "support_min": 23,
+      "support_median": 112.5,
+      "support_max": 398,
+      "peptides_below_threshold": 0,
+      "scores": {
+        "edit_retrieval": {
+          "point": 0.539,
+          "lo": 0.5245,
+          "hi": 0.5562
+        },
+        "edit_retrieval_peptides": 48,
+        "esm_retrieval": {
+          "point": 0.5164,
+          "lo": 0.5099,
+          "hi": 0.5254
+        },
+        "esm_retrieval_peptides": 48,
+        "svc_per_peptide": {
+          "point": 0.521,
+          "lo": 0.5137,
+          "hi": 0.5313
+        },
+        "svc_per_peptide_peptides": 48
+      },
+      "representation_effect": {
+        "point": -0.0226,
+        "lo": -0.0373,
+        "hi": -0.0091,
+        "p": 0.0,
+        "n_peptides": 48,
+        "spans_zero": false
+      }
+    },
+    "sub_3": {
+      "rows_kept": 23039,
+      "rows_removed_pct": 68.6,
+      "distinct_tcrs_removed_pct": 68.5,
+      "support_min": 10,
+      "support_median": 55.5,
+      "support_max": 240,
+      "peptides_below_threshold": 0,
+      "scores": {
+        "edit_retrieval": {
+          "point": 0.5302,
+          "lo": 0.5175,
+          "hi": 0.5486
+        },
+        "edit_retrieval_peptides": 48,
+        "esm_retrieval": {
+          "point": 0.5147,
+          "lo": 0.5075,
+          "hi": 0.5251
+        },
+        "esm_retrieval_peptides": 48,
+        "svc_per_peptide": {
+          "point": 0.5123,
+          "lo": 0.5052,
+          "hi": 0.5235
+        },
+        "svc_per_peptide_peptides": 48
+      },
+      "representation_effect": {
+        "point": -0.0155,
+        "lo": -0.0329,
+        "hi": -0.0012,
+        "p": 0.024,
+        "n_peptides": 48,
+        "spans_zero": false
+      }
+    },
+    "lev_3": {
+      "rows_kept": 14005,
+      "rows_removed_pct": 80.9,
+      "distinct_tcrs_removed_pct": 80.8,
+      "support_min": 5,
+      "support_median": 32.5,
+      "support_max": 174,
+      "peptides_below_threshold": 0,
+      "scores": {
+        "edit_retrieval": {
+          "point": 0.5246,
+          "lo": 0.5127,
+          "hi": 0.5432
+        },
+        "edit_retrieval_peptides": 48,
+        "esm_retrieval": {
+          "point": 0.5108,
+          "lo": 0.5027,
+          "hi": 0.526
+        },
+        "esm_retrieval_peptides": 48,
+        "svc_per_peptide": {
+          "point": 0.5129,
+          "lo": 0.5039,
+          "hi": 0.5268
+        },
+        "svc_per_peptide_peptides": 48
+      },
+      "representation_effect": {
+        "point": -0.0138,
+        "lo": -0.03,
+        "hi": 0.0027,
+        "p": 0.11,
+        "n_peptides": 48,
+        "spans_zero": true
+      }
+    }
+  }
+}

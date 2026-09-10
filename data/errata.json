@@ -1,0 +1,29 @@
+{
+  "resolved": "2026-09-09",
+  "status": "PERMANENT -- these artifacts will not be regenerated or edited",
+  "closes": [
+    "https://github.com/freddysongg/cognate/issues/10",
+    "https://github.com/freddysongg/cognate/issues/18"
+  ],
+  "recorded_in": "docs/findings.md S10, S10a; docs/final_state.md",
+  "pinned_by": "tests/test_reference_constants.py::test_committed_fork_artifacts_still_carry_the_erratum",
+  "errata": [
+    {
+      "id": "frozen_esm_cosine_seen_layer10",
+      "artifacts": ["data/fork1_results.json", "data/fork2_results.json"],
+      "json_path": "reference.frozen_esm_cosine_seen_layer10",
+      "value_in_artifact": 0.5364,
+      "authoritative_value": 0.5358,
+      "authoritative_source": "data/knn_esm_cosine.json -> scores['35M layer10 (headline)/seen'].macro_auc01.point",
+      "independently_reproduced_by": "data/operator_diagnostic.json -> esm_retrieval/seen",
+      "magnitude": 0.0006,
+      "downstream_effect": "none -- no delta, interval, or conclusion is computed from this constant; the fork comparisons use score vectors",
+      "drivers_fixed_at": "closeout commit; scripts/run_fork1.py and scripts/run_fork2.py now carry 0.5358",
+      "why_not_regenerated": [
+        "Regenerating either JSON requires re-running the fork driver, which trains models. The closeout forbids training runs, and re-running would also change the results block, which is correct.",
+        "Hand-editing the scalar in place would leave a results artifact that is the output of no script. That is precisely the restatement failure mode this project exists to document (findings.md S11).",
+        "The value is inert: nothing reads it."
+      ]
+    }
+  ]
+}

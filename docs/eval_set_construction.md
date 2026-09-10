@@ -75,6 +75,25 @@ eliminates the 17.9% verbatim-positive leak that inflated the Phase 1 k-NN basel
 consequence: **k-NN should score lower here than on IMMREP23, and that is correct, not a
 regression.**
 
+> **Closeout amendment, 2026-09-09 — step 4 is exact-match removal, and that is the *weakest* of
+> the published 2025–2026 deduplication standards, not the strictest.** The paragraph above
+> compares step 4 against IMMREP23 and is right on that comparison. It is the wrong frame against
+> the literature. Three published criteria, from [outlook.md](outlook.md) B2:
+>
+> | criterion | what it removes from this set |
+> |---|---|
+> | Drost et al., ePytope-TCR (2025): exact CDR3–epitope pair exclusion | step 4 is stronger — it drops the TCR everywhere, not just the pair |
+> | Lu et al., *Nat Methods* (2026): CD-HIT >95% | a further **0.74%** of seen rows, all of it the indel class |
+> | Liao et al. (2026): up to three CDR3β substitutions | a further **68.6%** of seen rows |
+>
+> **68.5% of this set's evaluation TCRs sit within three substitutions of an IMMREP23 training
+> CDR3β, and 80.8% sit within Levenshtein 3.** Every number computed on this set is therefore
+> reported at the exact-match standard, and the baseline moves from 0.5654 to 0.5302 at Liao's
+> criterion. The sensitivity curve is [outlook.md](outlook.md) Part D; the CD-HIT row and its
+> degeneracy are [cdhit_and_issues.md](cdhit_and_issues.md) Part 1. This is §11 instance 4: the
+> evaluation set is itself a restatement of an external convention that moved after the set was
+> frozen.
+
 ### Negatives
 
 Each positive contributes 5 negatives **assigned to the same peptide**, with the TCR drawn from
@@ -244,7 +263,7 @@ Macro AUC0.1 with two-level bootstrap CIs. IMMREP23 figures from `data/headline.
 | Model | seen, n = 48 | *(IMMREP23, n = 13)* | unseen, n = 40 | *(IMMREP23, n = 7)* |
 |---|---|---|---|---|
 | random predictor | 0.501 [0.498, 0.505] | *0.511* | 0.501 [0.497, 0.507] | *0.504* |
-| **k-NN, edit distance** | **0.565 [0.546, 0.585]** | *0.641* | 0.500 [0.500, 0.500] `DEGENERATE` | *0.500* |
+| **k-NN, edit distance** | **0.565 [0.546, 0.585]** *(exact-match regime; 0.5302 at sub 3)* | *0.641* | 0.500 [0.500, 0.500] `DEGENERATE` | *0.500* |
 | ESM-2 + logistic head | 0.511 [0.502, 0.523] | *0.571* | 0.500 [0.495, 0.506] | *0.502* |
 | ESM-2 + MLP head | 0.511 [0.504, 0.521] | *0.571* | 0.499 [0.495, 0.505] | *0.509* |
 
