@@ -33,3 +33,6 @@ notebooks/
 
 # Derived ESM-2 embedding caches - large, regenerable, not versioned
 /shared/
+
+# Isolated local worktrees
+/.worktrees/
