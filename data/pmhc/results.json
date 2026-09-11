@@ -1,0 +1,2389 @@
+{
+  "comparisons": {
+    "edit_retrieval_minus_random": {
+      "arm": "edit_retrieval",
+      "arm_point": 0.6087557680890882,
+      "difference": {
+        "hi": 0.12265709598499562,
+        "lo": 0.0966705070695435,
+        "n_replicates": 20000,
+        "point": 0.10897929021234465
+      },
+      "n_alleles": 47,
+      "p_two_sided": 0.0,
+      "reference": "random",
+      "reference_point": 0.4997764778767435
+    },
+    "esm_retrieval_minus_random": {
+      "arm": "esm_retrieval",
+      "arm_point": 0.5660299694907764,
+      "difference": {
+        "hi": 0.08040865636122682,
+        "lo": 0.054216527194332856,
+        "n_replicates": 20000,
+        "point": 0.06625349161403293
+      },
+      "n_alleles": 47,
+      "p_two_sided": 0.0,
+      "reference": "random",
+      "reference_point": 0.4997764778767435
+    },
+    "length_composition_minus_random": {
+      "arm": "length_composition",
+      "arm_point": 0.515424642319141,
+      "difference": {
+        "hi": 0.02295645530687188,
+        "lo": 0.00874520930504441,
+        "n_replicates": 20000,
+        "point": 0.015648164442397472
+      },
+      "n_alleles": 47,
+      "p_two_sided": 0.0,
+      "reference": "random",
+      "reference_point": 0.4997764778767435
+    },
+    "mlp_one_hot_minus_random": {
+      "arm": "mlp_one_hot",
+      "arm_point": 0.8252252511151067,
+      "difference": {
+        "hi": 0.34181683177391464,
+        "lo": 0.30852997001370214,
+        "n_replicates": 20000,
+        "point": 0.3254487732383632
+      },
+      "n_alleles": 47,
+      "p_two_sided": 0.0,
+      "reference": "random",
+      "reference_point": 0.4997764778767435
+    },
+    "mlp_pseudo_sequence_minus_pwm": {
+      "arm": "mlp_pseudo_sequence",
+      "arm_point": 0.8283217723428749,
+      "difference": {
+        "hi": 0.10084068163425301,
+        "lo": 0.06876398358805365,
+        "n_replicates": 20000,
+        "point": 0.08405727364417293
+      },
+      "n_alleles": 47,
+      "p_two_sided": 0.0,
+      "reference": "pwm",
+      "reference_point": 0.7442644986987019
+    },
+    "mlp_pseudo_sequence_minus_random": {
+      "arm": "mlp_pseudo_sequence",
+      "arm_point": 0.8283217723428749,
+      "difference": {
+        "hi": 0.34499992957961556,
+        "lo": 0.3114243885588197,
+        "n_replicates": 20000,
+        "point": 0.32854529446613134
+      },
+      "n_alleles": 47,
+      "p_two_sided": 0.0,
+      "reference": "random",
+      "reference_point": 0.4997764778767435
+    },
+    "pwm_minus_random": {
+      "arm": "pwm",
+      "arm_point": 0.7442644986987019,
+      "difference": {
+        "hi": 0.26606837218284257,
+        "lo": 0.22348321384738912,
+        "n_replicates": 20000,
+        "point": 0.24448802082195842
+      },
+      "n_alleles": 47,
+      "p_two_sided": 0.0,
+      "reference": "random",
+      "reference_point": 0.4997764778767435
+    }
+  },
+  "config": {
+    "arms": [
+      "random",
+      "length_composition",
+      "edit_retrieval",
+      "esm_retrieval",
+      "pwm",
+      "mlp_pseudo_sequence",
+      "mlp_one_hot"
+    ],
+    "bootstrap": {
+      "draws": 20000,
+      "group": "Allele",
+      "mode": "both",
+      "seed": 0
+    },
+    "classification_threshold": 0.426,
+    "device": "mps",
+    "esm": {
+      "layer": 10,
+      "model": "facebook/esm2_t12_35M_UR50D",
+      "pooling": "residue_mean",
+      "similarity": "cosine"
+    },
+    "folds": [
+      "c000_ba",
+      "c001_ba",
+      "c002_ba",
+      "c003_ba",
+      "c004_ba"
+    ],
+    "mlp": {
+      "encodings": [
+        "pseudo_sequence",
+        "one_hot"
+      ],
+      "fits_per_encoding": 50,
+      "hidden_sizes": [
+        55,
+        66
+      ],
+      "learning_rate": 0.001,
+      "loss": "mse_continuous_affinity",
+      "max_epochs": 200,
+      "patience": 20,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "validation_fraction": 0.1
+    },
+    "pwm": {
+      "positions": 9,
+      "pseudocount": 1
+    },
+    "random_seed": 0,
+    "retrieval": {
+      "edit_similarity": "normalized_levenshtein",
+      "group": "Allele",
+      "operator": "nearest_positive"
+    }
+  },
+  "contract": {
+    "archive_sha256": "06f2c9f20bb959238bf5d601fca0489a0ed3f17648b952f30640205afca8f9b4",
+    "file_sha256": {
+      "MHC_pseudo.dat": "f46d95dee821db6c139d6cee6f6bf72328468c1d8f6e9741daf21562752ad39a",
+      "c000_ba": "a5704007e127c8c0e2a3b0043c52ad2f92be5efd01bd2b6a0f7e5424d25d06ef",
+      "c001_ba": "754c5fecf1c8387b48fc8cf77473fc14c9e89adb2694ac977e51e7028b0304f1",
+      "c002_ba": "f1ff916e3bd4ed01352b7fa4c6a1852fd9294104f6b344c5dd2eba7961a57aef",
+      "c003_ba": "9cde2dd51abf1cde03383c5f8120e88243c7b6f486f341a7566bb4ad6f60eb69",
+      "c004_ba": "a2a28d2565fb8a3e6c76e1f7d2be5b1a3aca28acbabe13c3db4e2063c404f2e5"
+    },
+    "headline_counts": {
+      "alleles": 47,
+      "artificial_negative": 1142,
+      "measured_nonbinder": 82448,
+      "negative": 83590,
+      "positive": 28538,
+      "rows": 112128
+    },
+    "retrieval_date": "2026-09-10",
+    "source_counts": {
+      "ba_rows_all_species": 208093,
+      "hla_abc_artificial_negative": 10895,
+      "hla_abc_positive": 42001,
+      "hla_abc_rows": 170107,
+      "nine_mer_hla_negative": 95506,
+      "nine_mer_hla_positive": 30869,
+      "nine_mer_hla_rows": 126375
+    },
+    "source_url": "https://services.healthtech.dtu.dk/suppl/immunology/NAR_NetMHCpan_NetMHCIIpan/NetMHCpan_train.tar.gz"
+  },
+  "criteria": {
+    "mlp_pseudo_sequence_minus_pwm_upper_bound": 0.10084068163425301,
+    "non_inferiority_margin": 0.02,
+    "predictive": {
+      "edit_retrieval": true,
+      "esm_retrieval": true,
+      "length_composition": true,
+      "mlp_one_hot": true,
+      "mlp_pseudo_sequence": true,
+      "pwm": true,
+      "random": false
+    },
+    "pwm_sufficient_relative_to_mlp": false
+  },
+  "negative_sources": {
+    "artificial_negative": {
+      "n_negative": 1142,
+      "n_positive": 28538,
+      "n_rows": 29680,
+      "scores": {
+        "edit_retrieval": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.7441806547450002,
+            "lo": 0.6901157144054897,
+            "n_replicates": 20000,
+            "point": 0.7051878635512924
+          },
+          "macro_auroc_point": 0.8439628534633901,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 29680,
+          "pooled_auprc": {
+            "hi": 0.993174039455871,
+            "lo": 0.9867020986685101,
+            "n_replicates": 20000,
+            "point": 0.9905387513835984
+          },
+          "pooled_auroc": {
+            "hi": 0.8896575222751941,
+            "lo": 0.848625985957481,
+            "n_replicates": 20000,
+            "point": 0.8706100410685405
+          }
+        },
+        "esm_retrieval": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.6801226268559998,
+            "lo": 0.6252522402369619,
+            "n_replicates": 20000,
+            "point": 0.6343752460391304
+          },
+          "macro_auroc_point": 0.7448006516369878,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 29680,
+          "pooled_auprc": {
+            "hi": 0.9915305220333391,
+            "lo": 0.9827643540483455,
+            "n_replicates": 20000,
+            "point": 0.987925893469011
+          },
+          "pooled_auroc": {
+            "hi": 0.8048534479149985,
+            "lo": 0.7486571939011409,
+            "n_replicates": 20000,
+            "point": 0.7777308075667444
+          }
+        },
+        "length_composition": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.5861017798362026,
+            "lo": 0.5422089072470727,
+            "n_replicates": 20000,
+            "point": 0.5441033721354092
+          },
+          "macro_auroc_point": 0.6764972497690993,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 29680,
+          "pooled_auprc": {
+            "hi": 0.9859283844948398,
+            "lo": 0.9687054423215795,
+            "n_replicates": 20000,
+            "point": 0.9791862986624096
+          },
+          "pooled_auroc": {
+            "hi": 0.7369271799614316,
+            "lo": 0.6585725147746934,
+            "n_replicates": 20000,
+            "point": 0.6997213841771053
+          }
+        },
+        "mlp_one_hot": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.9337445470590592,
+            "lo": 0.8764714016898056,
+            "n_replicates": 20000,
+            "point": 0.8967477217845176
+          },
+          "macro_auroc_point": 0.9686831035428176,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 29680,
+          "pooled_auprc": {
+            "hi": 0.998964627734442,
+            "lo": 0.997064887650049,
+            "n_replicates": 20000,
+            "point": 0.9982409532232702
+          },
+          "pooled_auroc": {
+            "hi": 0.9772969255527494,
+            "lo": 0.9567730250136336,
+            "n_replicates": 20000,
+            "point": 0.9679126329118555
+          }
+        },
+        "mlp_pseudo_sequence": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.9332649650431166,
+            "lo": 0.8776328001719378,
+            "n_replicates": 20000,
+            "point": 0.8968047304530479
+          },
+          "macro_auroc_point": 0.9683673634427568,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 29680,
+          "pooled_auprc": {
+            "hi": 0.9989706268304083,
+            "lo": 0.997185419590936,
+            "n_replicates": 20000,
+            "point": 0.9982863283608884
+          },
+          "pooled_auroc": {
+            "hi": 0.9771137236519805,
+            "lo": 0.9570947576914609,
+            "n_replicates": 20000,
+            "point": 0.9680473351719936
+          }
+        },
+        "pwm": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.8590115385793804,
+            "lo": 0.7904650782025816,
+            "n_replicates": 20000,
+            "point": 0.8088897816222459
+          },
+          "macro_auroc_point": 0.9241475882972839,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 29680,
+          "pooled_auprc": {
+            "hi": 0.9975724424436195,
+            "lo": 0.9944080272098756,
+            "n_replicates": 20000,
+            "point": 0.9963220249414885
+          },
+          "pooled_auroc": {
+            "hi": 0.9462584395941463,
+            "lo": 0.9156734089440925,
+            "n_replicates": 20000,
+            "point": 0.9319882151784838
+          }
+        },
+        "random": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.5332565204015566,
+            "lo": 0.5090316772508771,
+            "n_replicates": 20000,
+            "point": 0.5113166155344336
+          },
+          "macro_auroc_point": 0.4911192137710104,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 29680,
+          "pooled_auprc": {
+            "hi": 0.9692346413434657,
+            "lo": 0.947535374129548,
+            "n_replicates": 20000,
+            "point": 0.9601439873523651
+          },
+          "pooled_auroc": {
+            "hi": 0.5168953489075598,
+            "lo": 0.46589104293558165,
+            "n_replicates": 20000,
+            "point": 0.4911287362080534
+          }
+        }
+      }
+    },
+    "measured_nonbinder": {
+      "n_negative": 82448,
+      "n_positive": 28538,
+      "n_rows": 110986,
+      "scores": {
+        "edit_retrieval": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.6212370783314111,
+            "lo": 0.5947823853360198,
+            "n_replicates": 20000,
+            "point": 0.6071992523114814
+          },
+          "macro_auroc_point": 0.7730552915282849,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 110986,
+          "pooled_auprc": {
+            "hi": 0.5435587507452875,
+            "lo": 0.47145277993438434,
+            "n_replicates": 20000,
+            "point": 0.5113694653209371
+          },
+          "pooled_auroc": {
+            "hi": 0.7979869367857755,
+            "lo": 0.7676426134170444,
+            "n_replicates": 20000,
+            "point": 0.7835291322054353
+          }
+        },
+        "esm_retrieval": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.5794765597119675,
+            "lo": 0.5532942113477349,
+            "n_replicates": 20000,
+            "point": 0.5650642495893645
+          },
+          "macro_auroc_point": 0.6621110449927871,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 110986,
+          "pooled_auprc": {
+            "hi": 0.4835596840664685,
+            "lo": 0.4090010664574539,
+            "n_replicates": 20000,
+            "point": 0.44993184437374256
+          },
+          "pooled_auroc": {
+            "hi": 0.6896390920784001,
+            "lo": 0.6589876773117379,
+            "n_replicates": 20000,
+            "point": 0.675505544342013
+          }
+        },
+        "length_composition": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.5224966566852087,
+            "lo": 0.5090362624942086,
+            "n_replicates": 20000,
+            "point": 0.5152708668904133
+          },
+          "macro_auroc_point": 0.6011857946162852,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 110986,
+          "pooled_auprc": {
+            "hi": 0.4249116116347625,
+            "lo": 0.2881993804092716,
+            "n_replicates": 20000,
+            "point": 0.35808875993747846
+          },
+          "pooled_auroc": {
+            "hi": 0.6629653367060152,
+            "lo": 0.5927836179397827,
+            "n_replicates": 20000,
+            "point": 0.6302612538197443
+          }
+        },
+        "mlp_one_hot": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.8422191229195543,
+            "lo": 0.8064324983075587,
+            "n_replicates": 20000,
+            "point": 0.8241734653791987
+          },
+          "macro_auroc_point": 0.939351409224311,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 110986,
+          "pooled_auprc": {
+            "hi": 0.8890265154857551,
+            "lo": 0.8484215020612376,
+            "n_replicates": 20000,
+            "point": 0.8713589216909271
+          },
+          "pooled_auroc": {
+            "hi": 0.9531774051152038,
+            "lo": 0.9399280779286826,
+            "n_replicates": 20000,
+            "point": 0.9471987222442553
+          }
+        },
+        "mlp_pseudo_sequence": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.8453269621375378,
+            "lo": 0.8090740568988833,
+            "n_replicates": 20000,
+            "point": 0.8270911563847961
+          },
+          "macro_auroc_point": 0.9412621194175558,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 110986,
+          "pooled_auprc": {
+            "hi": 0.8912076641411284,
+            "lo": 0.8527653064989016,
+            "n_replicates": 20000,
+            "point": 0.8744646651662566
+          },
+          "pooled_auroc": {
+            "hi": 0.9548156718723241,
+            "lo": 0.9420356469022592,
+            "n_replicates": 20000,
+            "point": 0.9490477998108942
+          }
+        },
+        "pwm": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.7657153749421357,
+            "lo": 0.7218713269774021,
+            "n_replicates": 20000,
+            "point": 0.7434224284283887
+          },
+          "macro_auroc_point": 0.9102461922394465,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 110986,
+          "pooled_auprc": {
+            "hi": 0.8171525999842412,
+            "lo": 0.7524976040899842,
+            "n_replicates": 20000,
+            "point": 0.7871836372118335
+          },
+          "pooled_auroc": {
+            "hi": 0.9307909181973059,
+            "lo": 0.9138670786155223,
+            "n_replicates": 20000,
+            "point": 0.9232194194922497
+          }
+        },
+        "random": {
+          "is_degenerate": false,
+          "macro_auc01": {
+            "hi": 0.5023096689009171,
+            "lo": 0.4978660351634018,
+            "n_replicates": 20000,
+            "point": 0.49979277084969553
+          },
+          "macro_auroc_point": 0.49439761113766384,
+          "n_alleles": 47,
+          "n_alleles_skipped": 0,
+          "n_positive": 28538,
+          "n_rows": 110986,
+          "pooled_auprc": {
+            "hi": 0.28668201657437165,
+            "lo": 0.22133790529367098,
+            "n_replicates": 20000,
+            "point": 0.2545290377808403
+          },
+          "pooled_auroc": {
+            "hi": 0.49795124483350506,
+            "lo": 0.4880576478929302,
+            "n_replicates": 20000,
+            "point": 0.49292872168004975
+          }
+        }
+      }
+    }
+  },
+  "per_allele": {
+    "HLA-A01:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6415968520548767,
+          "auroc": 0.8402116841125421
+        },
+        "esm_retrieval": {
+          "auc01": 0.5939946321572999,
+          "auroc": 0.7198437001677604
+        },
+        "length_composition": {
+          "auc01": 0.4964154563410047,
+          "auroc": 0.5310159748385272
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8449674120608741,
+          "auroc": 0.9517518908701502
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8571136334388734,
+          "auroc": 0.9561592972211922
+        },
+        "pwm": {
+          "auc01": 0.7761385513156838,
+          "auroc": 0.9351246794531063
+        },
+        "random": {
+          "auc01": 0.5091667780020255,
+          "auroc": 0.4944110104778969
+        }
+      },
+      "n_positive": 565,
+      "n_rows": 3978
+    },
+    "HLA-A02:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5964191764586422,
+          "auroc": 0.7791307411824453
+        },
+        "esm_retrieval": {
+          "auc01": 0.5594221198971396,
+          "auroc": 0.6613425859881576
+        },
+        "length_composition": {
+          "auc01": 0.576106741172034,
+          "auroc": 0.7340748819285542
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8410623992462167,
+          "auroc": 0.9551060312967791
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.841162258302292,
+          "auroc": 0.955228905487683
+        },
+        "pwm": {
+          "auc01": 0.7979406059357423,
+          "auroc": 0.9432135309972022
+        },
+        "random": {
+          "auc01": 0.5042546214721096,
+          "auroc": 0.4921033836052353
+        }
+      },
+      "n_positive": 3480,
+      "n_rows": 9523
+    },
+    "HLA-A02:02": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5735698689043599,
+          "auroc": 0.7287408344999967
+        },
+        "esm_retrieval": {
+          "auc01": 0.5525176883677848,
+          "auroc": 0.6342452486431545
+        },
+        "length_composition": {
+          "auc01": 0.5426124042822857,
+          "auroc": 0.7033842829654349
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8000320306740808,
+          "auroc": 0.9254511631474982
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.7956025787384289,
+          "auroc": 0.924630982746166
+        },
+        "pwm": {
+          "auc01": 0.7299127803398953,
+          "auroc": 0.9010618235749124
+        },
+        "random": {
+          "auc01": 0.5030871580885359,
+          "auroc": 0.48323520574829476
+        }
+      },
+      "n_positive": 1146,
+      "n_rows": 2511
+    },
+    "HLA-A02:03": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6042568784288455,
+          "auroc": 0.7683499502648685
+        },
+        "esm_retrieval": {
+          "auc01": 0.5669280304789363,
+          "auroc": 0.6613029833368033
+        },
+        "length_composition": {
+          "auc01": 0.564642597263243,
+          "auroc": 0.7277255457921216
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8639935330704563,
+          "auroc": 0.9557366141996829
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8652522026572829,
+          "auroc": 0.9569114207944622
+        },
+        "pwm": {
+          "auc01": 0.8138081561441367,
+          "auroc": 0.9391698033396894
+        },
+        "random": {
+          "auc01": 0.501838753352418,
+          "auroc": 0.4874512149582126
+        }
+      },
+      "n_positive": 1555,
+      "n_rows": 4474
+    },
+    "HLA-A02:06": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5806313046027902,
+          "auroc": 0.7100875545451508
+        },
+        "esm_retrieval": {
+          "auc01": 0.555696077479479,
+          "auroc": 0.6336115659340976
+        },
+        "length_composition": {
+          "auc01": 0.5453552938899061,
+          "auroc": 0.7078769419917291
+        },
+        "mlp_one_hot": {
+          "auc01": 0.7740581616429203,
+          "auroc": 0.9098937730668231
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.7775764993597978,
+          "auroc": 0.9114455804456716
+        },
+        "pwm": {
+          "auc01": 0.7258941104973333,
+          "auroc": 0.8927939331158633
+        },
+        "random": {
+          "auc01": 0.4968946871735956,
+          "auroc": 0.4908360689927742
+        }
+      },
+      "n_positive": 1556,
+      "n_rows": 3787
+    },
+    "HLA-A02:11": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5868639931673978,
+          "auroc": 0.744923405771286
+        },
+        "esm_retrieval": {
+          "auc01": 0.519326822525314,
+          "auroc": 0.5839767624785279
+        },
+        "length_composition": {
+          "auc01": 0.5317817271011409,
+          "auroc": 0.6458641232844338
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8484340774654595,
+          "auroc": 0.9511828632097268
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8503555003654416,
+          "auroc": 0.9506961027417311
+        },
+        "pwm": {
+          "auc01": 0.7854559610799547,
+          "auroc": 0.9332714888873996
+        },
+        "random": {
+          "auc01": 0.5093762652848264,
+          "auroc": 0.502795345441206
+        }
+      },
+      "n_positive": 401,
+      "n_rows": 1108
+    },
+    "HLA-A02:12": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5984426347637101,
+          "auroc": 0.7661569062214686
+        },
+        "esm_retrieval": {
+          "auc01": 0.523975692895122,
+          "auroc": 0.6330449400750693
+        },
+        "length_composition": {
+          "auc01": 0.5074775543702524,
+          "auroc": 0.6158138051968756
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8895356952443715,
+          "auroc": 0.9637370838949031
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8866143882378874,
+          "auroc": 0.9637334608640205
+        },
+        "pwm": {
+          "auc01": 0.8137571440448432,
+          "auroc": 0.9352745532802922
+        },
+        "random": {
+          "auc01": 0.5063753902385633,
+          "auroc": 0.5087097662420474
+        }
+      },
+      "n_positive": 306,
+      "n_rows": 1208
+    },
+    "HLA-A02:16": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5675925035938402,
+          "auroc": 0.73936544723795
+        },
+        "esm_retrieval": {
+          "auc01": 0.5422934812314619,
+          "auroc": 0.6176621585941855
+        },
+        "length_composition": {
+          "auc01": 0.5148945500136647,
+          "auroc": 0.619459031302256
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8731882659387049,
+          "auroc": 0.9646419456097632
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8815106237445052,
+          "auroc": 0.9662554639598674
+        },
+        "pwm": {
+          "auc01": 0.766140201620312,
+          "auroc": 0.9196467861648134
+        },
+        "random": {
+          "auc01": 0.4976939811905449,
+          "auroc": 0.5211150878634083
+        }
+      },
+      "n_positive": 178,
+      "n_rows": 944
+    },
+    "HLA-A02:19": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5952420501299375,
+          "auroc": 0.7805258156477669
+        },
+        "esm_retrieval": {
+          "auc01": 0.5350015837820716,
+          "auroc": 0.6649350649350649
+        },
+        "length_composition": {
+          "auc01": 0.5194860766105952,
+          "auroc": 0.6554197022489705
+        },
+        "mlp_one_hot": {
+          "auc01": 0.909963378512801,
+          "auroc": 0.9807116460774997
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.9071736992147776,
+          "auroc": 0.9792672368282125
+        },
+        "pwm": {
+          "auc01": 0.768123190459519,
+          "auroc": 0.9397064723893993
+        },
+        "random": {
+          "auc01": 0.5097610989780438,
+          "auroc": 0.5056572695597086
+        }
+      },
+      "n_positive": 231,
+      "n_rows": 1256
+    },
+    "HLA-A03:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6001258441008214,
+          "auroc": 0.7757984073788278
+        },
+        "esm_retrieval": {
+          "auc01": 0.5501547539577365,
+          "auroc": 0.6378176850972079
+        },
+        "length_composition": {
+          "auc01": 0.5107751257485103,
+          "auroc": 0.5849446421527094
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8014049629845879,
+          "auroc": 0.9408625473837322
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8049554227764291,
+          "auroc": 0.9425105675828627
+        },
+        "pwm": {
+          "auc01": 0.759577919287606,
+          "auroc": 0.9282616219039953
+        },
+        "random": {
+          "auc01": 0.49610965235244125,
+          "auroc": 0.49247852321254515
+        }
+      },
+      "n_positive": 1423,
+      "n_rows": 5604
+    },
+    "HLA-A11:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5976369242036506,
+          "auroc": 0.7781424634570128
+        },
+        "esm_retrieval": {
+          "auc01": 0.5577846709693304,
+          "auroc": 0.6531820662837374
+        },
+        "length_composition": {
+          "auc01": 0.5111605519512148,
+          "auroc": 0.6103365323153508
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8331728547320632,
+          "auroc": 0.9561390773458491
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8366851098578756,
+          "auroc": 0.9571515757200489
+        },
+        "pwm": {
+          "auc01": 0.7943631084376446,
+          "auroc": 0.9443590567357044
+        },
+        "random": {
+          "auc01": 0.500909892313661,
+          "auroc": 0.5050637146951221
+        }
+      },
+      "n_positive": 1399,
+      "n_rows": 4614
+    },
+    "HLA-A23:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6166625306746908,
+          "auroc": 0.7679072894516935
+        },
+        "esm_retrieval": {
+          "auc01": 0.5839528894494903,
+          "auroc": 0.6959705130095726
+        },
+        "length_composition": {
+          "auc01": 0.5477697273385589,
+          "auroc": 0.6736697476100094
+        },
+        "mlp_one_hot": {
+          "auc01": 0.7214524106209714,
+          "auroc": 0.9113027649206931
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.7297437593517608,
+          "auroc": 0.9159868136259199
+        },
+        "pwm": {
+          "auc01": 0.6491102886248954,
+          "auroc": 0.888891003106314
+        },
+        "random": {
+          "auc01": 0.49686493547311056,
+          "auroc": 0.4792936188161122
+        }
+      },
+      "n_positive": 413,
+      "n_rows": 1940
+    },
+    "HLA-A24:02": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5818219241918267,
+          "auroc": 0.7435988997731989
+        },
+        "esm_retrieval": {
+          "auc01": 0.5488003413446031,
+          "auroc": 0.6220156348019109
+        },
+        "length_composition": {
+          "auc01": 0.5315680263729342,
+          "auroc": 0.6552627515321141
+        },
+        "mlp_one_hot": {
+          "auc01": 0.7358388975382044,
+          "auroc": 0.9021087680355161
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.7366186058206367,
+          "auroc": 0.9068918592867828
+        },
+        "pwm": {
+          "auc01": 0.6933155888321392,
+          "auroc": 0.8858920040534671
+        },
+        "random": {
+          "auc01": 0.4969306923149209,
+          "auroc": 0.4834715050909617
+        }
+      },
+      "n_positive": 530,
+      "n_rows": 2485
+    },
+    "HLA-A24:03": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6314863758436088,
+          "auroc": 0.8092725002837362
+        },
+        "esm_retrieval": {
+          "auc01": 0.5561499083083944,
+          "auroc": 0.6730450573147203
+        },
+        "length_composition": {
+          "auc01": 0.5295623293849195,
+          "auroc": 0.6262924185676995
+        },
+        "mlp_one_hot": {
+          "auc01": 0.9100914526698087,
+          "auroc": 0.9680569742367495
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.9101302797340645,
+          "auroc": 0.9683435478379299
+        },
+        "pwm": {
+          "auc01": 0.8716227920840577,
+          "auroc": 0.9533055271819317
+        },
+        "random": {
+          "auc01": 0.4964637504554713,
+          "auroc": 0.5196544092611508
+        }
+      },
+      "n_positive": 330,
+      "n_rows": 1398
+    },
+    "HLA-A26:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.642169072255818,
+          "auroc": 0.8093814585178625
+        },
+        "esm_retrieval": {
+          "auc01": 0.5885652089755549,
+          "auroc": 0.7183416174350242
+        },
+        "length_composition": {
+          "auc01": 0.5078450035672479,
+          "auroc": 0.6113179747807866
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8525577748580003,
+          "auroc": 0.9459792008851663
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8639157897150713,
+          "auroc": 0.9513223031522584
+        },
+        "pwm": {
+          "auc01": 0.79070121277378,
+          "auroc": 0.9311043653489498
+        },
+        "random": {
+          "auc01": 0.4957428377068894,
+          "auroc": 0.4837965550749439
+        }
+      },
+      "n_positive": 412,
+      "n_rows": 3799
+    },
+    "HLA-A26:02": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6091265332870419,
+          "auroc": 0.8073215544145776
+        },
+        "esm_retrieval": {
+          "auc01": 0.5866383718280903,
+          "auroc": 0.6879719118091211
+        },
+        "length_composition": {
+          "auc01": 0.5319827051773196,
+          "auroc": 0.6225963958522098
+        },
+        "mlp_one_hot": {
+          "auc01": 0.9210102423076719,
+          "auroc": 0.9750830564784052
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.9234277554350994,
+          "auroc": 0.9770713782341689
+        },
+        "pwm": {
+          "auc01": 0.8414177621643961,
+          "auroc": 0.947460485251183
+        },
+        "random": {
+          "auc01": 0.5049529214155897,
+          "auroc": 0.5142957817376422
+        }
+      },
+      "n_positive": 168,
+      "n_rows": 641
+    },
+    "HLA-A29:02": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5790093442885846,
+          "auroc": 0.71842835344708
+        },
+        "esm_retrieval": {
+          "auc01": 0.5596050745534943,
+          "auroc": 0.6196976002219448
+        },
+        "length_composition": {
+          "auc01": 0.5213780045897793,
+          "auroc": 0.6293094280297775
+        },
+        "mlp_one_hot": {
+          "auc01": 0.7537483603585187,
+          "auroc": 0.8842997179451612
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.7654028955034278,
+          "auroc": 0.8895593471124057
+        },
+        "pwm": {
+          "auc01": 0.6665462032108986,
+          "auroc": 0.8567542886207057
+        },
+        "random": {
+          "auc01": 0.4933112361984167,
+          "auroc": 0.468792481620197
+        }
+      },
+      "n_positive": 540,
+      "n_rows": 2142
+    },
+    "HLA-A30:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6044674590682675,
+          "auroc": 0.759908252064766
+        },
+        "esm_retrieval": {
+          "auc01": 0.5557030948773174,
+          "auroc": 0.652173326606318
+        },
+        "length_composition": {
+          "auc01": 0.4955766855195008,
+          "auroc": 0.5174498973449675
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8352254726920423,
+          "auroc": 0.9369590196444403
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8466713246182977,
+          "auroc": 0.9392053275628762
+        },
+        "pwm": {
+          "auc01": 0.8084772980114885,
+          "auroc": 0.9257311254724465
+        },
+        "random": {
+          "auc01": 0.5031085073516229,
+          "auroc": 0.514919246652046
+        }
+      },
+      "n_positive": 739,
+      "n_rows": 2595
+    },
+    "HLA-A30:02": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5448083412313849,
+          "auroc": 0.6974915028816314
+        },
+        "esm_retrieval": {
+          "auc01": 0.5340001399982889,
+          "auroc": 0.5908920742820551
+        },
+        "length_composition": {
+          "auc01": 0.4928950868378275,
+          "auroc": 0.5226134180582237
+        },
+        "mlp_one_hot": {
+          "auc01": 0.6735188051405299,
+          "auroc": 0.8160804886458796
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.679442806810139,
+          "auroc": 0.8186025318949807
+        },
+        "pwm": {
+          "auc01": 0.6158732134014658,
+          "auroc": 0.7945790847741491
+        },
+        "random": {
+          "auc01": 0.4997524104335021,
+          "auroc": 0.48356731195507613
+        }
+      },
+      "n_positive": 402,
+      "n_rows": 1412
+    },
+    "HLA-A31:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5588831364718472,
+          "auroc": 0.7076565245925184
+        },
+        "esm_retrieval": {
+          "auc01": 0.5429629126465495,
+          "auroc": 0.6213534778477499
+        },
+        "length_composition": {
+          "auc01": 0.49653814715360184,
+          "auroc": 0.5424227675036055
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8029034538107749,
+          "auroc": 0.9407500201139278
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8114424680242789,
+          "auroc": 0.9440942515391311
+        },
+        "pwm": {
+          "auc01": 0.7663715212397305,
+          "auroc": 0.925159232492405
+        },
+        "random": {
+          "auc01": 0.5038752251246355,
+          "auroc": 0.49442495111151896
+        }
+      },
+      "n_positive": 1021,
+      "n_rows": 3967
+    },
+    "HLA-A32:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5776669308734889,
+          "auroc": 0.7618657127132635
+        },
+        "esm_retrieval": {
+          "auc01": 0.5791211655997451,
+          "auroc": 0.6938084755090809
+        },
+        "length_composition": {
+          "auc01": 0.516655562958028,
+          "auroc": 0.6951348376444689
+        },
+        "mlp_one_hot": {
+          "auc01": 0.712597398835559,
+          "auroc": 0.9071161254815631
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.696608058395852,
+          "auroc": 0.9034892680242158
+        },
+        "pwm": {
+          "auc01": 0.639399820409582,
+          "auroc": 0.8728673637864612
+        },
+        "random": {
+          "auc01": 0.49042667207369,
+          "auroc": 0.4982883874518437
+        }
+      },
+      "n_positive": 395,
+      "n_rows": 855
+    },
+    "HLA-A33:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6254492296778414,
+          "auroc": 0.7530436422060462
+        },
+        "esm_retrieval": {
+          "auc01": 0.5669603873938239,
+          "auroc": 0.6019632434913764
+        },
+        "length_composition": {
+          "auc01": 0.4906827367454639,
+          "auroc": 0.4870762017181455
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8270464672403023,
+          "auroc": 0.9411272870352154
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8332159831015666,
+          "auroc": 0.9434602269001245
+        },
+        "pwm": {
+          "auc01": 0.7829624720861765,
+          "auroc": 0.9209456357793954
+        },
+        "random": {
+          "auc01": 0.502227928664865,
+          "auroc": 0.49611449931143026
+        }
+      },
+      "n_positive": 391,
+      "n_rows": 1951
+    },
+    "HLA-A68:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5725509058128031,
+          "auroc": 0.7058920079160835
+        },
+        "esm_retrieval": {
+          "auc01": 0.5323617635899763,
+          "auroc": 0.6113345034388309
+        },
+        "length_composition": {
+          "auc01": 0.48920211834837896,
+          "auroc": 0.5320038903185997
+        },
+        "mlp_one_hot": {
+          "auc01": 0.771976953535584,
+          "auroc": 0.915231312173612
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.7787661000892678,
+          "auroc": 0.9226018480894548
+        },
+        "pwm": {
+          "auc01": 0.7291786964363367,
+          "auroc": 0.8859692687405
+        },
+        "random": {
+          "auc01": 0.4939674913049023,
+          "auroc": 0.486272894186344
+        }
+      },
+      "n_positive": 856,
+      "n_rows": 2098
+    },
+    "HLA-A68:02": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6024923392829923,
+          "auroc": 0.7556263196675002
+        },
+        "esm_retrieval": {
+          "auc01": 0.5895136013968991,
+          "auroc": 0.684339420628891
+        },
+        "length_composition": {
+          "auc01": 0.5428024401377322,
+          "auroc": 0.69671898083314
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8279900439155801,
+          "auroc": 0.9402648069710765
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8319985580029469,
+          "auroc": 0.9436793219737091
+        },
+        "pwm": {
+          "auc01": 0.7909881600905266,
+          "auroc": 0.9242350786799007
+        },
+        "random": {
+          "auc01": 0.49865624556360566,
+          "auroc": 0.48500677707177314
+        }
+      },
+      "n_positive": 849,
+      "n_rows": 3728
+    },
+    "HLA-A69:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5781671328676395,
+          "auroc": 0.7157370215467859
+        },
+        "esm_retrieval": {
+          "auc01": 0.5232458501423545,
+          "auroc": 0.6279642359241929
+        },
+        "length_composition": {
+          "auc01": 0.5355279685403413,
+          "auroc": 0.6975633911687165
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8635672320890844,
+          "auroc": 0.9559747125484838
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8703235323390675,
+          "auroc": 0.9591874059657406
+        },
+        "pwm": {
+          "auc01": 0.7666406585431238,
+          "auroc": 0.9138439134815796
+        },
+        "random": {
+          "auc01": 0.5006494766046757,
+          "auroc": 0.4851063536102254
+        }
+      },
+      "n_positive": 248,
+      "n_rows": 2585
+    },
+    "HLA-A80:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6347459266758843,
+          "auroc": 0.850941246635674
+        },
+        "esm_retrieval": {
+          "auc01": 0.5570357874132358,
+          "auroc": 0.6697531808172252
+        },
+        "length_composition": {
+          "auc01": 0.5284148712863637,
+          "auroc": 0.6008380229997554
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8495389746693623,
+          "auroc": 0.9602474308783948
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8638091895998867,
+          "auroc": 0.9634970638610227
+        },
+        "pwm": {
+          "auc01": 0.7636762262887461,
+          "auroc": 0.9407114020063617
+        },
+        "random": {
+          "auc01": 0.4940150412733571,
+          "auroc": 0.47196904820161484
+        }
+      },
+      "n_positive": 122,
+      "n_rows": 1194
+    },
+    "HLA-B07:02": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6464679131859397,
+          "auroc": 0.8527486759320926
+        },
+        "esm_retrieval": {
+          "auc01": 0.5891555214360396,
+          "auroc": 0.6920104303129215
+        },
+        "length_composition": {
+          "auc01": 0.49571595066400165,
+          "auroc": 0.5141269995194079
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8403239714808439,
+          "auroc": 0.957918609161501
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8435412937519556,
+          "auroc": 0.9599249898148622
+        },
+        "pwm": {
+          "auc01": 0.756493996321923,
+          "auroc": 0.9369860164767474
+        },
+        "random": {
+          "auc01": 0.5023239319343904,
+          "auroc": 0.5040460002293181
+        }
+      },
+      "n_positive": 1112,
+      "n_rows": 4061
+    },
+    "HLA-B08:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6168556554948981,
+          "auroc": 0.801515009057087
+        },
+        "esm_retrieval": {
+          "auc01": 0.5591120409082919,
+          "auroc": 0.6592419777536044
+        },
+        "length_composition": {
+          "auc01": 0.5112624460561801,
+          "auroc": 0.5740842344797709
+        },
+        "mlp_one_hot": {
+          "auc01": 0.7932570647972281,
+          "auroc": 0.9380339337273543
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8058745973984192,
+          "auroc": 0.9436859844851266
+        },
+        "pwm": {
+          "auc01": 0.7689810147570573,
+          "auroc": 0.9344920295253896
+        },
+        "random": {
+          "auc01": 0.4994905505999827,
+          "auroc": 0.4907935484024536
+        }
+      },
+      "n_positive": 716,
+      "n_rows": 3063
+    },
+    "HLA-B15:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5865347870892847,
+          "auroc": 0.7199934389480447
+        },
+        "esm_retrieval": {
+          "auc01": 0.548263269643648,
+          "auroc": 0.6189278944946395
+        },
+        "length_composition": {
+          "auc01": 0.5342691765088441,
+          "auroc": 0.6399635554067169
+        },
+        "mlp_one_hot": {
+          "auc01": 0.7783841934762137,
+          "auroc": 0.9248621438692892
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.7807781920800716,
+          "auroc": 0.9295865853825229
+        },
+        "pwm": {
+          "auc01": 0.7521149560570188,
+          "auroc": 0.921118442934795
+        },
+        "random": {
+          "auc01": 0.4965043094073159,
+          "auroc": 0.49013051481476416
+        }
+      },
+      "n_positive": 1192,
+      "n_rows": 4138
+    },
+    "HLA-B15:03": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5453995894242115,
+          "auroc": 0.72941262452495
+        },
+        "esm_retrieval": {
+          "auc01": 0.5242457489605414,
+          "auroc": 0.6705570172479706
+        },
+        "length_composition": {
+          "auc01": 0.5402060098637608,
+          "auroc": 0.7072792282264049
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8278280197559269,
+          "auroc": 0.929917470597495
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8105362576650086,
+          "auroc": 0.9248690098720456
+        },
+        "pwm": {
+          "auc01": 0.6773092077153688,
+          "auroc": 0.8854595336076816
+        },
+        "random": {
+          "auc01": 0.4974204383656977,
+          "auroc": 0.4693494344374733
+        }
+      },
+      "n_positive": 366,
+      "n_rows": 609
+    },
+    "HLA-B15:17": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5855936133642815,
+          "auroc": 0.7210379876925391
+        },
+        "esm_retrieval": {
+          "auc01": 0.5228348980963607,
+          "auroc": 0.5841669904372783
+        },
+        "length_composition": {
+          "auc01": 0.5256766036209978,
+          "auroc": 0.6214214992041509
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8701113660965005,
+          "auroc": 0.9561543571168958
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8801193410778825,
+          "auroc": 0.9590043740365213
+        },
+        "pwm": {
+          "auc01": 0.7774551432033567,
+          "auroc": 0.9217987441877954
+        },
+        "random": {
+          "auc01": 0.4945840707497604,
+          "auroc": 0.4907318051360463
+        }
+      },
+      "n_positive": 365,
+      "n_rows": 1458
+    },
+    "HLA-B18:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5768492894928892,
+          "auroc": 0.717606272996646
+        },
+        "esm_retrieval": {
+          "auc01": 0.5443557854291879,
+          "auroc": 0.6439152502360718
+        },
+        "length_composition": {
+          "auc01": 0.49009355468381804,
+          "auroc": 0.5065174123278304
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8035634411808559,
+          "auroc": 0.9164285597994206
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8090003753155479,
+          "auroc": 0.9206249389469572
+        },
+        "pwm": {
+          "auc01": 0.6980038011410278,
+          "auroc": 0.8662572042590603
+        },
+        "random": {
+          "auc01": 0.5041186168508112,
+          "auroc": 0.475877942756667
+        }
+      },
+      "n_positive": 232,
+      "n_rows": 2350
+    },
+    "HLA-B27:05": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6354566569460358,
+          "auroc": 0.8122537484826812
+        },
+        "esm_retrieval": {
+          "auc01": 0.5659431331942759,
+          "auroc": 0.6576369135687885
+        },
+        "length_composition": {
+          "auc01": 0.48978720995420527,
+          "auroc": 0.4568853971599067
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8360361794513199,
+          "auroc": 0.9533421051194838
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8331291723573606,
+          "auroc": 0.9542575010600758
+        },
+        "pwm": {
+          "auc01": 0.7796421574839245,
+          "auroc": 0.9407130988973391
+        },
+        "random": {
+          "auc01": 0.4947133178567532,
+          "auroc": 0.49607271483141613
+        }
+      },
+      "n_positive": 453,
+      "n_rows": 2879
+    },
+    "HLA-B35:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5876033009981848,
+          "auroc": 0.7409362333142335
+        },
+        "esm_retrieval": {
+          "auc01": 0.5597629953791974,
+          "auroc": 0.6268337100231319
+        },
+        "length_composition": {
+          "auc01": 0.5404677655174417,
+          "auroc": 0.6411591965365759
+        },
+        "mlp_one_hot": {
+          "auc01": 0.7944785764308907,
+          "auroc": 0.935743219583625
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.7918062848277503,
+          "auroc": 0.9360847605101759
+        },
+        "pwm": {
+          "auc01": 0.7094608896022446,
+          "auroc": 0.9061067517667281
+        },
+        "random": {
+          "auc01": 0.49731528238052314,
+          "auroc": 0.48551203285159483
+        }
+      },
+      "n_positive": 834,
+      "n_rows": 2642
+    },
+    "HLA-B38:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.7662544006853056,
+          "auroc": 0.9350764178350385
+        },
+        "esm_retrieval": {
+          "auc01": 0.7814733879032557,
+          "auroc": 0.9347786860102131
+        },
+        "length_composition": {
+          "auc01": 0.4862867665564062,
+          "auroc": 0.631408000866129
+        },
+        "mlp_one_hot": {
+          "auc01": 0.937879940472629,
+          "auroc": 0.9870261101788196
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.9297789756695642,
+          "auroc": 0.9851675418177882
+        },
+        "pwm": {
+          "auc01": 0.6012292952920384,
+          "auroc": 0.9155253613381693
+        },
+        "random": {
+          "auc01": 0.5089276810822053,
+          "auroc": 0.5429004493043902
+        }
+      },
+      "n_positive": 147,
+      "n_rows": 524
+    },
+    "HLA-B39:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6125131833636395,
+          "auroc": 0.7975038503850386
+        },
+        "esm_retrieval": {
+          "auc01": 0.5112500723756587,
+          "auroc": 0.6015313531353135
+        },
+        "length_composition": {
+          "auc01": 0.5003763534248161,
+          "auroc": 0.5405632563256326
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8675120143593307,
+          "auroc": 0.9617029702970297
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8756528284407388,
+          "auroc": 0.9653751375137514
+        },
+        "pwm": {
+          "auc01": 0.7883388338833883,
+          "auroc": 0.9423498349834983
+        },
+        "random": {
+          "auc01": 0.4993109837299519,
+          "auroc": 0.5167018701870186
+        }
+      },
+      "n_positive": 303,
+      "n_rows": 1803
+    },
+    "HLA-B40:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6979472587846998,
+          "auroc": 0.8613142064263404
+        },
+        "esm_retrieval": {
+          "auc01": 0.6190699549747234,
+          "auroc": 0.7648287231933831
+        },
+        "length_composition": {
+          "auc01": 0.4972807847098354,
+          "auroc": 0.512059102701466
+        },
+        "mlp_one_hot": {
+          "auc01": 0.9015270558623835,
+          "auroc": 0.9727364732407551
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.908560574965369,
+          "auroc": 0.9759892000736993
+        },
+        "pwm": {
+          "auc01": 0.8573299550013794,
+          "auroc": 0.9637109203426846
+        },
+        "random": {
+          "auc01": 0.5047265533315989,
+          "auroc": 0.48780860518707325
+        }
+      },
+      "n_positive": 483,
+      "n_rows": 2854
+    },
+    "HLA-B40:02": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5996763317512835,
+          "auroc": 0.8016634325534849
+        },
+        "esm_retrieval": {
+          "auc01": 0.5496007620559838,
+          "auroc": 0.6719022687609075
+        },
+        "length_composition": {
+          "auc01": 0.4895817877355491,
+          "auroc": 0.5648836329464602
+        },
+        "mlp_one_hot": {
+          "auc01": 0.7697966587467828,
+          "auroc": 0.9228328390632056
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.766681375940125,
+          "auroc": 0.9237847667167038
+        },
+        "pwm": {
+          "auc01": 0.6253181924165666,
+          "auroc": 0.8453605731092643
+        },
+        "random": {
+          "auc01": 0.49060308663505137,
+          "auroc": 0.4926591732874455
+        }
+      },
+      "n_positive": 191,
+      "n_rows": 620
+    },
+    "HLA-B44:02": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.7196658155222537,
+          "auroc": 0.8783350305498983
+        },
+        "esm_retrieval": {
+          "auc01": 0.6721751765700742,
+          "auroc": 0.7775543109300747
+        },
+        "length_composition": {
+          "auc01": 0.48492157072926717,
+          "auroc": 0.5187457569585879
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8674086778385204,
+          "auroc": 0.9631817153202082
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8629289193792355,
+          "auroc": 0.9654107264086897
+        },
+        "pwm": {
+          "auc01": 0.791793213515799,
+          "auroc": 0.939460285132383
+        },
+        "random": {
+          "auc01": 0.5032425769107085,
+          "auroc": 0.4797210907445123
+        }
+      },
+      "n_positive": 240,
+      "n_rows": 1713
+    },
+    "HLA-B44:03": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6501811148381627,
+          "auroc": 0.8239514025265997
+        },
+        "esm_retrieval": {
+          "auc01": 0.6221670628780528,
+          "auroc": 0.7433354339478851
+        },
+        "length_composition": {
+          "auc01": 0.4851154618086677,
+          "auroc": 0.5354955007767388
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8246822466959673,
+          "auroc": 0.9419497611161591
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8133975499172352,
+          "auroc": 0.942140281970865
+        },
+        "pwm": {
+          "auc01": 0.6547870100258707,
+          "auroc": 0.871698859805962
+        },
+        "random": {
+          "auc01": 0.49402443294977194,
+          "auroc": 0.49207140135416366
+        }
+      },
+      "n_positive": 218,
+      "n_rows": 844
+    },
+    "HLA-B45:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5786020999040653,
+          "auroc": 0.8234274626528268
+        },
+        "esm_retrieval": {
+          "auc01": 0.5470251651584361,
+          "auroc": 0.6809901475048509
+        },
+        "length_composition": {
+          "auc01": 0.48467990049346754,
+          "auroc": 0.5290205903961721
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8498478549481101,
+          "auroc": 0.9578772865135731
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8541212024466155,
+          "auroc": 0.9582917318162123
+        },
+        "pwm": {
+          "auc01": 0.7613667573224454,
+          "auroc": 0.9330482452009118
+        },
+        "random": {
+          "auc01": 0.49391072768861477,
+          "auroc": 0.4870674227153703
+        }
+      },
+      "n_positive": 109,
+      "n_rows": 596
+    },
+    "HLA-B51:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6361527852394314,
+          "auroc": 0.8237440978787008
+        },
+        "esm_retrieval": {
+          "auc01": 0.5586414141229954,
+          "auroc": 0.6702552883996713
+        },
+        "length_composition": {
+          "auc01": 0.5179888686109521,
+          "auroc": 0.6253100779030518
+        },
+        "mlp_one_hot": {
+          "auc01": 0.7679006917132472,
+          "auroc": 0.9295506963760728
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.7864582166541544,
+          "auroc": 0.9370202825099234
+        },
+        "pwm": {
+          "auc01": 0.7087739790365613,
+          "auroc": 0.9087376142066659
+        },
+        "random": {
+          "auc01": 0.5028021237477448,
+          "auroc": 0.5190817932550014
+        }
+      },
+      "n_positive": 247,
+      "n_rows": 2292
+    },
+    "HLA-B53:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6180427667176743,
+          "auroc": 0.7887327754130293
+        },
+        "esm_retrieval": {
+          "auc01": 0.6187238712176155,
+          "auroc": 0.7369489935791068
+        },
+        "length_composition": {
+          "auc01": 0.5090636735406802,
+          "auroc": 0.5899321838251208
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8042975558078517,
+          "auroc": 0.9357189235985859
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8088350882255779,
+          "auroc": 0.9348495779525288
+        },
+        "pwm": {
+          "auc01": 0.6570460853815514,
+          "auroc": 0.8812729961763222
+        },
+        "random": {
+          "auc01": 0.4942644830820287,
+          "auroc": 0.4756294639636389
+        }
+      },
+      "n_positive": 332,
+      "n_rows": 1167
+    },
+    "HLA-B54:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5803005990586222,
+          "auroc": 0.7558854166666666
+        },
+        "esm_retrieval": {
+          "auc01": 0.5331140350877193,
+          "auroc": 0.612375
+        },
+        "length_composition": {
+          "auc01": 0.49758771929824563,
+          "auroc": 0.6000104166666667
+        },
+        "mlp_one_hot": {
+          "auc01": 0.809594298245614,
+          "auroc": 0.9234583333333335
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8192434210526316,
+          "auroc": 0.9229062499999999
+        },
+        "pwm": {
+          "auc01": 0.5878837719298246,
+          "auroc": 0.83253125
+        },
+        "random": {
+          "auc01": 0.5043311403508772,
+          "auroc": 0.5157708333333334
+        }
+      },
+      "n_positive": 160,
+      "n_rows": 760
+    },
+    "HLA-B57:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6862987131018139,
+          "auroc": 0.8444053350595406
+        },
+        "esm_retrieval": {
+          "auc01": 0.617999142101454,
+          "auroc": 0.7115081612745164
+        },
+        "length_composition": {
+          "auc01": 0.5168825727113971,
+          "auroc": 0.5949380318539197
+        },
+        "mlp_one_hot": {
+          "auc01": 0.902866531002291,
+          "auroc": 0.9701689795147741
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.9113591587767682,
+          "auroc": 0.9720839907755796
+        },
+        "pwm": {
+          "auc01": 0.8580717346088718,
+          "auroc": 0.9549500343892868
+        },
+        "random": {
+          "auc01": 0.504655270764469,
+          "auroc": 0.48799072163558144
+        }
+      },
+      "n_positive": 396,
+      "n_rows": 2643
+    },
+    "HLA-B58:01": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.6592857172700446,
+          "auroc": 0.8079746652326233
+        },
+        "esm_retrieval": {
+          "auc01": 0.5961664827767477,
+          "auroc": 0.6747476272241825
+        },
+        "length_composition": {
+          "auc01": 0.5452539683643133,
+          "auroc": 0.6554977954726997
+        },
+        "mlp_one_hot": {
+          "auc01": 0.8863047196647014,
+          "auroc": 0.9633425791396997
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.8896504899813925,
+          "auroc": 0.9646407658295123
+        },
+        "pwm": {
+          "auc01": 0.8651582065717722,
+          "auroc": 0.9608798611242145
+        },
+        "random": {
+          "auc01": 0.5043853856011049,
+          "auroc": 0.4981860608462114
+        }
+      },
+      "n_positive": 670,
+      "n_rows": 3043
+    },
+    "HLA-C15:02": {
+      "arms": {
+        "edit_retrieval": {
+          "auc01": 0.5239542950418282,
+          "auroc": 0.6296695402298851
+        },
+        "esm_retrieval": {
+          "auc01": 0.5006165945367397,
+          "auroc": 0.6120689655172414
+        },
+        "length_composition": {
+          "auc01": 0.5033505514449254,
+          "auroc": 0.5490163572060124
+        },
+        "mlp_one_hot": {
+          "auc01": 0.7131090325282703,
+          "auroc": 0.8920203359858532
+        },
+        "mlp_pseudo_sequence": {
+          "auc01": 0.7041509609567685,
+          "auroc": 0.8899756852343059
+        },
+        "pwm": {
+          "auc01": 0.5964795942109917,
+          "auroc": 0.7612179487179487
+        },
+        "random": {
+          "auc01": 0.4914258457815627,
+          "auroc": 0.49176613616268794
+        }
+      },
+      "n_positive": 116,
+      "n_rows": 272
+    }
+  },
+  "retrieval_diagnostics": {
+    "artificial_negative": {
+      "exact_duplicate_count": 0,
+      "mean_nearest_positive_edit_distance": 5.689141856392294,
+      "median_nearest_positive_edit_distance": 6.0,
+      "n_negative": 1142
+    },
+    "measured_nonbinder": {
+      "exact_duplicate_count": 0,
+      "mean_nearest_positive_edit_distance": 5.272244323694935,
+      "median_nearest_positive_edit_distance": 5.0,
+      "n_negative": 82448
+    }
+  },
+  "scores": {
+    "edit_retrieval": {
+      "is_degenerate": false,
+      "macro_auc01": {
+        "hi": 0.6230666760901921,
+        "lo": 0.5964350273652117,
+        "n_replicates": 20000,
+        "point": 0.6087557680890882
+      },
+      "macro_auroc_point": 0.7753764493785039,
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128,
+      "pooled_auprc": {
+        "hi": 0.5425025407328845,
+        "lo": 0.46970430183151685,
+        "n_replicates": 20000,
+        "point": 0.5099791530453022
+      },
+      "pooled_auroc": {
+        "hi": 0.7989557091421217,
+        "lo": 0.7689244225347986,
+        "n_replicates": 20000,
+        "point": 0.7847188247275273
+      }
+    },
+    "esm_retrieval": {
+      "is_degenerate": false,
+      "macro_auc01": {
+        "hi": 0.5807312404032015,
+        "lo": 0.5542467702198337,
+        "n_replicates": 20000,
+        "point": 0.5660299694907764
+      },
+      "macro_auroc_point": 0.6642064718770964,
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128,
+      "pooled_auprc": {
+        "hi": 0.4821645782348854,
+        "lo": 0.40678783107256505,
+        "n_replicates": 20000,
+        "point": 0.4484166310872025
+      },
+      "pooled_auroc": {
+        "hi": 0.6907660169781527,
+        "lo": 0.660605790887479,
+        "n_replicates": 20000,
+        "point": 0.6769021378412671
+      }
+    },
+    "length_composition": {
+      "is_degenerate": false,
+      "macro_auc01": {
+        "hi": 0.5227337836568581,
+        "lo": 0.5090964593786401,
+        "n_replicates": 20000,
+        "point": 0.515424642319141
+      },
+      "macro_auroc_point": 0.6032873152072044,
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128,
+      "pooled_auprc": {
+        "hi": 0.422131672905816,
+        "lo": 0.2848780974356741,
+        "n_replicates": 20000,
+        "point": 0.35551081623319736
+      },
+      "pooled_auroc": {
+        "hi": 0.6639838938225311,
+        "lo": 0.5933160220483606,
+        "n_replicates": 20000,
+        "point": 0.6312102126529552
+      }
+    },
+    "mlp_one_hot": {
+      "is_degenerate": false,
+      "macro_auc01": {
+        "hi": 0.8423519681348564,
+        "lo": 0.8078821273807248,
+        "n_replicates": 20000,
+        "point": 0.8252252511151067
+      },
+      "macro_auroc_point": 0.9402077388244642,
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128,
+      "pooled_auprc": {
+        "hi": 0.8883721975636106,
+        "lo": 0.8471601069056177,
+        "n_replicates": 20000,
+        "point": 0.8703709840123008
+      },
+      "pooled_auroc": {
+        "hi": 0.9532846873279657,
+        "lo": 0.9403000882569982,
+        "n_replicates": 20000,
+        "point": 0.9474817140612479
+      }
+    },
+    "mlp_pseudo_sequence": {
+      "is_degenerate": false,
+      "macro_auc01": {
+        "hi": 0.8455664400452074,
+        "lo": 0.810770547453672,
+        "n_replicates": 20000,
+        "point": 0.8283217723428749
+      },
+      "macro_auroc_point": 0.9420565355783085,
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128,
+      "pooled_auprc": {
+        "hi": 0.8904231578634387,
+        "lo": 0.8515744316385818,
+        "n_replicates": 20000,
+        "point": 0.8735172664083534
+      },
+      "pooled_auroc": {
+        "hi": 0.9549322234411404,
+        "lo": 0.9423485489169985,
+        "n_replicates": 20000,
+        "point": 0.9493073699674007
+      }
+    },
+    "pwm": {
+      "is_degenerate": false,
+      "macro_auc01": {
+        "hi": 0.7664034137380762,
+        "lo": 0.7230775851512287,
+        "n_replicates": 20000,
+        "point": 0.7442644986987019
+      },
+      "macro_auroc_point": 0.9107023220170422,
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128,
+      "pooled_auprc": {
+        "hi": 0.815740039126649,
+        "lo": 0.7502811845021877,
+        "n_replicates": 20000,
+        "point": 0.7854732182138412
+      },
+      "pooled_auroc": {
+        "hi": 0.9309051857422597,
+        "lo": 0.9141050400277674,
+        "n_replicates": 20000,
+        "point": 0.9233392180886569
+      }
+    },
+    "random": {
+      "is_degenerate": false,
+      "macro_auc01": {
+        "hi": 0.5022974007792648,
+        "lo": 0.49784288424254275,
+        "n_replicates": 20000,
+        "point": 0.4997764778767435
+      },
+      "macro_auroc_point": 0.4944404133486275,
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128,
+      "pooled_auprc": {
+        "hi": 0.2838857997962839,
+        "lo": 0.21886330363529585,
+        "n_replicates": 20000,
+        "point": 0.2518673132038567
+      },
+      "pooled_auroc": {
+        "hi": 0.4979310736024072,
+        "lo": 0.48796890134410337,
+        "n_replicates": 20000,
+        "point": 0.49290413042022174
+      }
+    }
+  }
+}

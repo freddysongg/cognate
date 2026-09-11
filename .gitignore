@@ -24,6 +24,10 @@ data/immrep23.zip
 # Regenerable submission outputs
 data/submissions/
 
+# pMHC source rows and regenerable row-level outputs
+data/pmhc/raw/
+data/pmhc/derived/
+
 # Notebooks kept local
 notebooks/
 
