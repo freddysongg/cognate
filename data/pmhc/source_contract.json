@@ -1,0 +1,30 @@
+{
+  "source_url": "https://services.healthtech.dtu.dk/suppl/immunology/NAR_NetMHCpan_NetMHCIIpan/NetMHCpan_train.tar.gz",
+  "retrieval_date": "2026-09-10",
+  "archive_sha256": "06f2c9f20bb959238bf5d601fca0489a0ed3f17648b952f30640205afca8f9b4",
+  "file_sha256": {
+    "c000_ba": "a5704007e127c8c0e2a3b0043c52ad2f92be5efd01bd2b6a0f7e5424d25d06ef",
+    "c001_ba": "754c5fecf1c8387b48fc8cf77473fc14c9e89adb2694ac977e51e7028b0304f1",
+    "c002_ba": "f1ff916e3bd4ed01352b7fa4c6a1852fd9294104f6b344c5dd2eba7961a57aef",
+    "c003_ba": "9cde2dd51abf1cde03383c5f8120e88243c7b6f486f341a7566bb4ad6f60eb69",
+    "c004_ba": "a2a28d2565fb8a3e6c76e1f7d2be5b1a3aca28acbabe13c3db4e2063c404f2e5",
+    "MHC_pseudo.dat": "f46d95dee821db6c139d6cee6f6bf72328468c1d8f6e9741daf21562752ad39a"
+  },
+  "source_counts": {
+    "ba_rows_all_species": 208093,
+    "hla_abc_rows": 170107,
+    "hla_abc_positive": 42001,
+    "hla_abc_artificial_negative": 10895,
+    "nine_mer_hla_rows": 126375,
+    "nine_mer_hla_positive": 30869,
+    "nine_mer_hla_negative": 95506
+  },
+  "headline_counts": {
+    "alleles": 47,
+    "rows": 112128,
+    "positive": 28538,
+    "negative": 83590,
+    "measured_nonbinder": 82448,
+    "artificial_negative": 1142
+  }
+}
