@@ -99,6 +99,15 @@ def build_joint_novelty_partition(
     )
 
 
+def build_allele_only_schedule(
+    rows: pd.DataFrame, alleles: Sequence[str]
+) -> tuple[TransferPartition, ...]:
+    """Build one allele-only partition per target allele, preserving input order."""
+    target_alleles = tuple(alleles)
+    _require_held_out_alleles(target_alleles)
+    return tuple(build_allele_partition(rows, allele) for allele in target_alleles)
+
+
 def split_transfer_fit_validation(
     train: pd.DataFrame, *, seed: int = 0
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -169,6 +178,43 @@ def _normalized_hamming_distance(sequence_a: str, sequence_b: str) -> float:
         residue_a != residue_b
         for residue_a, residue_b in zip(sequence_a, sequence_b, strict=True)
     ) / PSEUDO_SEQUENCE_LENGTH
+
+
+def build_allele_only_diagnostics(
+    schedule: Sequence[TransferPartition],
+    pseudo_sequences: Mapping[str, str],
+) -> dict[str, dict[str, object]]:
+    """Report peptide overlap, nearest retained distance, and PWM source per target."""
+    diagnostics: dict[str, dict[str, object]] = {}
+    for partition in schedule:
+        target_allele = partition.held_out_alleles[0]
+        target_sequence = pseudo_sequences[target_allele]
+        train_peptides = set(partition.train["Peptide"])
+        test_peptides = partition.test["Peptide"]
+        unique_test_peptides = set(test_peptides)
+        overlap_peptides = unique_test_peptides & train_peptides
+        rows_with_training_peptide = int(test_peptides.isin(train_peptides).sum())
+        retained_distances = {
+            str(source_allele): _normalized_hamming_distance(
+                target_sequence, pseudo_sequences[str(source_allele)]
+            )
+            for source_allele in partition.train["Allele"].unique()
+        }
+        source_allele = select_nearest_pwm_source(
+            partition.train, target_allele, pseudo_sequences
+        )
+        diagnostics[target_allele] = {
+            "peptide_overlap_count": len(overlap_peptides),
+            "peptide_overlap_fraction": len(overlap_peptides) / len(unique_test_peptides),
+            "test_unique_peptides": len(unique_test_peptides),
+            "test_rows_with_training_peptide": rows_with_training_peptide,
+            "test_row_overlap_fraction": rows_with_training_peptide / len(test_peptides),
+            "nearest_retained_pseudo_distance": min(retained_distances.values()),
+            "selected_pwm_source": source_allele,
+            "selected_pwm_source_distance": retained_distances[source_allele],
+            "training_rows": len(partition.train),
+        }
+    return diagnostics
 
 
 def preflight_partitions(
