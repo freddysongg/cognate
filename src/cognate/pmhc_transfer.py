@@ -35,6 +35,59 @@ TRANSFER_SCORE_NAMES = (
     "pseudo_sequence_mlp",
 )
 
+# The frozen 47-allele pseudo-sequence cohort. `build_pseudo_sequence_clusters` rejects
+# any mapping that is not exactly this one, so the cluster grouping is fixed before any
+# score or outcome is inspected, independent of which caller supplies the mapping.
+FROZEN_PSEUDO_SEQUENCES: dict[str, str] = {
+    "HLA-A01:01": "YFAMYQENMAHTDANTLYIIYRDYTWVARVYRGY",
+    "HLA-A02:01": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVLAYTWY",
+    "HLA-A02:02": "YFAMYGEKVAHTHVDTLYLRYHYYTWAVWAYTWY",
+    "HLA-A02:03": "YFAMYGEKVAHTHVDTLYVRYHYYTWAEWAYTWY",
+    "HLA-A02:06": "YYAMYGEKVAHTHVDTLYVRYHYYTWAVLAYTWY",
+    "HLA-A02:11": "YFAMYGEKVAHIDVDTLYVRYHYYTWAVLAYTWY",
+    "HLA-A02:12": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVQAYTWY",
+    "HLA-A02:16": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVLAYEWY",
+    "HLA-A02:19": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVQAYTGY",
+    "HLA-A03:01": "YFAMYQENVAQTDVDTLYIIYRDYTWAELAYTWY",
+    "HLA-A11:01": "YYAMYQENVAQTDVDTLYIIYRDYTWAAQAYRWY",
+    "HLA-A23:01": "YSAMYEEKVAHTDENIAYLMFHYYTWAVLAYTGY",
+    "HLA-A24:02": "YSAMYEEKVAHTDENIAYLMFHYYTWAVQAYTGY",
+    "HLA-A24:03": "YSAMYEEKVAHTDENIAYLMFHYYTWAVQAYTWY",
+    "HLA-A26:01": "YYAMYRNNVAHTDANTLYIRYQDYTWAEWAYRWY",
+    "HLA-A26:02": "YYAMYRNNVAHTDANTLYIRYQNYTWAEWAYRWY",
+    "HLA-A29:02": "YTAMYLQNVAQTDANTLYIMYRDYTWAVLAYTWY",
+    "HLA-A30:01": "YSAMYQENVAQTDVDTLYIIYEHYTWAWLAYTWY",
+    "HLA-A30:02": "YSAMYQENVAHTDENTLYIIYEHYTWARLAYTWY",
+    "HLA-A31:01": "YTAMYQENVAHIDVDTLYIMYQDYTWAVLAYTWY",
+    "HLA-A32:01": "YFAMYQENVAHTDESIAYIMYQDYTWAVLAYTWY",
+    "HLA-A33:01": "YTAMYRNNVAHIDVDTLYIMYQDYTWAVLAYTWH",
+    "HLA-A68:01": "YYAMYRNNVAQTDVDTLYIMYRDYTWAVWAYTWY",
+    "HLA-A68:02": "YYAMYRNNVAQTDVDTLYIRYHYYTWAVWAYTWY",
+    "HLA-A69:01": "YYAMYRNNVAQTDVDTLYVRYHYYTWAVLAYTWY",
+    "HLA-A80:01": "YFAMYEENVAHTNANTLYIIYRDYTWARLAYEGY",
+    "HLA-B07:02": "YYSEYRNIYAQTDESNLYLSYDYYTWAERAYEWY",
+    "HLA-B08:01": "YDSEYRNIFTNTDESNLYLSYNYYTWAVDAYTWY",
+    "HLA-B15:01": "YYAMYREISTNTYESNLYLRYDSYTWAEWAYLWY",
+    "HLA-B15:03": "YYSEYREISTNTYESNLYLRYDSYTWAELAYLWY",
+    "HLA-B15:17": "YYAMYRENMASTYENIAYLRYHDYTWAELAYLWY",
+    "HLA-B18:01": "YHSTYRNISTNTYESNLYLRYDSYTWAVLAYTWH",
+    "HLA-B27:05": "YHTEYREICAKTDEDTLYLNYHDYTWAVLAYEWY",
+    "HLA-B35:01": "YYATYRNIFTNTYESNLYIRYDSYTWAVLAYLWY",
+    "HLA-B38:01": "YYSEYRNICTNTYENIAYLRYNFYTWAVLTYTWY",
+    "HLA-B39:01": "YYSEYRNICTNTDESNLYLRYNFYTWAVLTYTWY",
+    "HLA-B40:01": "YHTKYREISTNTYESNLYLRYNYYSLAVLAYEWY",
+    "HLA-B40:02": "YHTKYREISTNTYESNLYLSYNYYTWAVLAYEWY",
+    "HLA-B44:02": "YYTKYREISTNTYENTAYIRYDDYTWAVDAYLSY",
+    "HLA-B44:03": "YYTKYREISTNTYENTAYIRYDDYTWAVLAYLSY",
+    "HLA-B45:01": "YHTKYREISTNTYESNLYWRYNLYTWAVDAYLSY",
+    "HLA-B51:01": "YYATYRNIFTNTYENIAYWTYNYYTWAELAYLWH",
+    "HLA-B53:01": "YYATYRNIFTNTYENIAYIRYDSYTWAVLAYLWY",
+    "HLA-B54:01": "YYAGYRNIYAQTDESNLYWTYNLYTWAVLAYTWY",
+    "HLA-B57:01": "YYAMYGENMASTYENIAYIVYDSYTWAVLAYLWY",
+    "HLA-B58:01": "YYATYGENMASTYENIAYIRYDSYTWAVLAYLWY",
+    "HLA-C15:02": "YYAGYRENYRQTDVNKLYIRYDLYTWAELAYTWY",
+}
+
 
 @dataclass(frozen=True)
 class TransferPartition:
@@ -96,6 +149,84 @@ def build_joint_novelty_partition(
         rows,
         (target_allele,),
         exclude_test_peptides=True,
+    )
+
+
+def build_pseudo_sequence_clusters(
+    pseudo_sequences: Mapping[str, str],
+) -> tuple[tuple[str, ...], ...]:
+    """Group the frozen 47-allele cohort by complete-linkage Hamming distance.
+
+    Iterates integer Hamming cuts from zero upward over the 34-residue pseudo-sequences
+    and returns the first cut that leaves at most one singleton cluster. Ties during
+    agglomeration and cut selection are broken by sorted-allele order, so the grouping
+    is deterministic and depends only on pseudo-sequence content, never on target labels
+    or arm outcomes.
+    """
+    if dict(pseudo_sequences) != FROZEN_PSEUDO_SEQUENCES:
+        raise ValueError(
+            "pseudo-sequence mapping differs from the frozen 47-allele cohort"
+        )
+    alleles = sorted(pseudo_sequences)
+    merges = _complete_linkage_merges(alleles, pseudo_sequences)
+    for cut in range(PSEUDO_SEQUENCE_LENGTH):
+        partition = tuple(sorted((allele,) for allele in alleles))
+        for merge_distance, snapshot in merges:
+            if merge_distance > cut:
+                break
+            partition = snapshot
+        if sum(len(cluster) == 1 for cluster in partition) <= 1:
+            return partition
+    raise ValueError("no Hamming cut leaves at most one singleton cluster")
+
+
+def _complete_linkage_merges(
+    alleles: Sequence[str], pseudo_sequences: Mapping[str, str]
+) -> list[tuple[int, tuple[tuple[str, ...], ...]]]:
+    """Build the deterministic complete-linkage merge sequence, sorted-allele tie-break."""
+
+    def residue_distance(allele_a: str, allele_b: str) -> int:
+        return sum(
+            residue_a != residue_b
+            for residue_a, residue_b in zip(
+                pseudo_sequences[allele_a], pseudo_sequences[allele_b], strict=True
+            )
+        )
+
+    def linkage_distance(
+        cluster_a: tuple[str, ...], cluster_b: tuple[str, ...]
+    ) -> int:
+        return max(
+            residue_distance(member_a, member_b)
+            for member_a in cluster_a
+            for member_b in cluster_b
+        )
+
+    clusters = sorted((allele,) for allele in alleles)
+    merges: list[tuple[int, tuple[tuple[str, ...], ...]]] = []
+    while len(clusters) > 1:
+        clusters = sorted(clusters)
+        merge_distance, i, j = min(
+            (linkage_distance(clusters[i], clusters[j]), i, j)
+            for i in range(len(clusters))
+            for j in range(i + 1, len(clusters))
+        )
+        merged_cluster = tuple(sorted(clusters[i] + clusters[j]))
+        clusters = [
+            cluster for index, cluster in enumerate(clusters) if index not in (i, j)
+        ] + [merged_cluster]
+        merges.append((merge_distance, tuple(sorted(clusters))))
+    return merges
+
+
+def build_cluster_schedule(
+    rows: pd.DataFrame, pseudo_sequences: Mapping[str, str]
+) -> tuple[TransferPartition, ...]:
+    """Build one group-holdout transfer partition per frozen pseudo-sequence cluster."""
+    clusters = build_pseudo_sequence_clusters(pseudo_sequences)
+    return tuple(
+        build_transfer_partition(rows, cluster, exclude_test_peptides=False)
+        for cluster in clusters
     )
 
 
