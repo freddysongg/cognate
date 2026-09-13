@@ -229,6 +229,77 @@ def preflight_partitions(
         checked_targets.update(held_out_alleles)
 
 
+@dataclass(frozen=True)
+class JointNoveltyTargetDiagnostics:
+    """Deletion and transfer diagnostics for one joint allele-and-peptide target."""
+
+    target_allele: str
+    deleted_training_rows: int
+    retained_positive_rows: int
+    retained_negative_rows: int
+    retained_allele_count: int
+    nearest_pwm_source: str
+    nearest_pseudo_sequence_distance: float
+
+
+@dataclass(frozen=True)
+class JointNoveltySchedule:
+    """The complete joint-novelty partition schedule with per-target diagnostics."""
+
+    partitions: tuple[TransferPartition, ...]
+    diagnostics: tuple[JointNoveltyTargetDiagnostics, ...]
+
+
+def build_joint_novelty_schedule(
+    rows: pd.DataFrame,
+    alleles: Sequence[str],
+    pseudo_sequences: Mapping[str, str],
+) -> JointNoveltySchedule:
+    """Build the joint allele-and-peptide novelty schedule for every target.
+
+    Every target additionally loses training rows whose peptide occurs in its
+    own held-out rows. This is a compound intervention: the recorded deletion
+    diagnostics describe altered training-set composition, not an isolated
+    peptide-novelty effect. The shared all-or-fail preflight runs before any
+    diagnostic is computed, so one invalid target aborts the whole schedule.
+    """
+    target_alleles = tuple(sorted(alleles))
+    _require_held_out_alleles(target_alleles)
+    partitions = tuple(
+        build_joint_novelty_partition(rows, target_allele)
+        for target_allele in target_alleles
+    )
+    preflight_partitions(partitions, pseudo_sequences, target_alleles)
+    diagnostics = tuple(
+        _joint_novelty_target_diagnostics(rows, partition, pseudo_sequences)
+        for partition in partitions
+    )
+    return JointNoveltySchedule(partitions=partitions, diagnostics=diagnostics)
+
+
+def _joint_novelty_target_diagnostics(
+    rows: pd.DataFrame,
+    partition: TransferPartition,
+    pseudo_sequences: Mapping[str, str],
+) -> JointNoveltyTargetDiagnostics:
+    (target_allele,) = partition.held_out_alleles
+    non_target_rows = rows.loc[rows["Allele"] != target_allele]
+    nearest_source = select_nearest_pwm_source(
+        partition.train, target_allele, pseudo_sequences
+    )
+    return JointNoveltyTargetDiagnostics(
+        target_allele=target_allele,
+        deleted_training_rows=len(non_target_rows) - len(partition.train),
+        retained_positive_rows=int(partition.train["Target"].sum()),
+        retained_negative_rows=int((~partition.train["Target"]).sum()),
+        retained_allele_count=int(partition.train["Allele"].nunique()),
+        nearest_pwm_source=nearest_source,
+        nearest_pseudo_sequence_distance=_normalized_hamming_distance(
+            pseudo_sequences[target_allele], pseudo_sequences[nearest_source]
+        ),
+    )
+
+
 def score_transfer_partition(
     partition: TransferPartition,
     pseudo_sequences: Mapping[str, str],
