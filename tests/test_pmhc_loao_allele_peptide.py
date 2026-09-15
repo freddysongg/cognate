@@ -17,7 +17,7 @@ import pytest
 import scripts.run_pmhc_loao_allele_peptide as runner
 from cognate import pmhc_transfer
 from cognate.pmhc import PmhcDataset
-from cognate.pmhc_transfer import build_joint_novelty_schedule
+from cognate.pmhc_transfer import build_joint_novelty_diagnostics, build_joint_novelty_schedule
 
 
 def _pseudo_sequences() -> dict[str, str]:
@@ -66,11 +66,11 @@ def test_joint_schedule_has_zero_target_and_peptide_overlap() -> None:
     rows = _rows()
     pseudo_sequences = _pseudo_sequences()
 
-    schedule = build_joint_novelty_schedule(
+    partitions = build_joint_novelty_schedule(
         rows, sorted(pseudo_sequences), pseudo_sequences
     )
 
-    for partition in schedule.partitions:
+    for partition in partitions:
         assert set(partition.test["Allele"]).isdisjoint(partition.train["Allele"])
         assert set(partition.test["Peptide"]).isdisjoint(partition.train["Peptide"])
         assert partition.label == pmhc_transfer.JOINT_NOVELTY_LABEL
@@ -81,10 +81,11 @@ def test_joint_schedule_records_diagnostics_for_every_target() -> None:
     pseudo_sequences = _pseudo_sequences()
     alleles = sorted(pseudo_sequences)
 
-    schedule = build_joint_novelty_schedule(rows, alleles, pseudo_sequences)
+    partitions = build_joint_novelty_schedule(rows, alleles, pseudo_sequences)
+    diagnostics = build_joint_novelty_diagnostics(partitions, rows, pseudo_sequences)
 
-    assert [diagnostic.target_allele for diagnostic in schedule.diagnostics] == alleles
-    by_target = {diagnostic.target_allele: diagnostic for diagnostic in schedule.diagnostics}
+    assert [diagnostic.target_allele for diagnostic in diagnostics] == alleles
+    by_target = {diagnostic.target_allele: diagnostic for diagnostic in diagnostics}
 
     a01 = by_target["HLA-A01:01"]
     assert a01.deleted_training_rows == 1

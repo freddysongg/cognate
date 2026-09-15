@@ -27,7 +27,11 @@ from cognate.pmhc import (
     load_source_contract,
     verify_source,
 )
-from cognate.pmhc_transfer import build_joint_novelty_schedule, evaluate_transfer_schedule
+from cognate.pmhc_transfer import (
+    build_joint_novelty_diagnostics,
+    build_joint_novelty_schedule,
+    evaluate_transfer_schedule,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_CONTRACT_PATH = ROOT / "data" / "pmhc" / "source_contract.json"
@@ -64,11 +68,12 @@ def run_joint_novelty(source_dir: Path, output_path: Path, *, device: str) -> di
     pseudo_sequences = load_pseudo_sequences(
         source_dir / "MHC_pseudo.dat", dataset.eligible_alleles
     )
-    schedule = build_joint_novelty_schedule(
+    partitions = build_joint_novelty_schedule(
         dataset.rows, dataset.eligible_alleles, pseudo_sequences
     )
+    diagnostics = build_joint_novelty_diagnostics(partitions, dataset.rows, pseudo_sequences)
     result_core = evaluate_transfer_schedule(
-        schedule.partitions, pseudo_sequences, dataset.eligible_alleles, device=device
+        partitions, pseudo_sequences, dataset.eligible_alleles, device=device
     )
     if tuple(result_core) != _RESULT_CORE_FIELDS:
         raise AssertionError("transfer result core fields differ from the shared contract")
@@ -76,7 +81,7 @@ def run_joint_novelty(source_dir: Path, output_path: Path, *, device: str) -> di
         "estimand": ESTIMAND,
         "claim_boundary": CLAIM_BOUNDARY,
         "diagnostics": {
-            "targets": [asdict(target) for target in schedule.diagnostics],
+            "targets": [asdict(target) for target in diagnostics],
         },
         **result_core,
     }

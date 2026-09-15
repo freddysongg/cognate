@@ -242,26 +242,18 @@ class JointNoveltyTargetDiagnostics:
     nearest_pseudo_sequence_distance: float
 
 
-@dataclass(frozen=True)
-class JointNoveltySchedule:
-    """The complete joint-novelty partition schedule with per-target diagnostics."""
-
-    partitions: tuple[TransferPartition, ...]
-    diagnostics: tuple[JointNoveltyTargetDiagnostics, ...]
-
-
 def build_joint_novelty_schedule(
     rows: pd.DataFrame,
     alleles: Sequence[str],
     pseudo_sequences: Mapping[str, str],
-) -> JointNoveltySchedule:
-    """Build the joint allele-and-peptide novelty schedule for every target.
+) -> tuple[TransferPartition, ...]:
+    """Build the joint allele-and-peptide novelty partition schedule for every target.
 
     Every target additionally loses training rows whose peptide occurs in its
-    own held-out rows. This is a compound intervention: the recorded deletion
-    diagnostics describe altered training-set composition, not an isolated
-    peptide-novelty effect. The shared all-or-fail preflight runs before any
-    diagnostic is computed, so one invalid target aborts the whole schedule.
+    own held-out rows. This is a compound intervention, not an isolated
+    peptide-novelty effect — see `build_joint_novelty_diagnostics` for the
+    per-target deletion accounting. The shared all-or-fail preflight runs
+    before this returns, so one invalid target aborts the whole schedule.
     """
     target_alleles = tuple(sorted(alleles))
     _require_held_out_alleles(target_alleles)
@@ -270,11 +262,19 @@ def build_joint_novelty_schedule(
         for target_allele in target_alleles
     )
     preflight_partitions(partitions, pseudo_sequences, target_alleles)
-    diagnostics = tuple(
+    return partitions
+
+
+def build_joint_novelty_diagnostics(
+    partitions: Sequence[TransferPartition],
+    rows: pd.DataFrame,
+    pseudo_sequences: Mapping[str, str],
+) -> tuple[JointNoveltyTargetDiagnostics, ...]:
+    """Report deletion and transfer diagnostics for every joint-novelty target."""
+    return tuple(
         _joint_novelty_target_diagnostics(rows, partition, pseudo_sequences)
         for partition in partitions
     )
-    return JointNoveltySchedule(partitions=partitions, diagnostics=diagnostics)
 
 
 def _joint_novelty_target_diagnostics(
