@@ -35,60 +35,6 @@ TRANSFER_SCORE_NAMES = (
     "pseudo_sequence_mlp",
 )
 
-# The frozen 47-allele pseudo-sequence cohort. `build_pseudo_sequence_clusters` rejects
-# any mapping that is not exactly this one, so the cluster grouping is fixed before any
-# score or outcome is inspected, independent of which caller supplies the mapping.
-FROZEN_PSEUDO_SEQUENCES: dict[str, str] = {
-    "HLA-A01:01": "YFAMYQENMAHTDANTLYIIYRDYTWVARVYRGY",
-    "HLA-A02:01": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVLAYTWY",
-    "HLA-A02:02": "YFAMYGEKVAHTHVDTLYLRYHYYTWAVWAYTWY",
-    "HLA-A02:03": "YFAMYGEKVAHTHVDTLYVRYHYYTWAEWAYTWY",
-    "HLA-A02:06": "YYAMYGEKVAHTHVDTLYVRYHYYTWAVLAYTWY",
-    "HLA-A02:11": "YFAMYGEKVAHIDVDTLYVRYHYYTWAVLAYTWY",
-    "HLA-A02:12": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVQAYTWY",
-    "HLA-A02:16": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVLAYEWY",
-    "HLA-A02:19": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVQAYTGY",
-    "HLA-A03:01": "YFAMYQENVAQTDVDTLYIIYRDYTWAELAYTWY",
-    "HLA-A11:01": "YYAMYQENVAQTDVDTLYIIYRDYTWAAQAYRWY",
-    "HLA-A23:01": "YSAMYEEKVAHTDENIAYLMFHYYTWAVLAYTGY",
-    "HLA-A24:02": "YSAMYEEKVAHTDENIAYLMFHYYTWAVQAYTGY",
-    "HLA-A24:03": "YSAMYEEKVAHTDENIAYLMFHYYTWAVQAYTWY",
-    "HLA-A26:01": "YYAMYRNNVAHTDANTLYIRYQDYTWAEWAYRWY",
-    "HLA-A26:02": "YYAMYRNNVAHTDANTLYIRYQNYTWAEWAYRWY",
-    "HLA-A29:02": "YTAMYLQNVAQTDANTLYIMYRDYTWAVLAYTWY",
-    "HLA-A30:01": "YSAMYQENVAQTDVDTLYIIYEHYTWAWLAYTWY",
-    "HLA-A30:02": "YSAMYQENVAHTDENTLYIIYEHYTWARLAYTWY",
-    "HLA-A31:01": "YTAMYQENVAHIDVDTLYIMYQDYTWAVLAYTWY",
-    "HLA-A32:01": "YFAMYQENVAHTDESIAYIMYQDYTWAVLAYTWY",
-    "HLA-A33:01": "YTAMYRNNVAHIDVDTLYIMYQDYTWAVLAYTWH",
-    "HLA-A68:01": "YYAMYRNNVAQTDVDTLYIMYRDYTWAVWAYTWY",
-    "HLA-A68:02": "YYAMYRNNVAQTDVDTLYIRYHYYTWAVWAYTWY",
-    "HLA-A69:01": "YYAMYRNNVAQTDVDTLYVRYHYYTWAVLAYTWY",
-    "HLA-A80:01": "YFAMYEENVAHTNANTLYIIYRDYTWARLAYEGY",
-    "HLA-B07:02": "YYSEYRNIYAQTDESNLYLSYDYYTWAERAYEWY",
-    "HLA-B08:01": "YDSEYRNIFTNTDESNLYLSYNYYTWAVDAYTWY",
-    "HLA-B15:01": "YYAMYREISTNTYESNLYLRYDSYTWAEWAYLWY",
-    "HLA-B15:03": "YYSEYREISTNTYESNLYLRYDSYTWAELAYLWY",
-    "HLA-B15:17": "YYAMYRENMASTYENIAYLRYHDYTWAELAYLWY",
-    "HLA-B18:01": "YHSTYRNISTNTYESNLYLRYDSYTWAVLAYTWH",
-    "HLA-B27:05": "YHTEYREICAKTDEDTLYLNYHDYTWAVLAYEWY",
-    "HLA-B35:01": "YYATYRNIFTNTYESNLYIRYDSYTWAVLAYLWY",
-    "HLA-B38:01": "YYSEYRNICTNTYENIAYLRYNFYTWAVLTYTWY",
-    "HLA-B39:01": "YYSEYRNICTNTDESNLYLRYNFYTWAVLTYTWY",
-    "HLA-B40:01": "YHTKYREISTNTYESNLYLRYNYYSLAVLAYEWY",
-    "HLA-B40:02": "YHTKYREISTNTYESNLYLSYNYYTWAVLAYEWY",
-    "HLA-B44:02": "YYTKYREISTNTYENTAYIRYDDYTWAVDAYLSY",
-    "HLA-B44:03": "YYTKYREISTNTYENTAYIRYDDYTWAVLAYLSY",
-    "HLA-B45:01": "YHTKYREISTNTYESNLYWRYNLYTWAVDAYLSY",
-    "HLA-B51:01": "YYATYRNIFTNTYENIAYWTYNYYTWAELAYLWH",
-    "HLA-B53:01": "YYATYRNIFTNTYENIAYIRYDSYTWAVLAYLWY",
-    "HLA-B54:01": "YYAGYRNIYAQTDESNLYWTYNLYTWAVLAYTWY",
-    "HLA-B57:01": "YYAMYGENMASTYENIAYIVYDSYTWAVLAYLWY",
-    "HLA-B58:01": "YYATYGENMASTYENIAYIRYDSYTWAVLAYLWY",
-    "HLA-C15:02": "YYAGYRENYRQTDVNKLYIRYDLYTWAELAYTWY",
-}
-
-
 @dataclass(frozen=True)
 class TransferPartition:
     """One transfer evaluation partition with all held-out rows in its test frame."""
@@ -154,18 +100,30 @@ def build_joint_novelty_partition(
 
 def build_pseudo_sequence_clusters(
     pseudo_sequences: Mapping[str, str],
+    expected_alleles: Sequence[str],
 ) -> tuple[tuple[str, ...], ...]:
-    """Group the frozen 47-allele cohort by complete-linkage Hamming distance.
+    """Group the expected allele cohort by complete-linkage Hamming distance.
 
     Iterates integer Hamming cuts from zero upward over the 34-residue pseudo-sequences
     and returns the first cut that leaves at most one singleton cluster. Ties during
     agglomeration and cut selection are broken by sorted-allele order, so the grouping
     is deterministic and depends only on pseudo-sequence content, never on target labels
     or arm outcomes.
+
+    Rejects a mapping that does not cover exactly the caller's expected cohort. Content
+    fidelity (are these really the right 34-residue sequences) is the source contract's
+    job, verified once by `verify_source` before this ever runs; this function only
+    guards against the wrong *set* of alleles being supplied, so it does not duplicate
+    the pseudo-sequence data as a second, hand-maintained copy in source code.
     """
-    if dict(pseudo_sequences) != FROZEN_PSEUDO_SEQUENCES:
+    expected = tuple(expected_alleles)
+    _require_held_out_alleles(expected)
+    if set(pseudo_sequences) != set(expected):
+        missing = sorted(set(expected) - set(pseudo_sequences))
+        unexpected = sorted(set(pseudo_sequences) - set(expected))
         raise ValueError(
-            "pseudo-sequence mapping differs from the frozen 47-allele cohort"
+            "pseudo-sequence mapping does not cover exactly the expected allele "
+            f"cohort: missing {missing}, unexpected {unexpected}"
         )
     alleles = sorted(pseudo_sequences)
     merges = _complete_linkage_merges(alleles, pseudo_sequences)
@@ -220,10 +178,12 @@ def _complete_linkage_merges(
 
 
 def build_cluster_schedule(
-    rows: pd.DataFrame, pseudo_sequences: Mapping[str, str]
+    rows: pd.DataFrame,
+    pseudo_sequences: Mapping[str, str],
+    expected_alleles: Sequence[str],
 ) -> tuple[TransferPartition, ...]:
     """Build one group-holdout transfer partition per frozen pseudo-sequence cluster."""
-    clusters = build_pseudo_sequence_clusters(pseudo_sequences)
+    clusters = build_pseudo_sequence_clusters(pseudo_sequences, expected_alleles)
     return tuple(
         build_transfer_partition(rows, cluster, exclude_test_peptides=False)
         for cluster in clusters

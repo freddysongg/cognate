@@ -166,8 +166,8 @@ def run_cluster_holdout(source_dir: Path, output_path: Path, *, device: str) -> 
     pseudo_sequences = load_pseudo_sequences(
         source_dir / "MHC_pseudo.dat", dataset.eligible_alleles
     )
-    schedule = build_cluster_schedule(dataset.rows, pseudo_sequences)
     expected_alleles = tuple(sorted(dataset.eligible_alleles))
+    schedule = build_cluster_schedule(dataset.rows, pseudo_sequences, expected_alleles)
 
     core = evaluate_transfer_schedule(
         schedule, pseudo_sequences, expected_alleles, device=device

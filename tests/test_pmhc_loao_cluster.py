@@ -11,7 +11,6 @@ import pytest
 
 from cognate import metrics, pmhc_transfer
 from cognate.pmhc_transfer import (
-    FROZEN_PSEUDO_SEQUENCES,
     build_cluster_schedule,
     build_pseudo_sequence_clusters,
     preflight_partitions,
@@ -19,6 +18,60 @@ from cognate.pmhc_transfer import (
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = REPO_ROOT / "data" / "pmhc" / "raw" / "NetMHCpan_train"
+
+# Real 47-allele pseudo-sequence cohort, fixed here only as an offline test fixture so
+# clustering logic can be tested without the hash-verified source archive present.
+# Production code never hardcodes this — it trusts `verify_source`'s hash chain for
+# content fidelity and only checks allele-set membership (see `pmhc_transfer.py`).
+FROZEN_PSEUDO_SEQUENCES: dict[str, str] = {
+    "HLA-A01:01": "YFAMYQENMAHTDANTLYIIYRDYTWVARVYRGY",
+    "HLA-A02:01": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVLAYTWY",
+    "HLA-A02:02": "YFAMYGEKVAHTHVDTLYLRYHYYTWAVWAYTWY",
+    "HLA-A02:03": "YFAMYGEKVAHTHVDTLYVRYHYYTWAEWAYTWY",
+    "HLA-A02:06": "YYAMYGEKVAHTHVDTLYVRYHYYTWAVLAYTWY",
+    "HLA-A02:11": "YFAMYGEKVAHIDVDTLYVRYHYYTWAVLAYTWY",
+    "HLA-A02:12": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVQAYTWY",
+    "HLA-A02:16": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVLAYEWY",
+    "HLA-A02:19": "YFAMYGEKVAHTHVDTLYVRYHYYTWAVQAYTGY",
+    "HLA-A03:01": "YFAMYQENVAQTDVDTLYIIYRDYTWAELAYTWY",
+    "HLA-A11:01": "YYAMYQENVAQTDVDTLYIIYRDYTWAAQAYRWY",
+    "HLA-A23:01": "YSAMYEEKVAHTDENIAYLMFHYYTWAVLAYTGY",
+    "HLA-A24:02": "YSAMYEEKVAHTDENIAYLMFHYYTWAVQAYTGY",
+    "HLA-A24:03": "YSAMYEEKVAHTDENIAYLMFHYYTWAVQAYTWY",
+    "HLA-A26:01": "YYAMYRNNVAHTDANTLYIRYQDYTWAEWAYRWY",
+    "HLA-A26:02": "YYAMYRNNVAHTDANTLYIRYQNYTWAEWAYRWY",
+    "HLA-A29:02": "YTAMYLQNVAQTDANTLYIMYRDYTWAVLAYTWY",
+    "HLA-A30:01": "YSAMYQENVAQTDVDTLYIIYEHYTWAWLAYTWY",
+    "HLA-A30:02": "YSAMYQENVAHTDENTLYIIYEHYTWARLAYTWY",
+    "HLA-A31:01": "YTAMYQENVAHIDVDTLYIMYQDYTWAVLAYTWY",
+    "HLA-A32:01": "YFAMYQENVAHTDESIAYIMYQDYTWAVLAYTWY",
+    "HLA-A33:01": "YTAMYRNNVAHIDVDTLYIMYQDYTWAVLAYTWH",
+    "HLA-A68:01": "YYAMYRNNVAQTDVDTLYIMYRDYTWAVWAYTWY",
+    "HLA-A68:02": "YYAMYRNNVAQTDVDTLYIRYHYYTWAVWAYTWY",
+    "HLA-A69:01": "YYAMYRNNVAQTDVDTLYVRYHYYTWAVLAYTWY",
+    "HLA-A80:01": "YFAMYEENVAHTNANTLYIIYRDYTWARLAYEGY",
+    "HLA-B07:02": "YYSEYRNIYAQTDESNLYLSYDYYTWAERAYEWY",
+    "HLA-B08:01": "YDSEYRNIFTNTDESNLYLSYNYYTWAVDAYTWY",
+    "HLA-B15:01": "YYAMYREISTNTYESNLYLRYDSYTWAEWAYLWY",
+    "HLA-B15:03": "YYSEYREISTNTYESNLYLRYDSYTWAELAYLWY",
+    "HLA-B15:17": "YYAMYRENMASTYENIAYLRYHDYTWAELAYLWY",
+    "HLA-B18:01": "YHSTYRNISTNTYESNLYLRYDSYTWAVLAYTWH",
+    "HLA-B27:05": "YHTEYREICAKTDEDTLYLNYHDYTWAVLAYEWY",
+    "HLA-B35:01": "YYATYRNIFTNTYESNLYIRYDSYTWAVLAYLWY",
+    "HLA-B38:01": "YYSEYRNICTNTYENIAYLRYNFYTWAVLTYTWY",
+    "HLA-B39:01": "YYSEYRNICTNTDESNLYLRYNFYTWAVLTYTWY",
+    "HLA-B40:01": "YHTKYREISTNTYESNLYLRYNYYSLAVLAYEWY",
+    "HLA-B40:02": "YHTKYREISTNTYESNLYLSYNYYTWAVLAYEWY",
+    "HLA-B44:02": "YYTKYREISTNTYENTAYIRYDDYTWAVDAYLSY",
+    "HLA-B44:03": "YYTKYREISTNTYENTAYIRYDDYTWAVLAYLSY",
+    "HLA-B45:01": "YHTKYREISTNTYESNLYWRYNLYTWAVDAYLSY",
+    "HLA-B51:01": "YYATYRNIFTNTYENIAYWTYNYYTWAELAYLWH",
+    "HLA-B53:01": "YYATYRNIFTNTYENIAYIRYDSYTWAVLAYLWY",
+    "HLA-B54:01": "YYAGYRNIYAQTDESNLYWTYNLYTWAVLAYTWY",
+    "HLA-B57:01": "YYAMYGENMASTYENIAYIVYDSYTWAVLAYLWY",
+    "HLA-B58:01": "YYATYGENMASTYENIAYIRYDSYTWAVLAYLWY",
+    "HLA-C15:02": "YYAGYRENYRQTDVNKLYIRYDLYTWAELAYTWY",
+}
 
 
 def _load_runner_module() -> types.ModuleType:
@@ -31,26 +84,30 @@ def _load_runner_module() -> types.ModuleType:
 
 
 def test_cluster_rule_is_label_independent_and_has_one_singleton() -> None:
-    clusters = build_pseudo_sequence_clusters(FROZEN_PSEUDO_SEQUENCES)
+    expected_alleles = sorted(FROZEN_PSEUDO_SEQUENCES)
+    clusters = build_pseudo_sequence_clusters(FROZEN_PSEUDO_SEQUENCES, expected_alleles)
 
     assert sum(len(cluster) == 1 for cluster in clusters) == 1
     assert sorted(map(len, clusters)) == [1, 2, 2, 3, 3, 3, 5, 6, 6, 8, 8]
 
 
-def test_cluster_rule_rejects_a_mapping_that_is_not_exactly_the_frozen_cohort() -> None:
+def test_cluster_rule_rejects_a_mismatched_allele_set() -> None:
+    expected_alleles = sorted(FROZEN_PSEUDO_SEQUENCES)
     corrupted = dict(FROZEN_PSEUDO_SEQUENCES)
-    corrupted["HLA-A01:01"] = "A" * len(corrupted["HLA-A01:01"])
+    del corrupted["HLA-A01:01"]
+    corrupted["HLA-Z99:99"] = corrupted["HLA-A02:01"]
 
-    with pytest.raises(ValueError, match="frozen 47-allele cohort"):
-        build_pseudo_sequence_clusters(corrupted)
+    with pytest.raises(ValueError, match="does not cover exactly the expected"):
+        build_pseudo_sequence_clusters(corrupted, expected_alleles)
 
 
 def test_cluster_rule_rejects_an_incomplete_cohort() -> None:
+    expected_alleles = sorted(FROZEN_PSEUDO_SEQUENCES)
     incomplete = dict(FROZEN_PSEUDO_SEQUENCES)
     del incomplete["HLA-A01:01"]
 
-    with pytest.raises(ValueError, match="frozen 47-allele cohort"):
-        build_pseudo_sequence_clusters(incomplete)
+    with pytest.raises(ValueError, match="does not cover exactly the expected"):
+        build_pseudo_sequence_clusters(incomplete, expected_alleles)
 
 
 def _frozen_cohort_rows() -> pd.DataFrame:
@@ -72,19 +129,19 @@ def _frozen_cohort_rows() -> pd.DataFrame:
 
 def test_cluster_schedule_groups_match_the_frozen_clusters_and_preflight_cleanly() -> None:
     rows = _frozen_cohort_rows()
-    clusters = build_pseudo_sequence_clusters(FROZEN_PSEUDO_SEQUENCES)
+    expected_alleles = tuple(sorted(FROZEN_PSEUDO_SEQUENCES))
+    clusters = build_pseudo_sequence_clusters(FROZEN_PSEUDO_SEQUENCES, expected_alleles)
 
-    schedule = build_cluster_schedule(rows, FROZEN_PSEUDO_SEQUENCES)
+    schedule = build_cluster_schedule(rows, FROZEN_PSEUDO_SEQUENCES, expected_alleles)
 
     assert tuple(partition.held_out_alleles for partition in schedule) == clusters
-    preflight_partitions(
-        schedule, FROZEN_PSEUDO_SEQUENCES, tuple(sorted(FROZEN_PSEUDO_SEQUENCES))
-    )
+    preflight_partitions(schedule, FROZEN_PSEUDO_SEQUENCES, expected_alleles)
 
 
 def test_preflight_rejects_group_membership_leakage() -> None:
     rows = _frozen_cohort_rows()
-    schedule = list(build_cluster_schedule(rows, FROZEN_PSEUDO_SEQUENCES))
+    expected_alleles = tuple(sorted(FROZEN_PSEUDO_SEQUENCES))
+    schedule = list(build_cluster_schedule(rows, FROZEN_PSEUDO_SEQUENCES, expected_alleles))
     leaked_partition = replace(
         schedule[0],
         train=pd.concat(
