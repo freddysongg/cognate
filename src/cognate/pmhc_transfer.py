@@ -156,18 +156,19 @@ def select_nearest_pwm_source(
             continue
         _require_pseudo_sequence(source_allele_name, pseudo_sequences)
         source_sequence = pseudo_sequences[source_allele_name]
-        distance = sum(
-            target_residue != source_residue
-            for target_residue, source_residue in zip(
-                target_sequence,
-                source_sequence,
-                strict=True,
-            )
-        ) / PSEUDO_SEQUENCE_LENGTH
+        distance = _normalized_hamming_distance(target_sequence, source_sequence)
         nearest_sources.append((distance, source_allele_name))
     if not nearest_sources:
         raise ValueError(f"no eligible PWM source for target allele {target_allele}")
     return min(nearest_sources)[1]
+
+
+def _normalized_hamming_distance(sequence_a: str, sequence_b: str) -> float:
+    """Fraction of differing residues across the fixed 34 pseudo-sequence positions."""
+    return sum(
+        residue_a != residue_b
+        for residue_a, residue_b in zip(sequence_a, sequence_b, strict=True)
+    ) / PSEUDO_SEQUENCE_LENGTH
 
 
 def preflight_partitions(
