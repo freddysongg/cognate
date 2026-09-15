@@ -99,15 +99,6 @@ def build_joint_novelty_partition(
     )
 
 
-def build_allele_only_schedule(
-    rows: pd.DataFrame, alleles: Sequence[str]
-) -> tuple[TransferPartition, ...]:
-    """Build one allele-only partition per target allele, preserving input order."""
-    target_alleles = tuple(alleles)
-    _require_held_out_alleles(target_alleles)
-    return tuple(build_allele_partition(rows, allele) for allele in target_alleles)
-
-
 def split_transfer_fit_validation(
     train: pd.DataFrame, *, seed: int = 0
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -178,6 +169,15 @@ def _normalized_hamming_distance(sequence_a: str, sequence_b: str) -> float:
         residue_a != residue_b
         for residue_a, residue_b in zip(sequence_a, sequence_b, strict=True)
     ) / PSEUDO_SEQUENCE_LENGTH
+
+
+def build_allele_only_schedule(
+    rows: pd.DataFrame, alleles: Sequence[str]
+) -> tuple[TransferPartition, ...]:
+    """Build one allele-only partition per target allele, preserving input order."""
+    target_alleles = tuple(alleles)
+    _require_held_out_alleles(target_alleles)
+    return tuple(build_allele_partition(rows, allele) for allele in target_alleles)
 
 
 def build_allele_only_diagnostics(
