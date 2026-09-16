@@ -16,8 +16,6 @@ import json
 import sys
 from pathlib import Path
 
-import numpy as np
-
 ROOT = Path(__file__).resolve().parents[1]
 COHORT_ALLELES_PATH = ROOT / "data" / "pmhc" / "cohort_alleles.json"
 COVERAGE_PATH = ROOT / "data" / "pmhc" / "mhcflurry_allele_coverage.json"
