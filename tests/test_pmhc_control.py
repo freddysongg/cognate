@@ -5,6 +5,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pandas as pd
+import pytest
+
+from cognate.pmhc_control import score_per_allele_auc01
+
 ROOT = Path(__file__).resolve().parents[1]
 PREDECLARATION = ROOT / "docs" / "pmhc" / "novelty_control_predeclaration.md"
 
@@ -36,3 +41,28 @@ def test_coverage_artifact_partitions_the_frozen_cohort() -> None:
     unsupported = set(coverage["unsupported"])
     assert not supported & unsupported
     assert len(supported | unsupported) == 47
+
+
+def test_score_per_allele_auc01_is_perfect_when_scores_rank_targets_first() -> None:
+    predictions = pd.DataFrame(
+        {
+            "Allele": ["HLA-A01:01"] * 4 + ["HLA-B07:02"] * 4,
+            "Target": [True, True, False, False] * 2,
+            "Score": [0.9, 0.8, 0.2, 0.1, 0.9, 0.8, 0.2, 0.1],
+        }
+    )
+    scored = score_per_allele_auc01(predictions)
+    assert set(scored) == {"HLA-A01:01", "HLA-B07:02"}
+    assert scored["HLA-A01:01"] == pytest.approx(1.0)
+
+
+def test_score_per_allele_auc01_rejects_an_allele_missing_a_class() -> None:
+    predictions = pd.DataFrame(
+        {
+            "Allele": ["HLA-A01:01"] * 3,
+            "Target": [True, True, True],
+            "Score": [0.9, 0.8, 0.7],
+        }
+    )
+    with pytest.raises(ValueError, match="single-class allele"):
+        score_per_allele_auc01(predictions)
