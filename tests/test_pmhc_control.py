@@ -66,3 +66,27 @@ def test_score_per_allele_auc01_rejects_an_allele_missing_a_class() -> None:
     )
     with pytest.raises(ValueError, match="single-class allele"):
         score_per_allele_auc01(predictions)
+
+
+def test_score_per_allele_auc01_reflects_the_ten_percent_fpr_cap() -> None:
+    """A frame with enough negatives that the 10% FPR cap has real operating points.
+
+    The degenerate four-row case above yields 1.0 under any max_fpr, so it cannot
+    detect a full-AUC computation substituted for the partial one. This case can:
+    the same input scores 0.75 under an uncapped AUROC.
+    """
+    predictions = pd.DataFrame(
+        {
+            "Allele": ["HLA-A02:01"] * 25,
+            "Target": [True] * 5 + [False] * 20,
+            "Score": (
+                [0.99, 0.98, 0.97, 0.50, 0.40]
+                + [0.96, 0.95]
+                + [0.60] * 8
+                + [0.45] * 5
+                + [0.10] * 5
+            ),
+        }
+    )
+    scored = score_per_allele_auc01(predictions)
+    assert scored["HLA-A02:01"] == pytest.approx(0.7894736842105263)
