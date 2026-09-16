@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,3 +25,14 @@ def test_predeclaration_names_all_three_outcome_literals() -> None:
 def test_predeclaration_forbids_absolute_accuracy_comparison() -> None:
     text = PREDECLARATION.read_text(encoding="utf-8")
     assert "only slopes are comparable" in text.lower()
+
+COVERAGE_PATH = ROOT / "data" / "pmhc" / "mhcflurry_allele_coverage.json"
+
+
+def test_coverage_artifact_partitions_the_frozen_cohort() -> None:
+    coverage = json.loads(COVERAGE_PATH.read_text(encoding="utf-8"))
+    assert set(coverage) == {"supported", "unsupported", "mhcflurry_version"}
+    supported = set(coverage["supported"])
+    unsupported = set(coverage["unsupported"])
+    assert not supported & unsupported
+    assert len(supported | unsupported) == 47
