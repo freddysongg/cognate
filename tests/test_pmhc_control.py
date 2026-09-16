@@ -8,7 +8,15 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from cognate.pmhc_control import score_per_allele_auc01
+from cognate.pmhc_control import (
+    PINNED_REFERENCE_SLOPE,
+    DistanceSlope,
+    classify_control_outcome,
+    fit_distance_slope,
+    score_per_allele_auc01,
+)
+
+REFERENCE_SLOPE = PINNED_REFERENCE_SLOPE
 
 ROOT = Path(__file__).resolve().parents[1]
 PREDECLARATION = ROOT / "docs" / "pmhc" / "novelty_control_predeclaration.md"
@@ -90,3 +98,52 @@ def test_score_per_allele_auc01_reflects_the_ten_percent_fpr_cap() -> None:
     )
     scored = score_per_allele_auc01(predictions)
     assert scored["HLA-A02:01"] == pytest.approx(0.7894736842105263)
+
+
+def test_fit_distance_slope_recovers_a_known_line() -> None:
+    distances = [0.1, 0.2, 0.3, 0.4]
+    scores = [0.8, 0.6, 0.4, 0.2]
+    fitted = fit_distance_slope(distances, scores)
+    assert fitted.slope == pytest.approx(-2.0)
+    assert fitted.intercept == pytest.approx(1.0)
+    assert fitted.n == 4
+
+
+def test_classify_returns_novelty_effect_for_a_flat_control() -> None:
+    flat = DistanceSlope(
+        slope=0.01, stderr=0.05, ci_lo=-0.09, ci_hi=0.11,
+        intercept=0.9, r_squared=0.0, n=47,
+    )
+    assert classify_control_outcome(REFERENCE_SLOPE, flat) == "novelty_effect"
+
+
+def test_classify_returns_intrinsic_difficulty_when_control_matches_reference() -> None:
+    steep = DistanceSlope(
+        slope=-1.00, stderr=0.15, ci_lo=-1.30, ci_hi=-0.70,
+        intercept=0.85, r_squared=0.5, n=47,
+    )
+    assert classify_control_outcome(REFERENCE_SLOPE, steep) == "intrinsic_difficulty"
+
+
+def test_classify_returns_mixed_when_control_is_steep_but_shallower() -> None:
+    partial = DistanceSlope(
+        slope=-0.45, stderr=0.08, ci_lo=-0.61, ci_hi=-0.29,
+        intercept=0.88, r_squared=0.3, n=47,
+    )
+    assert classify_control_outcome(REFERENCE_SLOPE, partial) == "mixed"
+
+
+def test_outcome_is_invariant_to_a_constant_offset_in_control_scores() -> None:
+    """The slopes-only constraint, enforced structurally.
+
+    MHCflurry's training data overlaps these test rows, so its absolute AUC0.1 is partly
+    memorization and is not comparable to ours. Shifting every control score by a constant
+    must not change the outcome. This fails if the classifier is ever rewritten to consume
+    absolute performance.
+    """
+    distances = [0.05, 0.10, 0.15, 0.20, 0.25, 0.30]
+    scores = [0.80, 0.76, 0.71, 0.67, 0.62, 0.58]
+    shifted = [score + 0.15 for score in scores]
+    baseline = classify_control_outcome(REFERENCE_SLOPE, fit_distance_slope(distances, scores))
+    offset = classify_control_outcome(REFERENCE_SLOPE, fit_distance_slope(distances, shifted))
+    assert baseline == offset

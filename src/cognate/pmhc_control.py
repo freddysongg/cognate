@@ -6,11 +6,20 @@ TensorFlow or torch, reaches no network, and never writes to a shipped artifact.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+from dataclasses import dataclass
+from typing import Literal
+
+import numpy as np
 import pandas as pd
 
 from cognate.metrics import auc01
 
 _PREDICTION_COLUMNS = frozenset({"Allele", "Target", "Score"})
+CONFIDENCE_MULTIPLIER = 1.96
+PINNED_REFERENCE_SLOPE = -1.0315
+
+ControlOutcome = Literal["novelty_effect", "intrinsic_difficulty", "mixed"]
 
 
 def score_per_allele_auc01(predictions: pd.DataFrame) -> dict[str, float]:
@@ -25,3 +34,59 @@ def score_per_allele_auc01(predictions: pd.DataFrame) -> dict[str, float]:
             raise ValueError(f"single-class allele cannot be scored: {allele}")
         scored[str(allele)] = auc01(labels, group["Score"].to_numpy(dtype=float))
     return scored
+
+
+@dataclass(frozen=True)
+class DistanceSlope:
+    """An OLS fit of per-allele AUC0.1 on pseudo-sequence distance."""
+
+    slope: float
+    stderr: float
+    ci_lo: float
+    ci_hi: float
+    intercept: float
+    r_squared: float
+    n: int
+
+
+def fit_distance_slope(
+    distances: Sequence[float], scores: Sequence[float]
+) -> DistanceSlope:
+    """Fit the pre-declared linear relation of AUC0.1 on distance."""
+    x = np.asarray(distances, dtype=float)
+    y = np.asarray(scores, dtype=float)
+    if x.shape != y.shape:
+        raise ValueError(f"length mismatch: {x.shape} distances, {y.shape} scores")
+    if x.size < 3:
+        raise ValueError(f"need at least three alleles to fit a slope, got {x.size}")
+    if np.unique(x).size < 2:
+        raise ValueError("distance axis is constant; no slope is identifiable")
+    slope, intercept = np.polyfit(x, y, 1)
+    predicted = slope * x + intercept
+    residual_sum = float(np.sum((y - predicted) ** 2))
+    total_sum = float(np.sum((y - y.mean()) ** 2))
+    degrees_of_freedom = x.size - 2
+    stderr = float(
+        np.sqrt(residual_sum / degrees_of_freedom / np.sum((x - x.mean()) ** 2))
+    )
+    return DistanceSlope(
+        slope=float(slope),
+        stderr=stderr,
+        ci_lo=float(slope) - CONFIDENCE_MULTIPLIER * stderr,
+        ci_hi=float(slope) + CONFIDENCE_MULTIPLIER * stderr,
+        intercept=float(intercept),
+        r_squared=0.0 if total_sum == 0.0 else 1.0 - residual_sum / total_sum,
+        n=int(x.size),
+    )
+
+
+def classify_control_outcome(
+    reference_slope: float, control: DistanceSlope
+) -> ControlOutcome:
+    """Apply the frozen decision rule from the pre-declaration, in its stated order."""
+    is_flat = control.ci_lo <= 0.0 <= control.ci_hi
+    if is_flat and reference_slope < control.ci_lo:
+        return "novelty_effect"
+    if control.ci_lo <= reference_slope <= control.ci_hi:
+        return "intrinsic_difficulty"
+    return "mixed"
