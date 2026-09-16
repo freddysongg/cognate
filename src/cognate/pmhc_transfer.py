@@ -13,6 +13,7 @@ from cognate.metrics import compare_macro_auc01, evaluate
 from cognate.pmhc import (
     MLP_HIDDEN_SIZES,
     MLP_SEEDS,
+    POSITIVE_THRESHOLD,
     PSEUDO_SEQUENCE_LENGTH,
     _score_single_mlp,
     encode_blosum50,
@@ -26,6 +27,7 @@ TRANSFER_REFERENCES = ("peptide_only_mlp", "shuffled_mapping_mlp", "nearest_pwm"
 TRANSFER_BOOTSTRAP_DRAWS = 20_000
 TRANSFER_BOOTSTRAP_SEED = 0
 JOINT_NOVELTY_LABEL = "joint_novelty"
+CLUSTER_HOLDOUT_LABEL = "cluster_holdout"
 _REQUIRED_COLUMNS = frozenset({"Allele", "Peptide", "Target"})
 TRANSFER_SCORE_NAMES = (
     "random",
@@ -34,6 +36,7 @@ TRANSFER_SCORE_NAMES = (
     "nearest_pwm",
     "pseudo_sequence_mlp",
 )
+
 
 @dataclass(frozen=True)
 class TransferPartition:
@@ -50,6 +53,7 @@ def build_transfer_partition(
     held_out_alleles: Sequence[str],
     *,
     exclude_test_peptides: bool,
+    label: str | None = None,
 ) -> TransferPartition:
     """Build a validated, non-mutating transfer partition from pMHC rows."""
     _require_partition_columns(rows)
@@ -69,7 +73,8 @@ def build_transfer_partition(
         held_out_allele_tuple,
         exclude_test_peptides=exclude_test_peptides,
     )
-    label = JOINT_NOVELTY_LABEL if exclude_test_peptides else ALLELE_ONLY_LABEL
+    if label is None:
+        label = JOINT_NOVELTY_LABEL if exclude_test_peptides else ALLELE_ONLY_LABEL
     return TransferPartition(
         label=label,
         held_out_alleles=held_out_allele_tuple,
@@ -127,7 +132,7 @@ def build_pseudo_sequence_clusters(
         )
     alleles = sorted(pseudo_sequences)
     merges = _complete_linkage_merges(alleles, pseudo_sequences)
-    for cut in range(PSEUDO_SEQUENCE_LENGTH):
+    for cut in range(PSEUDO_SEQUENCE_LENGTH + 1):
         partition = tuple(sorted((allele,) for allele in alleles))
         for merge_distance, snapshot in merges:
             if merge_distance > cut:
@@ -185,7 +190,12 @@ def build_cluster_schedule(
     """Build one group-holdout transfer partition per frozen pseudo-sequence cluster."""
     clusters = build_pseudo_sequence_clusters(pseudo_sequences, expected_alleles)
     return tuple(
-        build_transfer_partition(rows, cluster, exclude_test_peptides=False)
+        build_transfer_partition(
+            rows,
+            cluster,
+            exclude_test_peptides=False,
+            label=CLUSTER_HOLDOUT_LABEL,
+        )
         for cluster in clusters
     )
 
@@ -330,7 +340,11 @@ def preflight_partitions(
 
     checked_targets: set[str] = set()
     for partition in partitions:
-        if partition.label not in (ALLELE_ONLY_LABEL, JOINT_NOVELTY_LABEL):
+        if partition.label not in (
+            ALLELE_ONLY_LABEL,
+            JOINT_NOVELTY_LABEL,
+            CLUSTER_HOLDOUT_LABEL,
+        ):
             raise ValueError(f"unsupported transfer partition label: {partition.label}")
         _require_partition_columns(partition.train)
         _require_partition_columns(partition.test)
@@ -443,7 +457,23 @@ def score_transfer_partition(
     *,
     device: str,
 ) -> dict[str, np.ndarray]:
-    """Score one validated transfer partition with the fixed compatible arms."""
+    """Score one validated transfer partition with the fixed compatible arms.
+
+    Re-preflights its own argument even though `evaluate_transfer_schedule` already
+    preflighted the whole schedule. The duplication is deliberate: this is a public entry
+    point that tests and future callers invoke directly, and the checks it repeats are
+    cheap relative to fitting the MLP ensemble. Removing it to save the repeated
+    `groupby` and split would trade a guard for time on runs that are already recorded.
+
+    The `random` arm is one fixed uniform stream, not an independent draw per partition:
+    `random_scores` reseeds `default_rng(0)` on every call, so two partitions receive the
+    same values for their first `min(n, m)` rows and the macro random reference is that
+    one stream realigned against different rows. It is a fixed reproducible reference
+    rather than an estimate of how variable a random ranker is, and it is never a
+    criterion input — the declared references are peptide-only and shuffled-mapping.
+    Reseeding per partition would change every recorded random row, which the frozen
+    plan forbids after results exist.
+    """
     preflight_partitions(
         (partition,),
         pseudo_sequences,
@@ -503,6 +533,11 @@ def evaluate_transfer_schedule(
     preflight_partitions(partitions, pseudo_sequences, expected_target_alleles)
     if len({partition.label for partition in partitions}) != 1:
         raise ValueError("transfer schedule must not combine different estimands")
+    for partition in partitions:
+        if "Affinity" not in partition.train.columns:
+            raise ValueError(
+                "training partition is missing the Affinity column the MLP arms fit on"
+            )
     partition_scores = []
     for partition in partitions:
         scores = score_transfer_partition(partition, pseudo_sequences, device=device)
@@ -545,7 +580,7 @@ def evaluate_transfer_schedule(
         "config": {
             "arms": list(TRANSFER_SCORE_NAMES),
             "target_alleles": sorted(expected_target_alleles),
-            "classification_threshold": 0.426,
+            "classification_threshold": POSITIVE_THRESHOLD,
             "headline": "macro_standardized_auc01",
             "bootstrap": {
                 "mode": "both", "draws": TRANSFER_BOOTSTRAP_DRAWS,
@@ -636,7 +671,7 @@ def validate_transfer_result(
     if (
         config["arms"] != list(TRANSFER_SCORE_NAMES)
         or config["target_alleles"] != sorted(expected_targets)
-        or config["classification_threshold"] != 0.426
+        or config["classification_threshold"] != POSITIVE_THRESHOLD
         or config["headline"] != "macro_standardized_auc01"
         or config["bootstrap"] != {
             "mode": "both", "draws": TRANSFER_BOOTSTRAP_DRAWS,

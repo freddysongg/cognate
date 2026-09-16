@@ -1,0 +1,28 @@
+question: What is the smallest pMHC replication that reuses Cognate's evaluation stack to explain the contrast with TCR-peptide prediction, without drifting toward novelty?
+repos:
+  - path: /Users/freddy/Documents/repos/cognate
+    focus:
+      - docs/final_state.md
+      - docs/lessons.md
+      - docs/belief_list.md
+      - docs/redteam_curve.md
+      - docs/pmhc/brief.md
+      - src/cognate/baseline_knn.py
+      - src/cognate/embed.py
+      - existing metrics and bootstrap code
+vault_pages:
+  - cognate
+  - pMHC
+  - peptide-MHC
+  - NetMHCpan
+  - TCR
+session_keywords:
+  - pMHC scoping
+  - binding versus presentation
+  - second brief
+session_store: /Users/freddy/Documents/vault/conversations
+freshness_cutoff: 2026-06-01
+scope_boundaries:
+  - Exclude other Cognate repositories unless a live dependency is found.
+  - Treat presentation as a caveat, not a completion requirement.
+  - Close the four literature gaps in docs/pmhc/brief.md before recommending a build.

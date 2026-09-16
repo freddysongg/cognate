@@ -439,6 +439,26 @@ def test_transfer_scores_reject_nonfinite_arm_values(
             device="cpu",
         )
 
+def test_schedule_rejects_a_partition_missing_affinity_before_scoring(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rows = _sufficient_transfer_rows()
+    partition = build_allele_partition(rows, "HLA-B07:02")
+    without_affinity = replace(
+        partition, train=partition.train.drop(columns=["Affinity"])
+    )
+
+    def unexpected_score(*args: object, **kwargs: object) -> dict[str, np.ndarray]:
+        raise AssertionError("scoring started on a partition the MLP arms cannot fit")
+
+    monkeypatch.setattr(pmhc_transfer, "score_transfer_partition", unexpected_score)
+
+    with pytest.raises(ValueError, match="missing the Affinity column"):
+        pmhc_transfer.evaluate_transfer_schedule(
+            [without_affinity], _pseudo_sequences(), ("HLA-B07:02",), device="cpu"
+        )
+
+
 def test_schedule_preflights_every_target_before_scoring(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

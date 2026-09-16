@@ -11,6 +11,9 @@ import pytest
 
 from cognate import metrics, pmhc_transfer
 from cognate.pmhc_transfer import (
+    ALLELE_ONLY_LABEL,
+    CLUSTER_HOLDOUT_LABEL,
+    build_allele_partition,
     build_cluster_schedule,
     build_pseudo_sequence_clusters,
     preflight_partitions,
@@ -136,6 +139,29 @@ def test_cluster_schedule_groups_match_the_frozen_clusters_and_preflight_cleanly
 
     assert tuple(partition.held_out_alleles for partition in schedule) == clusters
     preflight_partitions(schedule, FROZEN_PSEUDO_SEQUENCES, expected_alleles)
+
+
+def test_cluster_partitions_carry_their_own_estimand_label() -> None:
+    rows = _frozen_cohort_rows()
+    expected_alleles = tuple(sorted(FROZEN_PSEUDO_SEQUENCES))
+
+    schedule = build_cluster_schedule(rows, FROZEN_PSEUDO_SEQUENCES, expected_alleles)
+    allele_only = build_allele_partition(rows, expected_alleles[0])
+
+    assert {partition.label for partition in schedule} == {CLUSTER_HOLDOUT_LABEL}
+    assert allele_only.label == ALLELE_ONLY_LABEL
+    assert len({*(p.label for p in schedule), allele_only.label}) == 2
+    preflight_partitions(schedule, FROZEN_PSEUDO_SEQUENCES, expected_alleles)
+
+
+def test_clustering_reaches_the_maximum_hamming_cut() -> None:
+    maximally_distant = {"HLA-A01:01": "Q" * 34, "HLA-A02:01": "W" * 34}
+
+    clusters = build_pseudo_sequence_clusters(
+        maximally_distant, tuple(sorted(maximally_distant))
+    )
+
+    assert clusters == (("HLA-A01:01", "HLA-A02:01"),)
 
 
 def test_preflight_rejects_group_membership_leakage() -> None:
