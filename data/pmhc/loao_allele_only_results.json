@@ -1,0 +1,1690 @@
+{
+  "comparisons": {
+    "pseudo_sequence_mlp_minus_nearest_pwm": {
+      "arm": "pseudo_sequence_mlp",
+      "arm_point": 0.7486552064877018,
+      "difference": {
+        "hi": 0.09736059725517636,
+        "lo": 0.0655702696790534,
+        "n_replicates": 20000,
+        "point": 0.08146557948449029
+      },
+      "n_alleles": 47,
+      "p_two_sided": 0.0,
+      "reference": "nearest_pwm",
+      "reference_point": 0.6671896270032115
+    },
+    "pseudo_sequence_mlp_minus_peptide_only_mlp": {
+      "arm": "pseudo_sequence_mlp",
+      "arm_point": 0.7486552064877018,
+      "difference": {
+        "hi": 0.139308054938469,
+        "lo": 0.08911142290556301,
+        "n_replicates": 20000,
+        "point": 0.11379778894680237
+      },
+      "n_alleles": 47,
+      "p_two_sided": 0.0,
+      "reference": "peptide_only_mlp",
+      "reference_point": 0.6348574175408994
+    },
+    "pseudo_sequence_mlp_minus_shuffled_mapping_mlp": {
+      "arm": "pseudo_sequence_mlp",
+      "arm_point": 0.7486552064877018,
+      "difference": {
+        "hi": 0.2203565740493903,
+        "lo": 0.15042047751181664,
+        "n_replicates": 20000,
+        "point": 0.1853806714625782
+      },
+      "n_alleles": 47,
+      "p_two_sided": 0.0,
+      "reference": "shuffled_mapping_mlp",
+      "reference_point": 0.5632745350251236
+    }
+  },
+  "config": {
+    "arms": [
+      "random",
+      "peptide_only_mlp",
+      "shuffled_mapping_mlp",
+      "nearest_pwm",
+      "pseudo_sequence_mlp"
+    ],
+    "bootstrap": {
+      "confidence": 0.95,
+      "draws": 20000,
+      "group": "Allele",
+      "mode": "both",
+      "seed": 0
+    },
+    "classification_threshold": 0.426,
+    "headline": "macro_standardized_auc01",
+    "target_alleles": [
+      "HLA-A01:01",
+      "HLA-A02:01",
+      "HLA-A02:02",
+      "HLA-A02:03",
+      "HLA-A02:06",
+      "HLA-A02:11",
+      "HLA-A02:12",
+      "HLA-A02:16",
+      "HLA-A02:19",
+      "HLA-A03:01",
+      "HLA-A11:01",
+      "HLA-A23:01",
+      "HLA-A24:02",
+      "HLA-A24:03",
+      "HLA-A26:01",
+      "HLA-A26:02",
+      "HLA-A29:02",
+      "HLA-A30:01",
+      "HLA-A30:02",
+      "HLA-A31:01",
+      "HLA-A32:01",
+      "HLA-A33:01",
+      "HLA-A68:01",
+      "HLA-A68:02",
+      "HLA-A69:01",
+      "HLA-A80:01",
+      "HLA-B07:02",
+      "HLA-B08:01",
+      "HLA-B15:01",
+      "HLA-B15:03",
+      "HLA-B15:17",
+      "HLA-B18:01",
+      "HLA-B27:05",
+      "HLA-B35:01",
+      "HLA-B38:01",
+      "HLA-B39:01",
+      "HLA-B40:01",
+      "HLA-B40:02",
+      "HLA-B44:02",
+      "HLA-B44:03",
+      "HLA-B45:01",
+      "HLA-B51:01",
+      "HLA-B53:01",
+      "HLA-B54:01",
+      "HLA-B57:01",
+      "HLA-B58:01",
+      "HLA-C15:02"
+    ]
+  },
+  "criteria": {
+    "lower_bounds": {
+      "pseudo_sequence_mlp_minus_peptide_only_mlp": 0.08911142290556301,
+      "pseudo_sequence_mlp_minus_shuffled_mapping_mlp": 0.15042047751181664
+    },
+    "primary_criterion_met": true
+  },
+  "diagnostics": {
+    "HLA-A01:01": {
+      "nearest_retained_pseudo_distance": 0.23529411764705882,
+      "peptide_overlap_count": 3656,
+      "peptide_overlap_fraction": 0.9190548014077425,
+      "selected_pwm_source": "HLA-A80:01",
+      "selected_pwm_source_distance": 0.23529411764705882,
+      "test_row_overlap_fraction": 0.9190548014077425,
+      "test_rows_with_training_peptide": 3656,
+      "test_unique_peptides": 3978,
+      "training_rows": 108150
+    },
+    "HLA-A02:01": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 6547,
+      "peptide_overlap_fraction": 0.68749343694214,
+      "selected_pwm_source": "HLA-A02:06",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.68749343694214,
+      "test_rows_with_training_peptide": 6547,
+      "test_unique_peptides": 9523,
+      "training_rows": 102605
+    },
+    "HLA-A02:02": {
+      "nearest_retained_pseudo_distance": 0.058823529411764705,
+      "peptide_overlap_count": 2497,
+      "peptide_overlap_fraction": 0.9944245320589407,
+      "selected_pwm_source": "HLA-A02:01",
+      "selected_pwm_source_distance": 0.058823529411764705,
+      "test_row_overlap_fraction": 0.9944245320589407,
+      "test_rows_with_training_peptide": 2497,
+      "test_unique_peptides": 2511,
+      "training_rows": 109617
+    },
+    "HLA-A02:03": {
+      "nearest_retained_pseudo_distance": 0.058823529411764705,
+      "peptide_overlap_count": 4395,
+      "peptide_overlap_fraction": 0.9823424228877962,
+      "selected_pwm_source": "HLA-A02:01",
+      "selected_pwm_source_distance": 0.058823529411764705,
+      "test_row_overlap_fraction": 0.9823424228877962,
+      "test_rows_with_training_peptide": 4395,
+      "test_unique_peptides": 4474,
+      "training_rows": 107654
+    },
+    "HLA-A02:06": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 3721,
+      "peptide_overlap_fraction": 0.982571956693953,
+      "selected_pwm_source": "HLA-A02:01",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.982571956693953,
+      "test_rows_with_training_peptide": 3721,
+      "test_unique_peptides": 3787,
+      "training_rows": 108341
+    },
+    "HLA-A02:11": {
+      "nearest_retained_pseudo_distance": 0.058823529411764705,
+      "peptide_overlap_count": 1082,
+      "peptide_overlap_fraction": 0.9765342960288809,
+      "selected_pwm_source": "HLA-A02:01",
+      "selected_pwm_source_distance": 0.058823529411764705,
+      "test_row_overlap_fraction": 0.9765342960288809,
+      "test_rows_with_training_peptide": 1082,
+      "test_unique_peptides": 1108,
+      "training_rows": 111020
+    },
+    "HLA-A02:12": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 1193,
+      "peptide_overlap_fraction": 0.9875827814569537,
+      "selected_pwm_source": "HLA-A02:01",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.9875827814569537,
+      "test_rows_with_training_peptide": 1193,
+      "test_unique_peptides": 1208,
+      "training_rows": 110920
+    },
+    "HLA-A02:16": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 930,
+      "peptide_overlap_fraction": 0.9851694915254238,
+      "selected_pwm_source": "HLA-A02:01",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.9851694915254238,
+      "test_rows_with_training_peptide": 930,
+      "test_unique_peptides": 944,
+      "training_rows": 111184
+    },
+    "HLA-A02:19": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 1243,
+      "peptide_overlap_fraction": 0.9896496815286624,
+      "selected_pwm_source": "HLA-A02:12",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.9896496815286624,
+      "test_rows_with_training_peptide": 1243,
+      "test_unique_peptides": 1256,
+      "training_rows": 110872
+    },
+    "HLA-A03:01": {
+      "nearest_retained_pseudo_distance": 0.11764705882352941,
+      "peptide_overlap_count": 5192,
+      "peptide_overlap_fraction": 0.926481084939329,
+      "selected_pwm_source": "HLA-A11:01",
+      "selected_pwm_source_distance": 0.11764705882352941,
+      "test_row_overlap_fraction": 0.926481084939329,
+      "test_rows_with_training_peptide": 5192,
+      "test_unique_peptides": 5604,
+      "training_rows": 106524
+    },
+    "HLA-A11:01": {
+      "nearest_retained_pseudo_distance": 0.11764705882352941,
+      "peptide_overlap_count": 4416,
+      "peptide_overlap_fraction": 0.9570871261378413,
+      "selected_pwm_source": "HLA-A03:01",
+      "selected_pwm_source_distance": 0.11764705882352941,
+      "test_row_overlap_fraction": 0.9570871261378413,
+      "test_rows_with_training_peptide": 4416,
+      "test_unique_peptides": 4614,
+      "training_rows": 107514
+    },
+    "HLA-A23:01": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 1845,
+      "peptide_overlap_fraction": 0.9510309278350515,
+      "selected_pwm_source": "HLA-A24:02",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.9510309278350515,
+      "test_rows_with_training_peptide": 1845,
+      "test_unique_peptides": 1940,
+      "training_rows": 110188
+    },
+    "HLA-A24:02": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 2104,
+      "peptide_overlap_fraction": 0.8466800804828973,
+      "selected_pwm_source": "HLA-A23:01",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.8466800804828973,
+      "test_rows_with_training_peptide": 2104,
+      "test_unique_peptides": 2485,
+      "training_rows": 109643
+    },
+    "HLA-A24:03": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 1322,
+      "peptide_overlap_fraction": 0.9456366237482118,
+      "selected_pwm_source": "HLA-A24:02",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.9456366237482118,
+      "test_rows_with_training_peptide": 1322,
+      "test_unique_peptides": 1398,
+      "training_rows": 110730
+    },
+    "HLA-A26:01": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 3626,
+      "peptide_overlap_fraction": 0.9544617004474861,
+      "selected_pwm_source": "HLA-A26:02",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.9544617004474861,
+      "test_rows_with_training_peptide": 3626,
+      "test_unique_peptides": 3799,
+      "training_rows": 108329
+    },
+    "HLA-A26:02": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 628,
+      "peptide_overlap_fraction": 0.9797191887675507,
+      "selected_pwm_source": "HLA-A26:01",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.9797191887675507,
+      "test_rows_with_training_peptide": 628,
+      "test_unique_peptides": 641,
+      "training_rows": 111487
+    },
+    "HLA-A29:02": {
+      "nearest_retained_pseudo_distance": 0.17647058823529413,
+      "peptide_overlap_count": 2058,
+      "peptide_overlap_fraction": 0.9607843137254902,
+      "selected_pwm_source": "HLA-A68:01",
+      "selected_pwm_source_distance": 0.17647058823529413,
+      "test_row_overlap_fraction": 0.9607843137254902,
+      "test_rows_with_training_peptide": 2058,
+      "test_unique_peptides": 2142,
+      "training_rows": 109986
+    },
+    "HLA-A30:01": {
+      "nearest_retained_pseudo_distance": 0.11764705882352941,
+      "peptide_overlap_count": 2268,
+      "peptide_overlap_fraction": 0.8739884393063584,
+      "selected_pwm_source": "HLA-A03:01",
+      "selected_pwm_source_distance": 0.11764705882352941,
+      "test_row_overlap_fraction": 0.8739884393063584,
+      "test_rows_with_training_peptide": 2268,
+      "test_unique_peptides": 2595,
+      "training_rows": 109533
+    },
+    "HLA-A30:02": {
+      "nearest_retained_pseudo_distance": 0.11764705882352941,
+      "peptide_overlap_count": 1311,
+      "peptide_overlap_fraction": 0.9284702549575071,
+      "selected_pwm_source": "HLA-A30:01",
+      "selected_pwm_source_distance": 0.11764705882352941,
+      "test_row_overlap_fraction": 0.9284702549575071,
+      "test_rows_with_training_peptide": 1311,
+      "test_unique_peptides": 1412,
+      "training_rows": 110716
+    },
+    "HLA-A31:01": {
+      "nearest_retained_pseudo_distance": 0.08823529411764706,
+      "peptide_overlap_count": 3906,
+      "peptide_overlap_fraction": 0.9846231409125283,
+      "selected_pwm_source": "HLA-A33:01",
+      "selected_pwm_source_distance": 0.08823529411764706,
+      "test_row_overlap_fraction": 0.9846231409125283,
+      "test_rows_with_training_peptide": 3906,
+      "test_unique_peptides": 3967,
+      "training_rows": 108161
+    },
+    "HLA-A32:01": {
+      "nearest_retained_pseudo_distance": 0.17647058823529413,
+      "peptide_overlap_count": 606,
+      "peptide_overlap_fraction": 0.7087719298245614,
+      "selected_pwm_source": "HLA-A31:01",
+      "selected_pwm_source_distance": 0.17647058823529413,
+      "test_row_overlap_fraction": 0.7087719298245614,
+      "test_rows_with_training_peptide": 606,
+      "test_unique_peptides": 855,
+      "training_rows": 111273
+    },
+    "HLA-A33:01": {
+      "nearest_retained_pseudo_distance": 0.08823529411764706,
+      "peptide_overlap_count": 1888,
+      "peptide_overlap_fraction": 0.9677088672475653,
+      "selected_pwm_source": "HLA-A31:01",
+      "selected_pwm_source_distance": 0.08823529411764706,
+      "test_row_overlap_fraction": 0.9677088672475653,
+      "test_rows_with_training_peptide": 1888,
+      "test_unique_peptides": 1951,
+      "training_rows": 110177
+    },
+    "HLA-A68:01": {
+      "nearest_retained_pseudo_distance": 0.08823529411764706,
+      "peptide_overlap_count": 2024,
+      "peptide_overlap_fraction": 0.9647283126787417,
+      "selected_pwm_source": "HLA-A68:02",
+      "selected_pwm_source_distance": 0.08823529411764706,
+      "test_row_overlap_fraction": 0.9647283126787417,
+      "test_rows_with_training_peptide": 2024,
+      "test_unique_peptides": 2098,
+      "training_rows": 110030
+    },
+    "HLA-A68:02": {
+      "nearest_retained_pseudo_distance": 0.058823529411764705,
+      "peptide_overlap_count": 3608,
+      "peptide_overlap_fraction": 0.9678111587982833,
+      "selected_pwm_source": "HLA-A69:01",
+      "selected_pwm_source_distance": 0.058823529411764705,
+      "test_row_overlap_fraction": 0.9678111587982833,
+      "test_rows_with_training_peptide": 3608,
+      "test_unique_peptides": 3728,
+      "training_rows": 108400
+    },
+    "HLA-A69:01": {
+      "nearest_retained_pseudo_distance": 0.058823529411764705,
+      "peptide_overlap_count": 2564,
+      "peptide_overlap_fraction": 0.9918762088974855,
+      "selected_pwm_source": "HLA-A68:02",
+      "selected_pwm_source_distance": 0.058823529411764705,
+      "test_row_overlap_fraction": 0.9918762088974855,
+      "test_rows_with_training_peptide": 2564,
+      "test_unique_peptides": 2585,
+      "training_rows": 109543
+    },
+    "HLA-A80:01": {
+      "nearest_retained_pseudo_distance": 0.23529411764705882,
+      "peptide_overlap_count": 1184,
+      "peptide_overlap_fraction": 0.9916247906197655,
+      "selected_pwm_source": "HLA-A01:01",
+      "selected_pwm_source_distance": 0.23529411764705882,
+      "test_row_overlap_fraction": 0.9916247906197655,
+      "test_rows_with_training_peptide": 1184,
+      "test_unique_peptides": 1194,
+      "training_rows": 110934
+    },
+    "HLA-B07:02": {
+      "nearest_retained_pseudo_distance": 0.23529411764705882,
+      "peptide_overlap_count": 3503,
+      "peptide_overlap_fraction": 0.8625954198473282,
+      "selected_pwm_source": "HLA-B08:01",
+      "selected_pwm_source_distance": 0.23529411764705882,
+      "test_row_overlap_fraction": 0.8625954198473282,
+      "test_rows_with_training_peptide": 3503,
+      "test_unique_peptides": 4061,
+      "training_rows": 108067
+    },
+    "HLA-B08:01": {
+      "nearest_retained_pseudo_distance": 0.17647058823529413,
+      "peptide_overlap_count": 2650,
+      "peptide_overlap_fraction": 0.8651648710414627,
+      "selected_pwm_source": "HLA-B39:01",
+      "selected_pwm_source_distance": 0.17647058823529413,
+      "test_row_overlap_fraction": 0.8651648710414627,
+      "test_rows_with_training_peptide": 2650,
+      "test_unique_peptides": 3063,
+      "training_rows": 109065
+    },
+    "HLA-B15:01": {
+      "nearest_retained_pseudo_distance": 0.08823529411764706,
+      "peptide_overlap_count": 3781,
+      "peptide_overlap_fraction": 0.9137264378927018,
+      "selected_pwm_source": "HLA-B15:03",
+      "selected_pwm_source_distance": 0.08823529411764706,
+      "test_row_overlap_fraction": 0.9137264378927018,
+      "test_rows_with_training_peptide": 3781,
+      "test_unique_peptides": 4138,
+      "training_rows": 107990
+    },
+    "HLA-B15:03": {
+      "nearest_retained_pseudo_distance": 0.08823529411764706,
+      "peptide_overlap_count": 375,
+      "peptide_overlap_fraction": 0.6157635467980296,
+      "selected_pwm_source": "HLA-B15:01",
+      "selected_pwm_source_distance": 0.08823529411764706,
+      "test_row_overlap_fraction": 0.6157635467980296,
+      "test_rows_with_training_peptide": 375,
+      "test_unique_peptides": 609,
+      "training_rows": 111519
+    },
+    "HLA-B15:17": {
+      "nearest_retained_pseudo_distance": 0.17647058823529413,
+      "peptide_overlap_count": 1430,
+      "peptide_overlap_fraction": 0.9807956104252401,
+      "selected_pwm_source": "HLA-B57:01",
+      "selected_pwm_source_distance": 0.17647058823529413,
+      "test_row_overlap_fraction": 0.9807956104252401,
+      "test_rows_with_training_peptide": 1430,
+      "test_unique_peptides": 1458,
+      "training_rows": 110670
+    },
+    "HLA-B18:01": {
+      "nearest_retained_pseudo_distance": 0.17647058823529413,
+      "peptide_overlap_count": 2303,
+      "peptide_overlap_fraction": 0.98,
+      "selected_pwm_source": "HLA-B15:03",
+      "selected_pwm_source_distance": 0.17647058823529413,
+      "test_row_overlap_fraction": 0.98,
+      "test_rows_with_training_peptide": 2303,
+      "test_unique_peptides": 2350,
+      "training_rows": 109778
+    },
+    "HLA-B27:05": {
+      "nearest_retained_pseudo_distance": 0.29411764705882354,
+      "peptide_overlap_count": 2333,
+      "peptide_overlap_fraction": 0.8103508162556443,
+      "selected_pwm_source": "HLA-B40:02",
+      "selected_pwm_source_distance": 0.29411764705882354,
+      "test_row_overlap_fraction": 0.8103508162556443,
+      "test_rows_with_training_peptide": 2333,
+      "test_unique_peptides": 2879,
+      "training_rows": 109249
+    },
+    "HLA-B35:01": {
+      "nearest_retained_pseudo_distance": 0.08823529411764706,
+      "peptide_overlap_count": 2488,
+      "peptide_overlap_fraction": 0.9417108251324754,
+      "selected_pwm_source": "HLA-B53:01",
+      "selected_pwm_source_distance": 0.08823529411764706,
+      "test_row_overlap_fraction": 0.9417108251324754,
+      "test_rows_with_training_peptide": 2488,
+      "test_unique_peptides": 2642,
+      "training_rows": 109486
+    },
+    "HLA-B38:01": {
+      "nearest_retained_pseudo_distance": 0.11764705882352941,
+      "peptide_overlap_count": 322,
+      "peptide_overlap_fraction": 0.6145038167938931,
+      "selected_pwm_source": "HLA-B39:01",
+      "selected_pwm_source_distance": 0.11764705882352941,
+      "test_row_overlap_fraction": 0.6145038167938931,
+      "test_rows_with_training_peptide": 322,
+      "test_unique_peptides": 524,
+      "training_rows": 111604
+    },
+    "HLA-B39:01": {
+      "nearest_retained_pseudo_distance": 0.11764705882352941,
+      "peptide_overlap_count": 1726,
+      "peptide_overlap_fraction": 0.9572933998890738,
+      "selected_pwm_source": "HLA-B38:01",
+      "selected_pwm_source_distance": 0.11764705882352941,
+      "test_row_overlap_fraction": 0.9572933998890738,
+      "test_rows_with_training_peptide": 1726,
+      "test_unique_peptides": 1803,
+      "training_rows": 110325
+    },
+    "HLA-B40:01": {
+      "nearest_retained_pseudo_distance": 0.08823529411764706,
+      "peptide_overlap_count": 2666,
+      "peptide_overlap_fraction": 0.9341275402943238,
+      "selected_pwm_source": "HLA-B40:02",
+      "selected_pwm_source_distance": 0.08823529411764706,
+      "test_row_overlap_fraction": 0.9341275402943238,
+      "test_rows_with_training_peptide": 2666,
+      "test_unique_peptides": 2854,
+      "training_rows": 109274
+    },
+    "HLA-B40:02": {
+      "nearest_retained_pseudo_distance": 0.08823529411764706,
+      "peptide_overlap_count": 582,
+      "peptide_overlap_fraction": 0.9387096774193548,
+      "selected_pwm_source": "HLA-B40:01",
+      "selected_pwm_source_distance": 0.08823529411764706,
+      "test_row_overlap_fraction": 0.9387096774193548,
+      "test_rows_with_training_peptide": 582,
+      "test_unique_peptides": 620,
+      "training_rows": 111508
+    },
+    "HLA-B44:02": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 1653,
+      "peptide_overlap_fraction": 0.9649737302977233,
+      "selected_pwm_source": "HLA-B44:03",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.9649737302977233,
+      "test_rows_with_training_peptide": 1653,
+      "test_unique_peptides": 1713,
+      "training_rows": 110415
+    },
+    "HLA-B44:03": {
+      "nearest_retained_pseudo_distance": 0.029411764705882353,
+      "peptide_overlap_count": 712,
+      "peptide_overlap_fraction": 0.8436018957345972,
+      "selected_pwm_source": "HLA-B44:02",
+      "selected_pwm_source_distance": 0.029411764705882353,
+      "test_row_overlap_fraction": 0.8436018957345972,
+      "test_rows_with_training_peptide": 712,
+      "test_unique_peptides": 844,
+      "training_rows": 111284
+    },
+    "HLA-B45:01": {
+      "nearest_retained_pseudo_distance": 0.17647058823529413,
+      "peptide_overlap_count": 571,
+      "peptide_overlap_fraction": 0.9580536912751678,
+      "selected_pwm_source": "HLA-B40:02",
+      "selected_pwm_source_distance": 0.17647058823529413,
+      "test_row_overlap_fraction": 0.9580536912751678,
+      "test_rows_with_training_peptide": 571,
+      "test_unique_peptides": 596,
+      "training_rows": 111532
+    },
+    "HLA-B51:01": {
+      "nearest_retained_pseudo_distance": 0.17647058823529413,
+      "peptide_overlap_count": 2155,
+      "peptide_overlap_fraction": 0.9402268760907504,
+      "selected_pwm_source": "HLA-B53:01",
+      "selected_pwm_source_distance": 0.17647058823529413,
+      "test_row_overlap_fraction": 0.9402268760907504,
+      "test_rows_with_training_peptide": 2155,
+      "test_unique_peptides": 2292,
+      "training_rows": 109836
+    },
+    "HLA-B53:01": {
+      "nearest_retained_pseudo_distance": 0.08823529411764706,
+      "peptide_overlap_count": 1056,
+      "peptide_overlap_fraction": 0.9048843187660668,
+      "selected_pwm_source": "HLA-B35:01",
+      "selected_pwm_source_distance": 0.08823529411764706,
+      "test_row_overlap_fraction": 0.9048843187660668,
+      "test_rows_with_training_peptide": 1056,
+      "test_unique_peptides": 1167,
+      "training_rows": 110961
+    },
+    "HLA-B54:01": {
+      "nearest_retained_pseudo_distance": 0.2647058823529412,
+      "peptide_overlap_count": 731,
+      "peptide_overlap_fraction": 0.9618421052631579,
+      "selected_pwm_source": "HLA-B07:02",
+      "selected_pwm_source_distance": 0.2647058823529412,
+      "test_row_overlap_fraction": 0.9618421052631579,
+      "test_rows_with_training_peptide": 731,
+      "test_unique_peptides": 760,
+      "training_rows": 111368
+    },
+    "HLA-B57:01": {
+      "nearest_retained_pseudo_distance": 0.058823529411764705,
+      "peptide_overlap_count": 2504,
+      "peptide_overlap_fraction": 0.9474082482027999,
+      "selected_pwm_source": "HLA-B58:01",
+      "selected_pwm_source_distance": 0.058823529411764705,
+      "test_row_overlap_fraction": 0.9474082482027999,
+      "test_rows_with_training_peptide": 2504,
+      "test_unique_peptides": 2643,
+      "training_rows": 109485
+    },
+    "HLA-B58:01": {
+      "nearest_retained_pseudo_distance": 0.058823529411764705,
+      "peptide_overlap_count": 2922,
+      "peptide_overlap_fraction": 0.9602366086099244,
+      "selected_pwm_source": "HLA-B57:01",
+      "selected_pwm_source_distance": 0.058823529411764705,
+      "test_row_overlap_fraction": 0.9602366086099244,
+      "test_rows_with_training_peptide": 2922,
+      "test_unique_peptides": 3043,
+      "training_rows": 109085
+    },
+    "HLA-C15:02": {
+      "nearest_retained_pseudo_distance": 0.29411764705882354,
+      "peptide_overlap_count": 213,
+      "peptide_overlap_fraction": 0.7830882352941176,
+      "selected_pwm_source": "HLA-A03:01",
+      "selected_pwm_source_distance": 0.29411764705882354,
+      "test_row_overlap_fraction": 0.7830882352941176,
+      "test_rows_with_training_peptide": 213,
+      "test_unique_peptides": 272,
+      "training_rows": 111856
+    }
+  },
+  "per_allele": {
+    "HLA-A01:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6404459728283498
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.523694370588578
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.6404203167946989
+        },
+        "random": {
+          "auc01": 0.497166850603142
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.4784076500833616
+        }
+      },
+      "n_positive": 565,
+      "n_rows": 3978
+    },
+    "HLA-A02:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.7055138416664839
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.7240597957028871
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8362438118669399
+        },
+        "random": {
+          "auc01": 0.5004640067417627
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.8018434432243453
+        }
+      },
+      "n_positive": 3480,
+      "n_rows": 9523
+    },
+    "HLA-A02:02": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.7182495102032165
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.7639672412337059
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8035463204931378
+        },
+        "random": {
+          "auc01": 0.49694009490096563
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.7532914713956324
+        }
+      },
+      "n_positive": 1146,
+      "n_rows": 2511
+    },
+    "HLA-A02:03": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.7707814842340763
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.7875914195027461
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.854456400549362
+        },
+        "random": {
+          "auc01": 0.5019097165755537
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.8050709832250247
+        }
+      },
+      "n_positive": 1555,
+      "n_rows": 4474
+    },
+    "HLA-A02:06": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6678298639464899
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.7292061025435795
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7522601142885144
+        },
+        "random": {
+          "auc01": 0.4978524282473487
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5922900645817981
+        }
+      },
+      "n_positive": 1556,
+      "n_rows": 3787
+    },
+    "HLA-A02:11": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.8428461712539168
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.8458201997425849
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8123855848356478
+        },
+        "random": {
+          "auc01": 0.5020098826112712
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.6896150155393916
+        }
+      },
+      "n_positive": 401,
+      "n_rows": 1108
+    },
+    "HLA-A02:12": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.8656503874354815
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.8389124195210429
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.9191835290151382
+        },
+        "random": {
+          "auc01": 0.5024663306019495
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5324764674609875
+        }
+      },
+      "n_positive": 306,
+      "n_rows": 1208
+    },
+    "HLA-A02:16": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.8738830824531038
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.9025326833968189
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.9101216237707539
+        },
+        "random": {
+          "auc01": 0.5122619674424421
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.8347108714079916
+        }
+      },
+      "n_positive": 178,
+      "n_rows": 944
+    },
+    "HLA-A02:19": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.8004768017604988
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.8858676625043762
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.93005796086669
+        },
+        "random": {
+          "auc01": 0.4961239017721688
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.8993714885884334
+        }
+      },
+      "n_positive": 231,
+      "n_rows": 1256
+    },
+    "HLA-A03:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6752939758149596
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5761755062824295
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7617449072796563
+        },
+        "random": {
+          "auc01": 0.5075407440141313
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5299218659111248
+        }
+      },
+      "n_positive": 1423,
+      "n_rows": 5604
+    },
+    "HLA-A11:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.7639001606814302
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6253734952461688
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7750793475361528
+        },
+        "random": {
+          "auc01": 0.5038604674593337
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5131246766317666
+        }
+      },
+      "n_positive": 1399,
+      "n_rows": 4614
+    },
+    "HLA-A23:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6740168826381494
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6394260600720942
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7540678308271094
+        },
+        "random": {
+          "auc01": 0.4922506559429108
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.6872179449656408
+        }
+      },
+      "n_positive": 413,
+      "n_rows": 1940
+    },
+    "HLA-A24:02": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6519351750026032
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5507483421674875
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7421730749205688
+        },
+        "random": {
+          "auc01": 0.5026756438942745
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.739813631942134
+        }
+      },
+      "n_positive": 530,
+      "n_rows": 2485
+    },
+    "HLA-A24:03": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.8364365117765472
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6070850432175092
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8933958150398127
+        },
+        "random": {
+          "auc01": 0.4991965784396299
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.48673309081351657
+        }
+      },
+      "n_positive": 330,
+      "n_rows": 1398
+    },
+    "HLA-A26:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.7222578016670491
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5850526502864435
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8345035324731204
+        },
+        "random": {
+          "auc01": 0.4987047321969133
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5597100277761057
+        }
+      },
+      "n_positive": 412,
+      "n_rows": 3799
+    },
+    "HLA-A26:02": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.8965039448515582
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5945797368685986
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.9227256831295999
+        },
+        "random": {
+          "auc01": 0.5064431692338669
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.48126129276680074
+        }
+      },
+      "n_positive": 168,
+      "n_rows": 641
+    },
+    "HLA-A29:02": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.5421731607420549
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5742140063711784
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.6326314816031617
+        },
+        "random": {
+          "auc01": 0.5026368111984776
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.6270731274016641
+        }
+      },
+      "n_positive": 540,
+      "n_rows": 2142
+    },
+    "HLA-A30:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6073168725088349
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5253731989321911
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.6268240915152423
+        },
+        "random": {
+          "auc01": 0.5039335234989157
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.49999416732770285
+        }
+      },
+      "n_positive": 739,
+      "n_rows": 2595
+    },
+    "HLA-A30:02": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.49986907567426025
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.533131632094867
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.5764273992206762
+        },
+        "random": {
+          "auc01": 0.4990524189889531
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.48993956740528727
+        }
+      },
+      "n_positive": 402,
+      "n_rows": 1412
+    },
+    "HLA-A31:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6629049159419791
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6225685725711395
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.6813936315122101
+        },
+        "random": {
+          "auc01": 0.502479936203765
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.48709501231630314
+        }
+      },
+      "n_positive": 1021,
+      "n_rows": 3967
+    },
+    "HLA-A32:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.49184601569967845
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6349100599600267
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.6062335254757698
+        },
+        "random": {
+          "auc01": 0.4924543058251021
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5583234365495466
+        }
+      },
+      "n_positive": 395,
+      "n_rows": 855
+    },
+    "HLA-A33:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6293026980198874
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5769783005615554
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7462905246590803
+        },
+        "random": {
+          "auc01": 0.4973009446693657
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.4785853084412783
+        }
+      },
+      "n_positive": 391,
+      "n_rows": 1951
+    },
+    "HLA-A68:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.4862337850586102
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6069661376340305
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7287143374260293
+        },
+        "random": {
+          "auc01": 0.4992685107957034
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.4895407340872385
+        }
+      },
+      "n_positive": 856,
+      "n_rows": 2098
+    },
+    "HLA-A68:02": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.647347441812863
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5879399969195422
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7799606551508879
+        },
+        "random": {
+          "auc01": 0.5069411396345943
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.48166721714830957
+        }
+      },
+      "n_positive": 849,
+      "n_rows": 3728
+    },
+    "HLA-A69:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.7630273092562039
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6755831667868998
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8446432346550254
+        },
+        "random": {
+          "auc01": 0.49033976198934537
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.6344351188128091
+        }
+      },
+      "n_positive": 248,
+      "n_rows": 2585
+    },
+    "HLA-A80:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6099072154327585
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5838135680527475
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7956695169536271
+        },
+        "random": {
+          "auc01": 0.48121772500740473
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.4847993638365549
+        }
+      },
+      "n_positive": 122,
+      "n_rows": 1194
+    },
+    "HLA-B07:02": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.5690513499143396
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5470489807222595
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.5672741669597341
+        },
+        "random": {
+          "auc01": 0.5002188536690056
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.4765304638015775
+        }
+      },
+      "n_positive": 1112,
+      "n_rows": 4061
+    },
+    "HLA-B08:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.5085188233190895
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5637010318151244
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.5593074770484683
+        },
+        "random": {
+          "auc01": 0.4995347116508879
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5348673107623801
+        }
+      },
+      "n_positive": 716,
+      "n_rows": 3063
+    },
+    "HLA-B15:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6144027080646024
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5939671654840706
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7085274850763645
+        },
+        "random": {
+          "auc01": 0.4987497790800762
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5160555727815144
+        }
+      },
+      "n_positive": 1192,
+      "n_rows": 4138
+    },
+    "HLA-B15:03": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6922516099328805
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5682148770698926
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7559328734032342
+        },
+        "random": {
+          "auc01": 0.49423667108133285
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.49953308691684684
+        }
+      },
+      "n_positive": 366,
+      "n_rows": 609
+    },
+    "HLA-B15:17": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.7450670881291511
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6763964957575606
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.810411803236299
+        },
+        "random": {
+          "auc01": 0.497326831095963
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.547589662471611
+        }
+      },
+      "n_positive": 365,
+      "n_rows": 1458
+    },
+    "HLA-B18:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.5172910786294641
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5916494004376968
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.6163555317912834
+        },
+        "random": {
+          "auc01": 0.49754202591562424
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.6659327448248442
+        }
+      },
+      "n_positive": 232,
+      "n_rows": 2350
+    },
+    "HLA-B27:05": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.5034659474529972
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5030579128493641
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.5123794921041952
+        },
+        "random": {
+          "auc01": 0.49484645590817344
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.49745940989575865
+        }
+      },
+      "n_positive": 453,
+      "n_rows": 2879
+    },
+    "HLA-B35:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6239021823993995
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6048505862287348
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7389908287622347
+        },
+        "random": {
+          "auc01": 0.49472117694758955
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5146188591744211
+        }
+      },
+      "n_positive": 834,
+      "n_rows": 2642
+    },
+    "HLA-B38:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6659040553258858
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.47929695401823996
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8361097894413942
+        },
+        "random": {
+          "auc01": 0.4881481840258091
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.47368421052631576
+        }
+      },
+      "n_positive": 147,
+      "n_rows": 524
+    },
+    "HLA-B39:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.5823055989809507
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5885472757802096
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7182676162353077
+        },
+        "random": {
+          "auc01": 0.5032018991372822
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5050431358925366
+        }
+      },
+      "n_positive": 303,
+      "n_rows": 1803
+    },
+    "HLA-B40:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6514239590136657
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5831095719236845
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8043441723704858
+        },
+        "random": {
+          "auc01": 0.4990428411814014
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.6867969899075159
+        }
+      },
+      "n_positive": 483,
+      "n_rows": 2854
+    },
+    "HLA-B40:02": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6051748380213522
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6454679700752999
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.6829412894444584
+        },
+        "random": {
+          "auc01": 0.4958444696664592
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.47368421052631576
+        }
+      },
+      "n_positive": 191,
+      "n_rows": 620
+    },
+    "HLA-B44:02": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.8002882290587298
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.7109952835244935
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8421097295172759
+        },
+        "random": {
+          "auc01": 0.4916047331499148
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.47492734722073343
+        }
+      },
+      "n_positive": 240,
+      "n_rows": 1713
+    },
+    "HLA-B44:03": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.7230119881583962
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6821927022027914
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8208872563917047
+        },
+        "random": {
+          "auc01": 0.5146269108007584
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5031030987792782
+        }
+      },
+      "n_positive": 218,
+      "n_rows": 844
+    },
+    "HLA-B45:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6028959613395903
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6099950722651816
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.7350722850114567
+        },
+        "random": {
+          "auc01": 0.4948030740340103
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.48613739952428026
+        }
+      },
+      "n_positive": 109,
+      "n_rows": 596
+    },
+    "HLA-B51:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.6392067048827338
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.6075880583733668
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.6748890429850003
+        },
+        "random": {
+          "auc01": 0.5022394587579587
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.4936223486366054
+        }
+      },
+      "n_positive": 247,
+      "n_rows": 2292
+    },
+    "HLA-B53:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.5867048401611488
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.645977543960905
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.6719781742792159
+        },
+        "random": {
+          "auc01": 0.508816862153942
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.49125528271295077
+        }
+      },
+      "n_positive": 332,
+      "n_rows": 1167
+    },
+    "HLA-B54:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.5420504385964913
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5955043859649123
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.6990679824561403
+        },
+        "random": {
+          "auc01": 0.5196271929824562
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.47850877192982455
+        }
+      },
+      "n_positive": 160,
+      "n_rows": 760
+    },
+    "HLA-B57:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.8251316008325353
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.7275178411430256
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.8621500650521801
+        },
+        "random": {
+          "auc01": 0.504751683797429
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.5509660585902593
+        }
+      },
+      "n_positive": 396,
+      "n_rows": 2643
+    },
+    "HLA-B58:01": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.8273156143561916
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.7076577323641955
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.857361340214888
+        },
+        "random": {
+          "auc01": 0.5026736038352386
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.4856686690971253
+        }
+      },
+      "n_positive": 670,
+      "n_rows": 3043
+    },
+    "HLA-C15:02": {
+      "arms": {
+        "nearest_pwm": {
+          "auc01": 0.48659779422029875
+        },
+        "peptide_only_mlp": {
+          "auc01": 0.5039904137000326
+        },
+        "pseudo_sequence_mlp": {
+          "auc01": 0.5512820512820513
+        },
+        "random": {
+          "auc01": 0.5198124621899577
+        },
+        "shuffled_mapping_mlp": {
+          "auc01": 0.50160547256736
+        }
+      },
+      "n_positive": 116,
+      "n_rows": 272
+    }
+  },
+  "scores": {
+    "nearest_pwm": {
+      "macro_auc01": {
+        "hi": 0.7008816241796053,
+        "lo": 0.6349158650604103,
+        "n_replicates": 20000,
+        "point": 0.6671896270032115
+      },
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128
+    },
+    "peptide_only_mlp": {
+      "macro_auc01": {
+        "hi": 0.6648535161290886,
+        "lo": 0.608380600821125,
+        "n_replicates": 20000,
+        "point": 0.6348574175408994
+      },
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128
+    },
+    "pseudo_sequence_mlp": {
+      "macro_auc01": {
+        "hi": 0.7801345279003972,
+        "lo": 0.7177468719988994,
+        "n_replicates": 20000,
+        "point": 0.7486552064877018
+      },
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128
+    },
+    "random": {
+      "macro_auc01": {
+        "hi": 0.5034309604970887,
+        "lo": 0.4979902478116309,
+        "n_replicates": 20000,
+        "point": 0.500337492118097
+      },
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128
+    },
+    "shuffled_mapping_mlp": {
+      "macro_auc01": {
+        "hi": 0.5969325830295441,
+        "lo": 0.5335558544986206,
+        "n_replicates": 20000,
+        "point": 0.5632745350251236
+      },
+      "n_alleles": 47,
+      "n_alleles_skipped": 0,
+      "n_positive": 28538,
+      "n_rows": 112128
+    }
+  }
+}
