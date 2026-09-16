@@ -35,7 +35,6 @@ TRANSFER_SCORE_NAMES = (
     "pseudo_sequence_mlp",
 )
 
-
 @dataclass(frozen=True)
 class TransferPartition:
     """One transfer evaluation partition with all held-out rows in its test frame."""
@@ -96,6 +95,98 @@ def build_joint_novelty_partition(
         rows,
         (target_allele,),
         exclude_test_peptides=True,
+    )
+
+
+def build_pseudo_sequence_clusters(
+    pseudo_sequences: Mapping[str, str],
+    expected_alleles: Sequence[str],
+) -> tuple[tuple[str, ...], ...]:
+    """Group the expected allele cohort by complete-linkage Hamming distance.
+
+    Iterates integer Hamming cuts from zero upward over the 34-residue pseudo-sequences
+    and returns the first cut that leaves at most one singleton cluster. Ties during
+    agglomeration and cut selection are broken by sorted-allele order, so the grouping
+    is deterministic and depends only on pseudo-sequence content, never on target labels
+    or arm outcomes.
+
+    Rejects a mapping that does not cover exactly the caller's expected cohort. Content
+    fidelity (are these really the right 34-residue sequences) is the source contract's
+    job, verified once by `verify_source` before this ever runs; this function only
+    guards against the wrong *set* of alleles being supplied, so it does not duplicate
+    the pseudo-sequence data as a second, hand-maintained copy in source code.
+    """
+    expected = tuple(expected_alleles)
+    _require_held_out_alleles(expected)
+    if set(pseudo_sequences) != set(expected):
+        missing = sorted(set(expected) - set(pseudo_sequences))
+        unexpected = sorted(set(pseudo_sequences) - set(expected))
+        raise ValueError(
+            "pseudo-sequence mapping does not cover exactly the expected allele "
+            f"cohort: missing {missing}, unexpected {unexpected}"
+        )
+    alleles = sorted(pseudo_sequences)
+    merges = _complete_linkage_merges(alleles, pseudo_sequences)
+    for cut in range(PSEUDO_SEQUENCE_LENGTH):
+        partition = tuple(sorted((allele,) for allele in alleles))
+        for merge_distance, snapshot in merges:
+            if merge_distance > cut:
+                break
+            partition = snapshot
+        if sum(len(cluster) == 1 for cluster in partition) <= 1:
+            return partition
+    raise ValueError("no Hamming cut leaves at most one singleton cluster")
+
+
+def _complete_linkage_merges(
+    alleles: Sequence[str], pseudo_sequences: Mapping[str, str]
+) -> list[tuple[int, tuple[tuple[str, ...], ...]]]:
+    """Build the deterministic complete-linkage merge sequence, sorted-allele tie-break."""
+
+    def residue_distance(allele_a: str, allele_b: str) -> int:
+        return sum(
+            residue_a != residue_b
+            for residue_a, residue_b in zip(
+                pseudo_sequences[allele_a], pseudo_sequences[allele_b], strict=True
+            )
+        )
+
+    def linkage_distance(
+        cluster_a: tuple[str, ...], cluster_b: tuple[str, ...]
+    ) -> int:
+        return max(
+            residue_distance(member_a, member_b)
+            for member_a in cluster_a
+            for member_b in cluster_b
+        )
+
+    clusters = sorted((allele,) for allele in alleles)
+    merges: list[tuple[int, tuple[tuple[str, ...], ...]]] = []
+    while len(clusters) > 1:
+        clusters = sorted(clusters)
+        merge_distance, i, j = min(
+            (linkage_distance(clusters[i], clusters[j]), i, j)
+            for i in range(len(clusters))
+            for j in range(i + 1, len(clusters))
+        )
+        merged_cluster = tuple(sorted(clusters[i] + clusters[j]))
+        clusters = [
+            cluster for index, cluster in enumerate(clusters) if index not in (i, j)
+        ] + [merged_cluster]
+        merges.append((merge_distance, tuple(sorted(clusters))))
+    return merges
+
+
+def build_cluster_schedule(
+    rows: pd.DataFrame,
+    pseudo_sequences: Mapping[str, str],
+    expected_alleles: Sequence[str],
+) -> tuple[TransferPartition, ...]:
+    """Build one group-holdout transfer partition per frozen pseudo-sequence cluster."""
+    clusters = build_pseudo_sequence_clusters(pseudo_sequences, expected_alleles)
+    return tuple(
+        build_transfer_partition(rows, cluster, exclude_test_peptides=False)
+        for cluster in clusters
     )
 
 
