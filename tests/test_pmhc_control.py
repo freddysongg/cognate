@@ -13,6 +13,7 @@ from cognate.pmhc_control import (
     DistanceSlope,
     classify_control_outcome,
     fit_distance_slope,
+    load_reference_table,
     score_per_allele_auc01,
 )
 
@@ -147,3 +148,15 @@ def test_outcome_is_invariant_to_a_constant_offset_in_control_scores() -> None:
     baseline = classify_control_outcome(REFERENCE_SLOPE, fit_distance_slope(distances, scores))
     offset = classify_control_outcome(REFERENCE_SLOPE, fit_distance_slope(distances, shifted))
     assert baseline == offset
+
+
+ALLELE_ONLY_RESULTS = ROOT / "data" / "pmhc" / "loao_allele_only_results.json"
+
+
+def test_load_reference_table_reproduces_the_pinned_reference_slope() -> None:
+    table = load_reference_table(ALLELE_ONLY_RESULTS, "pseudo_sequence_mlp")
+    assert len(table) == 47
+    assert list(table.columns) == ["Allele", "Distance", "Auc01", "NRows", "NPositive"]
+    fitted = fit_distance_slope(table["Distance"], table["Auc01"])
+    assert fitted.slope == pytest.approx(REFERENCE_SLOPE, abs=5e-4)
+    assert fitted.stderr == pytest.approx(0.1429, abs=5e-4)

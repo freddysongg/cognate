@@ -6,8 +6,10 @@ TensorFlow or torch, reaches no network, and never writes to a shipped artifact.
 
 from __future__ import annotations
 
+import json
 from collections.abc import Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Literal
 
 import numpy as np
@@ -90,3 +92,25 @@ def classify_control_outcome(
     if control.ci_lo <= reference_slope <= control.ci_hi:
         return "intrinsic_difficulty"
     return "mixed"
+
+
+def load_reference_table(results_path: Path, arm: str) -> pd.DataFrame:
+    """Per-allele distance and AUC0.1 for one arm of a committed LOAO artifact."""
+    artifact = json.loads(results_path.read_text(encoding="utf-8"))
+    per_allele = artifact["per_allele"]
+    diagnostics = artifact["diagnostics"]
+    records = []
+    for allele in sorted(per_allele):
+        arms = per_allele[allele]["arms"]
+        if arm not in arms:
+            raise ValueError(f"arm {arm!r} absent for {allele}; have {sorted(arms)}")
+        records.append(
+            {
+                "Allele": allele,
+                "Distance": diagnostics[allele]["nearest_retained_pseudo_distance"],
+                "Auc01": arms[arm]["auc01"],
+                "NRows": per_allele[allele]["n_rows"],
+                "NPositive": per_allele[allele]["n_positive"],
+            }
+        )
+    return pd.DataFrame.from_records(records)
