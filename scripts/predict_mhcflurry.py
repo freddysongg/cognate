@@ -48,7 +48,28 @@ def write_coverage() -> dict[str, object]:
 
 
 def write_predictions() -> None:
-    raise NotImplementedError("implemented in task 6")
+    import numpy as np
+    import pandas as pd
+    from mhcflurry import Class1AffinityPredictor
+
+    rows = pd.read_csv(COHORT_ROWS_PATH)
+    coverage = json.loads(COVERAGE_PATH.read_text(encoding="utf-8"))
+    supported = set(coverage["supported"])
+    scored = rows.loc[rows["Allele"].isin(supported)].reset_index(drop=True)
+    predictor = Class1AffinityPredictor.load()
+    predicted = predictor.predict(
+        peptides=scored["Peptide"].tolist(),
+        alleles=scored["Allele"].tolist(),
+    )
+    if len(predicted) != len(scored):
+        raise AssertionError(
+            f"expected {len(scored)} predictions, got {len(predicted)}"
+        )
+    scored["Score"] = -np.asarray(predicted, dtype=float)
+    scored[["Allele", "Peptide", "Target", "Score"]].to_csv(
+        PREDICTIONS_PATH, index=False
+    )
+    print(f"wrote {len(scored)} predictions to {PREDICTIONS_PATH}", flush=True)
 
 
 def main() -> None:

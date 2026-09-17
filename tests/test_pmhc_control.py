@@ -160,3 +160,30 @@ def test_load_reference_table_reproduces_the_pinned_reference_slope() -> None:
     fitted = fit_distance_slope(table["Distance"], table["Auc01"])
     assert fitted.slope == pytest.approx(REFERENCE_SLOPE, abs=5e-4)
     assert fitted.stderr == pytest.approx(0.1429, abs=5e-4)
+
+
+CONTROL_RESULTS = ROOT / "data" / "pmhc" / "novelty_control_results.json"
+
+
+def test_control_artifact_has_the_declared_top_level_contract() -> None:
+    artifact = json.loads(CONTROL_RESULTS.read_text(encoding="utf-8"))
+    assert set(artifact) == {
+        "config",
+        "coverage",
+        "reference",
+        "control",
+        "outcome",
+        "support_nulls",
+    }
+
+
+def test_control_artifact_outcome_is_one_of_the_frozen_literals() -> None:
+    artifact = json.loads(CONTROL_RESULTS.read_text(encoding="utf-8"))
+    assert artifact["outcome"] in {"novelty_effect", "intrinsic_difficulty", "mixed"}
+
+
+def test_control_artifact_carries_no_cross_predictor_accuracy_comparison() -> None:
+    artifact = json.loads(CONTROL_RESULTS.read_text(encoding="utf-8"))
+    flat = json.dumps(artifact).lower()
+    for forbidden in ("auc01_difference", "accuracy_delta", "beats", "outperforms"):
+        assert forbidden not in flat
