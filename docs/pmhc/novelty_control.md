@@ -19,8 +19,9 @@ rule comparing the two slopes was frozen in `docs/pmhc/novelty_control_predeclar
 before any MHCflurry prediction existed in this repository. The pre-declaration commit
 `6d4a7d6` (`add frozen pre-declaration for pmhc novelty control`) precedes the control-run
 commit `5a5d623` (`run mhcflurry novelty control, write comparison artifact`) in `git log`,
-checkable with `git merge-base --is-ancestor 6d4a7d6 5a5d623`; that ordering is what makes the
-rule a genuine pre-declaration rather than a threshold picked after seeing the scatter.
+checkable with `git merge-base --is-ancestor 6d4a7d6 5a5d623`. `observed`. That ordering is
+what makes the rule a genuine pre-declaration rather than a threshold picked after seeing the
+scatter.
 
 ## Results
 
@@ -36,7 +37,7 @@ version `2.2.1`.
 | Control (MHCflurry 2.2.1) | -0.1674 | [-0.3957, +0.0609] | 0.0439 | 47 |
 
 `coverage.unsupported` is empty: all 47 cohort alleles are in MHCflurry's curated training
-set, so no allele was excluded from the primary fit and no secondary fit was needed.
+set, so no allele was excluded from the primary fit and no secondary fit was needed. `observed`.
 
 Applying the frozen decision rule (control CI spans zero, and the reference point estimate
 falls below the control's CI lower bound) yields `outcome: novelty_effect`.
@@ -55,8 +56,8 @@ an intrinsic-difficulty effect could just be reflecting undertrained models — 
 cohort. From `support_nulls`: `distance_vs_log_n_rows` = -0.1685 and
 `distance_vs_log_n_positive` = -0.2257 (Pearson correlation of nearest-retained distance
 against log training row count and log positive count, computed in
-`scripts/run_pmhc_novelty_control.py`). Both are small. The rarity-drives-distance pathway is
-measurably near-closed in this cohort. `observed`. Consequently, if intrinsic difficulty
+`scripts/run_pmhc_novelty_control.py`). `observed`. Both are small; the rarity-drives-distance
+pathway is measurably near-closed in this cohort. `claimed`. Consequently, if intrinsic difficulty
 contributes at all to the shipped gradient, it is not explained by training-data volume here
 — it would have to come from something this study does not measure, such as motif degeneracy,
 binding promiscuity, or assay noise. `claimed`.
@@ -69,9 +70,10 @@ binding promiscuity, or assay noise. `claimed`.
   MHCflurry's absolute AUC0.1 beside our arms' absolute AUC0.1; only the two fitted
   degradation slopes are compared.
 - **The distance axis is coarse.** Nearest-retained normalized Hamming distance carries only 8
-  unique values across the 47 alleles (per the frozen pre-declaration's choice of a linear,
-  untransformed functional form). Both fits are linear regressions on that 8-point support,
-  not a smooth curve.
+  unique values across the 47 alleles, spanning 0.0294 to 0.2941 (from
+  `data/pmhc/loao_allele_only_results.json`'s `diagnostics[*].nearest_retained_pseudo_distance`;
+  `observed`; per the frozen pre-declaration's choice of a linear, untransformed functional
+  form). Both fits are linear regressions on that 8-point support, not a smooth curve.
 - **`nearest_pwm` is excluded from this comparison.** `select_nearest_pwm_source` picks its
   source by the same Hamming metric used as the x-axis, so its slope is tautologically tied to
   distance and carries no evidence either way; see the pre-declaration's exclusion clause.
