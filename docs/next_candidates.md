@@ -153,30 +153,38 @@ experiment, cost, or week-one kill has been written for any of them.
   non-retrieval is never evidence that no paper exists. Fit to this repository is unusually good:
   the three shipped holdout designs are already a shift-severity ladder, and the normalized
   Hamming helper is already extracted.
-- **Predictor-agnostic performance prediction. — RESOLVED, outcome `novelty_effect`.**
-  MHCPerf predicts *MHCGlobe's* PPV and has not been externally validated against a different
-  predictor. IEDB does per-allele method selection, but from *observed* benchmark performance,
-  so it cannot cover alleles with no benchmark data — precisely the alleles MHCPerf targets.
-  Whether the distance-to-training-data → performance relationship is **predictor-agnostic** was
-  not retrieved as an asked question. `observed`.
-  **Resolved 2026-09-16 — outcome `novelty_effect`.** The brief
-  (`.claude/delib/pmhc-allele-performance-rule/brief.md`) asked whether the shipped LOAO
-  degradation gradient is a novelty effect or intrinsic allele difficulty, given that every arm
-  in the shipped study was trained under holdout and so cannot distinguish the two. It added
-  MHCflurry 2.2.1, which has already seen every cohort allele, as a no-novelty control under a
-  decision rule frozen before the control ran. The control's fitted slope was -0.1674
-  (95% CI [-0.3957, +0.0609]) against the shipped reference slope -1.0315
-  (95% CI [-1.3116, -0.7514]); the control's CI spans zero and the reference falls outside it,
-  so the frozen rule declares the shipped gradient a novelty effect, not intrinsic difficulty.
-  `observed`; see [`novelty_control.md`](pmhc/novelty_control.md) for the full comparison,
-  its caveats, and what the result does not show. Candidate resolved.
+- **Predictor-agnostic performance prediction. — OPEN, evidence now points against
+  agnosticism.** MHCPerf predicts *MHCGlobe's* PPV and has not been externally validated
+  against a different predictor. IEDB does per-allele method selection, but from *observed*
+  benchmark performance, so it cannot cover alleles with no benchmark data — precisely the
+  alleles MHCPerf targets. Whether the distance-to-training-data → performance relationship is
+  **predictor-agnostic** was not retrieved as an asked question. `observed`.
+  **Novelty-control findings recorded 2026-09-16, bearing on but not closing this question.**
+  The brief (`.claude/delib/pmhc-allele-performance-rule/brief.md`) asked a different question —
+  whether the shipped LOAO degradation gradient is a novelty effect or intrinsic allele
+  difficulty, given that every arm in the shipped study was trained under holdout and so cannot
+  distinguish the two — and added MHCflurry 2.2.1, which has already seen every cohort allele,
+  as a no-novelty control under a decision rule frozen before the control ran. That question is
+  resolved: the control's fitted slope was -0.1674 (95% CI [-0.3957, +0.0609]) against the
+  shipped reference slope -1.0315 (95% CI [-1.3116, -0.7514]); the control's CI spans zero and
+  the reference falls outside it, so the frozen rule declares the shipped gradient a novelty
+  effect, not intrinsic difficulty. `observed`. But the same measured slopes bear directly on
+  *this* candidate's question, and point the other way: on the identical distance axis, one
+  predictor's fitted slope is roughly six times the other's magnitude, so in this cohort the
+  distance-to-performance relationship reads as predictor-*dependent* — the opposite of
+  agnostic. `claimed`. This candidate remains open; see
+  [`novelty_control.md`](pmhc/novelty_control.md) for the full comparison, its caveats, and
+  what the result does not show.
 
 ## How to read the literature gate
 
 `observed` means the stated search was run and its output was inspected; the saved results are
 `/tmp/tcr-reporting-audit.json`, `/tmp/virobench-litcheck.json`,
 `/tmp/retrieval-dedup-litcheck.json`, `/tmp/agent-eval-litcheck.json`, and
-`/tmp/rag-reporting-litcheck.json`. `claimed` marks a scope, cost, or feasibility estimate. A
+`/tmp/rag-reporting-litcheck.json`. The 2026-09-16 gate above (the study-derived and
+build-on-published candidates) was run and its output inspected the same way, but that output
+was not saved to disk, so those `observed` labels rest on in-session inspection rather than a
+committed search transcript. `claimed` marks a scope, cost, or feasibility estimate. A
 non-retrieval is never evidence that no paper exists. Thus “not already answered” below means
 that this bounded, current literature gate did not locate a paper answering the narrower question
 as defined; it is not a universal novelty claim.

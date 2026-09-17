@@ -36,8 +36,30 @@ version `2.2.1`.
 | Reference (`pseudo_sequence_mlp`, pinned -1.0315) | -1.0315 | [-1.3116, -0.7514] | 0.5366 | 47 |
 | Control (MHCflurry 2.2.1) | -0.1674 | [-0.3957, +0.0609] | 0.0439 | 47 |
 
-`coverage.unsupported` is empty: all 47 cohort alleles are in MHCflurry's curated training
-set, so no allele was excluded from the primary fit and no secondary fit was needed. `observed`.
+`coverage.unsupported` is empty: all 47 cohort alleles are supported by MHCflurry's released
+pan-allele models, so no allele was excluded from the primary fit and no secondary fit was
+needed. `observed`. This is membership in `Class1AffinityPredictor.supported_alleles`
+(14,884 entries as of 2.2.1, recorded as `coverage.supported_allele_count`), which is the set
+of alleles the released models can emit a prediction for by pseudo-sequence similarity — not
+the set of alleles MHCflurry's curated training data actually contains. That the cohort's
+alleles were in MHCflurry's *training* data, and therefore carry no novelty penalty, is
+inferred from these being high-data HLA-A/B/C alleles drawn from the same public
+binding-affinity literature MHCflurry was trained on, not verified directly. `claimed`.
+Verifying it would mean intersecting the cohort against MHCflurry's curated training-allele
+list, which this study did not do; with 14,884 supported alleles against 47 cohort alleles,
+the supported-set intersection is uninformative on its own.
+
+The control was checked for skill, not just assumed skillful because its slope is flat: every
+one of the 47 per-allele AUC0.1 values exceeds the frozen competence floor of 0.6
+(`scripts/run_pmhc_novelty_control.py`'s `CONTROL_COMPETENCE_FLOOR`), enforced by an assertion
+that fails naming the offending alleles if any allele does not clear it. On this cohort the
+per-allele mean is 0.8123 and the minimum is 0.6690 (HLA-A30:02). `observed`. This rules out
+the failure mode where a broken control (wrong alleles, shuffled peptides, an inverted sign)
+would also read as flat and thus also yield `novelty_effect` — a genuinely broken control would
+fail this floor. The per-allele values are recorded in `control.per_allele_auc01` in the
+result artifact, so the check is reproducible from the artifact alone. This floor asserts only
+that the control beats chance on this cohort; it never sets the control's absolute AUC0.1
+beside a reference arm's, so it does not breach the slopes-only comparison rule below.
 
 Applying the frozen decision rule (control CI spans zero, and the reference point estimate
 falls below the control's CI lower bound) yields `outcome: novelty_effect`.
@@ -69,6 +91,14 @@ binding promiscuity, or assay noise. `claimed`.
   no-novelty measurement of predictive skill. No table in this document, or elsewhere, sets
   MHCflurry's absolute AUC0.1 beside our arms' absolute AUC0.1; only the two fitted
   degradation slopes are compared.
+- **Memorization can flatten the control's slope for reasons unrelated to novelty, not only
+  inflate its accuracy.** The limit above covers memorization's effect on the control's
+  absolute AUC0.1. It does not by itself cover memorization's effect on the *slope* that the
+  decision rule actually consumes: a predictor that has memorized these exact measurements can
+  bypass intrinsic per-allele difficulty entirely, regardless of distance, which would also
+  flatten its slope. So the control's flatness is consistent both with an absence of intrinsic
+  difficulty and with memorization masking it, and `novelty_effect` should be read as "the
+  novelty interpretation is not contradicted," not as "novelty is established." `claimed`.
 - **The distance axis is coarse.** Nearest-retained normalized Hamming distance carries only 8
   unique values across the 47 alleles, spanning 0.0294 to 0.2941 (from
   `data/pmhc/loao_allele_only_results.json`'s `diagnostics[*].nearest_retained_pseudo_distance`;
@@ -100,5 +130,7 @@ Reproduce the comparison artifact with:
 uv run python scripts/run_pmhc_novelty_control.py
 ```
 
-Raw MHCflurry predictions remain local; only the aggregate comparison artifact above is
-durable.
+`data/pmhc/mhcflurry_predictions.csv` is committed to the repository (112,128 rows, one per
+cohort row). The per-allele AUC0.1 values used above are recorded in the result artifact's
+`control.per_allele_auc01`, so the fit is reproducible from the artifact alone; the CSV is the
+row-level record those values are computed from.
