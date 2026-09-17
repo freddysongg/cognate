@@ -24,6 +24,7 @@ PREDICTIONS_PATH = ROOT / "data" / "pmhc" / "mhcflurry_predictions.csv"
 RESULTS_PATH = ROOT / "data" / "pmhc" / "novelty_control_results.json"
 REFERENCE_ARM = "pseudo_sequence_mlp"
 REFERENCE_SLOPE = PINNED_REFERENCE_SLOPE
+REFERENCE_SLOPE_DRIFT_TOLERANCE = 0.15
 
 
 def main() -> None:
@@ -33,7 +34,7 @@ def main() -> None:
     primary = reference.loc[reference["Allele"].isin(supported)].reset_index(drop=True)
 
     reference_fit = fit_distance_slope(primary["Distance"], primary["Auc01"])
-    if abs(reference_fit.slope - REFERENCE_SLOPE) > 0.15:
+    if abs(reference_fit.slope - REFERENCE_SLOPE) > REFERENCE_SLOPE_DRIFT_TOLERANCE:
         raise AssertionError(
             f"reference slope on supported alleles is {reference_fit.slope:.4f}, "
             f"far from the pinned {REFERENCE_SLOPE}; investigate before interpreting"
