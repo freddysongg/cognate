@@ -3,6 +3,7 @@
 .env.*
 
 # Python
+.ruff_cache/
 .venv/
 __pycache__/
 *.pyc
@@ -36,3 +37,6 @@ notebooks/
 
 # Isolated local worktrees
 /.worktrees/
+
+# Orchestration scratch -- per-plan ledgers and review packages
+.superpowers/

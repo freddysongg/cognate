@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 COHORT_ALLELES_PATH = ROOT / "data" / "pmhc" / "cohort_alleles.json"
 COVERAGE_PATH = ROOT / "data" / "pmhc" / "mhcflurry_allele_coverage.json"
 PREDICTIONS_PATH = ROOT / "data" / "pmhc" / "mhcflurry_predictions.csv"
-COHORT_ROWS_PATH = ROOT / "data" / "pmhc" / "cohort_rows.csv"
+COHORT_ROWS_PATH = ROOT / "data" / "pmhc" / "derived" / "cohort_rows.csv"
 
 
 def write_coverage() -> dict[str, object]:
