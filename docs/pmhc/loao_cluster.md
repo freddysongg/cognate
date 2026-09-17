@@ -107,6 +107,10 @@ sequence-neighbour baseline, not a non-transfer control. This result does not
 establish a general transfer bound for arbitrary held-out alleles, only for
 this one frozen 11-group partition of the 47-allele cohort.
 
+The novelty reading behind the allele-only degradation curve this track relates to was tested
+against a no-novelty control (MHCflurry 2.2.1, which has seen every cohort allele) under a
+decision rule frozen before the control ran, and survived; see `novelty_control.md`.
+
 ## Verify
 
 ```bash

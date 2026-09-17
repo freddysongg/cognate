@@ -102,6 +102,10 @@ frozen 47-target schedule; it does not decompose the effect into an
 allele-only or peptide-only component (see the `loao_allele_only` track for
 the allele-only decomposition on the same cohort).
 
+The novelty reading behind the allele-only degradation curve this track builds on was tested
+against a no-novelty control (MHCflurry 2.2.1, which has seen every cohort allele) under a
+decision rule frozen before the control ran, and survived; see `novelty_control.md`.
+
 ## Verify
 
 ```bash
