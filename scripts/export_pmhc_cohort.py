@@ -11,13 +11,16 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "data" / "pmhc" / "raw" / "NetMHCpan_train"
 COHORT_ALLELES_PATH = ROOT / "data" / "pmhc" / "cohort_alleles.json"
 COHORT_ROWS_PATH = ROOT / "data" / "pmhc" / "cohort_rows.csv"
+FROZEN_COHORT_ALLELE_COUNT = 47
 
 
 def main() -> None:
     dataset = load_pmhc_dataset(SOURCE_DIR)
     alleles = list(dataset.eligible_alleles)
-    if len(alleles) != 47:
-        raise AssertionError(f"expected the frozen 47-allele cohort, got {len(alleles)}")
+    if len(alleles) != FROZEN_COHORT_ALLELE_COUNT:
+        raise AssertionError(
+            f"expected the frozen {FROZEN_COHORT_ALLELE_COUNT}-allele cohort, got {len(alleles)}"
+        )
     COHORT_ALLELES_PATH.write_text(
         json.dumps(alleles, indent=2) + "\n", encoding="utf-8"
     )

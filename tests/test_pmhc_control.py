@@ -44,12 +44,23 @@ COVERAGE_PATH = ROOT / "data" / "pmhc" / "mhcflurry_allele_coverage.json"
 
 
 def test_coverage_artifact_partitions_the_frozen_cohort() -> None:
+    """`supported_allele_count` is MHCflurry's whole released support set, not the cohort.
+
+    It is expected to dwarf the cohort's `supported` count; that gap is exactly what makes
+    cohort-in-supported-set membership uninformative about training-set membership.
+    """
     coverage = json.loads(COVERAGE_PATH.read_text(encoding="utf-8"))
-    assert set(coverage) == {"supported", "unsupported", "mhcflurry_version"}
+    assert set(coverage) == {
+        "supported",
+        "unsupported",
+        "mhcflurry_version",
+        "supported_allele_count",
+    }
     supported = set(coverage["supported"])
     unsupported = set(coverage["unsupported"])
     assert not supported & unsupported
     assert len(supported | unsupported) == 47
+    assert coverage["supported_allele_count"] > len(supported)
 
 
 def test_score_per_allele_auc01_is_perfect_when_scores_rank_targets_first() -> None:

@@ -25,6 +25,29 @@ RESULTS_PATH = ROOT / "data" / "pmhc" / "novelty_control_results.json"
 REFERENCE_ARM = "pseudo_sequence_mlp"
 REFERENCE_SLOPE = PINNED_REFERENCE_SLOPE
 REFERENCE_SLOPE_DRIFT_TOLERANCE = 0.15
+CONTROL_COMPETENCE_FLOOR = 0.6
+
+
+def _assert_control_is_skillful(control_auc: dict[str, float]) -> None:
+    """Guard against the favourable outcome's own failure mode.
+
+    `novelty_effect` fires whenever the control's slope is flat and separable from the
+    reference; a control that is flat because it is broken (wrong alleles, shuffled peptides,
+    an inverted sign) yields the identical verdict. This floor only asserts the control beats
+    chance on this cohort — it never compares the control's absolute AUC0.1 to another arm's,
+    so it does not breach the pre-declaration's slopes-only comparison rule.
+    """
+    incompetent = {
+        allele: auc01
+        for allele, auc01 in control_auc.items()
+        if auc01 <= CONTROL_COMPETENCE_FLOOR
+    }
+    if incompetent:
+        raise AssertionError(
+            f"control AUC0.1 at or below the competence floor {CONTROL_COMPETENCE_FLOOR} for "
+            f"{sorted(incompetent)}; a control this flat could be broken rather than merely "
+            "novelty-free, and its flatness would not distinguish the two"
+        )
 
 
 def main() -> None:
@@ -42,6 +65,7 @@ def main() -> None:
 
     predictions = pd.read_csv(PREDICTIONS_PATH)
     control_auc = score_per_allele_auc01(predictions)
+    _assert_control_is_skillful(control_auc)
     control_table = primary.assign(
         ControlAuc01=[control_auc[allele] for allele in primary["Allele"]]
     )
@@ -59,7 +83,13 @@ def main() -> None:
         },
         "coverage": coverage,
         "reference": asdict(reference_fit),
-        "control": asdict(control_fit),
+        "control": {
+            **asdict(control_fit),
+            "competence_floor": CONTROL_COMPETENCE_FLOOR,
+            "per_allele_auc01": {
+                allele: control_auc[allele] for allele in primary["Allele"]
+            },
+        },
         "outcome": classify_control_outcome(REFERENCE_SLOPE, control_fit),
         "support_nulls": {
             "distance_vs_log_n_rows": float(

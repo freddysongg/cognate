@@ -94,6 +94,13 @@ def classify_control_outcome(
     return "mixed"
 
 
+def _require_field(mapping: dict[str, object], field: str, allele: str, source: str) -> object:
+    """Look up `field` in `mapping`, raising the same contextual error as the arm check above."""
+    if field not in mapping:
+        raise ValueError(f"{source} missing {field!r} for {allele}")
+    return mapping[field]
+
+
 def load_reference_table(results_path: Path, arm: str) -> pd.DataFrame:
     """Per-allele distance and AUC0.1 for one arm of a committed LOAO artifact."""
     artifact = json.loads(results_path.read_text(encoding="utf-8"))
@@ -104,13 +111,19 @@ def load_reference_table(results_path: Path, arm: str) -> pd.DataFrame:
         arms = per_allele[allele]["arms"]
         if arm not in arms:
             raise ValueError(f"arm {arm!r} absent for {allele}; have {sorted(arms)}")
+        if allele not in diagnostics:
+            raise ValueError(f"diagnostics missing entry for {allele}")
+        allele_diagnostics = diagnostics[allele]
+        allele_summary = per_allele[allele]
         records.append(
             {
                 "Allele": allele,
-                "Distance": diagnostics[allele]["nearest_retained_pseudo_distance"],
-                "Auc01": arms[arm]["auc01"],
-                "NRows": per_allele[allele]["n_rows"],
-                "NPositive": per_allele[allele]["n_positive"],
+                "Distance": _require_field(
+                    allele_diagnostics, "nearest_retained_pseudo_distance", allele, "diagnostics"
+                ),
+                "Auc01": _require_field(arms[arm], "auc01", allele, f"arm {arm!r}"),
+                "NRows": _require_field(allele_summary, "n_rows", allele, "per_allele"),
+                "NPositive": _require_field(allele_summary, "n_positive", allele, "per_allele"),
             }
         )
     return pd.DataFrame.from_records(records)

@@ -8,6 +8,11 @@ Runs under an isolated interpreter, never under the project environment:
 
 TensorFlow is deliberately absent from pyproject.toml. The shipped LOAO results were
 produced without it, and this script's only interface to the rest of the project is a CSV.
+
+The path constants below duplicate ones `cognate`-importing scripts also define. That
+duplication is forced, not an oversight: this script runs under `--no-project`, so `cognate`
+is not importable here, and sharing the constants would mean importing across the isolation
+boundary this script exists to keep. Do not "fix" the duplication by adding that import.
 """
 
 from __future__ import annotations
@@ -40,6 +45,7 @@ def write_coverage() -> dict[str, object]:
         "supported": supported,
         "unsupported": unsupported,
         "mhcflurry_version": __version__,
+        "supported_allele_count": len(known),
     }
     COVERAGE_PATH.write_text(
         json.dumps(coverage, indent=2, sort_keys=True) + "\n", encoding="utf-8"
