@@ -153,7 +153,7 @@ experiment, cost, or week-one kill has been written for any of them.
   non-retrieval is never evidence that no paper exists. Fit to this repository is unusually good:
   the three shipped holdout designs are already a shift-severity ladder, and the normalized
   Hamming helper is already extracted.
-- **Predictor-agnostic performance prediction. — OPEN, best fit to what is already built.**
+- **Predictor-agnostic performance prediction. — RESOLVED, outcome `novelty_effect`.**
   MHCPerf predicts *MHCGlobe's* PPV and has not been externally validated against a different
   predictor. IEDB does per-allele method selection, but from *observed* benchmark performance,
   so it cannot cover alleles with no benchmark data — precisely the alleles MHCPerf targets.
