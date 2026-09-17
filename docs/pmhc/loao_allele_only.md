@@ -115,6 +115,12 @@ baseline, not a non-transfer control. Each target allele is unseen only to
 its own model; this result does not extend to alleles outside this frozen
 47-allele cohort or to poorly characterized alleles in general.
 
+The novelty reading behind this degradation curve was tested against a no-novelty control
+(MHCflurry 2.2.1, which has seen every cohort allele) under a decision rule frozen before the
+control ran, and survived: the control is not distinguishable from flat rather than confirmed
+flat, and a residual intrinsic contribution up to about 16% of the reference slope's magnitude
+is not excluded. `observed`; see `novelty_control.md`.
+
 ## Verify
 
 ```bash
