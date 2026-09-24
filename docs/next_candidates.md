@@ -77,9 +77,8 @@ A literature gate was run on all four on 2026-09-16 (searches: NetMHCpan leave-o
 validation; TCR-versus-pMHC generalization contrast; performance-versus-pseudo-sequence-distance;
 allele-novelty/peptide-novelty split design; allele-clustered holdout). Two are **dead** — the
 question is answered in print by better-resourced work. One survives as a repair, not a
-contribution. One was never screened and does not need to be. The LOAO brief
-(`.claude/delib/loao-mhc-transfer/brief.md`) still forbids extending that line, so anything
-below that proceeds needs its own fresh brief before any code.
+contribution. One was never screened and does not need to be. The shipped LOAO study was scoped
+to its three transfer designs; anything below that proceeds needs a fresh study brief before code.
 
 - **Decompose the joint allele-and-peptide confound. — SURVIVES as a repair.** The joint-novelty
   track is the one shipped result whose numbers carry no defensible claim: it records no boolean
@@ -160,15 +159,17 @@ experiment, cost, or week-one kill has been written for any of them.
   alleles MHCPerf targets. Whether the distance-to-training-data → performance relationship is
   **predictor-agnostic** was not retrieved as an asked question. `observed`.
   **Novelty-control findings recorded 2026-09-16, bearing on but not closing this question.**
-  The brief (`.claude/delib/pmhc-allele-performance-rule/brief.md`) asked a different question —
+  The [novelty-control study](pmhc/novelty_control.md) asked a different question —
   whether the shipped LOAO degradation gradient is a novelty effect or intrinsic allele
   difficulty, given that every arm in the shipped study was trained under holdout and so cannot
-  distinguish the two — and added MHCflurry 2.2.1, which has already seen every cohort allele,
-  as a no-novelty control under a decision rule frozen before the control ran. That question is
-  resolved: the control's fitted slope was -0.1674 (95% CI [-0.3957, +0.0609]) against the
+  distinguish the two — and added MHCflurry 2.2.1 as a control under a decision rule frozen
+  before the control ran. MHCflurry supports predictions for every cohort allele; overlap with
+  its training alleles was inferred, not directly verified. The control's fitted slope was
+  -0.1674 (95% CI [-0.3957, +0.0609]) against the
   shipped reference slope -1.0315 (95% CI [-1.3116, -0.7514]); the control's CI spans zero and
   the reference falls outside it, so the frozen rule declares the shipped gradient a novelty
-  effect, not intrinsic difficulty. `observed`. But the same measured slopes bear directly on
+  effect under that rule. `observed` for the fitted slopes and rule outcome; direct training
+  exposure remains `claimed`. The same measured slopes bear directly on
   *this* candidate's question, and point the other way: on the identical distance axis, one
   predictor's fitted slope is roughly six times the other's magnitude, so in this cohort the
   distance-to-performance relationship reads as predictor-*dependent* — the opposite of

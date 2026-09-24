@@ -40,3 +40,6 @@ notebooks/
 
 # Orchestration scratch -- per-plan ledgers and review packages
 .superpowers/
+/.claude/
+/docs/superpowers/plans/
+/STATE.md

@@ -1,7 +1,0 @@
-question: Can MHC pseudo-sequence features improve binding prediction for HLA alleles not seen in training, beyond peptide-only, PWM, and non-transfer controls?
-repos:
-  - path: ~/Documents/repos/cognate
-    focus: pMHC data contract, scoring arms, fold/evaluation metrics, existing TCR comparison boundaries
-vault_pages: [cognate, pmhc, TCR, leave-one-allele-out, transfer]
-session_keywords: [pmhc, HLA, allele, transfer, leave-one-allele-out]
-freshness_cutoff: 2026-09-01

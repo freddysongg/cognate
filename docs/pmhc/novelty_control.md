@@ -11,10 +11,11 @@ that study, including the pseudo-sequence MLP, was trained under holdout, so a n
 allele is just harder to predict, for reasons unrelated to holdout) predict the same falling
 curve. The shipped study's design cannot tell the two apart.
 
-MHCflurry 2.2.1 breaks the tie: its training data already includes every allele in this
-cohort, so it carries no novelty penalty. If its own AUC0.1 still falls with distance, that
-fall cannot be a holdout artifact, and some of the shipped gradient is intrinsic difficulty
-instead. If it does not fall, the shipped gradient survives as a novelty reading. The decision
+MHCflurry 2.2.1 was used as a putative no-novelty control. Its released models support every
+cohort allele, but overlap with its training alleles was inferred rather than verified. If it
+was trained on all 47 alleles, a falling AUC0.1 with distance would support an intrinsic
+difficulty contribution; a flat slope would support the shipped novelty reading under that
+exposure assumption. The decision
 rule comparing the two slopes was frozen in `docs/pmhc/novelty_control_predeclaration.md`
 before any MHCflurry prediction existed in this repository. The pre-declaration commit
 `6d4a7d6` (`add frozen pre-declaration for pmhc novelty control`) precedes the control-run
@@ -86,19 +87,17 @@ binding promiscuity, or assay noise. `claimed`.
 
 ## Limits
 
-- **Only slopes are comparable, not absolute performance.** MHCflurry 2.2.1's training data
-  overlaps these test rows, so its absolute AUC0.1 is partly memorization and is not a
-  no-novelty measurement of predictive skill. No table in this document, or elsewhere, sets
-  MHCflurry's absolute AUC0.1 beside our arms' absolute AUC0.1; only the two fitted
-  degradation slopes are compared.
-- **Memorization can flatten the control's slope for reasons unrelated to novelty, not only
-  inflate its accuracy.** The limit above covers memorization's effect on the control's
-  absolute AUC0.1. It does not by itself cover memorization's effect on the *slope* that the
-  decision rule actually consumes: a predictor that has memorized these exact measurements can
-  bypass intrinsic per-allele difficulty entirely, regardless of distance, which would also
-  flatten its slope. So the control's flatness is consistent both with an absence of intrinsic
-  difficulty and with memorization masking it, and `novelty_effect` should be read as "the
-  novelty interpretation is not contradicted," not as "novelty is established." `claimed`.
+- **Only slopes are compared, not absolute performance.** MHCflurry's training-allele and
+  exact training-row overlap with this cohort were not verified. Its absolute AUC0.1 could
+  reflect such overlap, so it is not established here as an independent measurement of
+  predictive skill. No table in this document, or elsewhere, sets MHCflurry's absolute AUC0.1
+  beside our arms' absolute AUC0.1; only the two fitted degradation slopes are compared.
+- **Possible memorization could flatten the control's slope for reasons unrelated to novelty.**
+  If the predictor saw these exact measurements during training, memorization could bypass
+  intrinsic per-allele difficulty regardless of distance and flatten the slope consumed by the
+  decision rule. That overlap was not checked, so this is a possible limit, not an observed
+  explanation. The `novelty_effect` outcome means the novelty interpretation is not
+  contradicted under the frozen rule; it does not establish novelty. `claimed`.
 - **The distance axis is coarse.** Nearest-retained normalized Hamming distance carries only 8
   unique values across the 47 alleles, spanning 0.0294 to 0.2941 (from
   `data/pmhc/loao_allele_only_results.json`'s `diagnostics[*].nearest_retained_pseudo_distance`;
@@ -114,8 +113,8 @@ binding promiscuity, or assay noise. `claimed`.
   exists to catch. Anyone running this study against a coverage set with real exclusions should
   treat the guard as unverified for that path until it is.
 - **This bounds one cohort's control comparison, not a general claim.** The result applies to
-  this frozen 47-allele cohort and this reference arm; it does not extend to other predictors,
-  other cohorts, or alleles outside MHCflurry's curated training set.
+  this frozen 47-allele cohort, all supported by the released MHCflurry models, and this
+  reference arm; it does not extend to other predictors or cohorts.
 
 ## Verify
 

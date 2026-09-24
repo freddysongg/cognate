@@ -108,10 +108,12 @@ establish a general transfer bound for arbitrary held-out alleles, only for
 this one frozen 11-group partition of the 47-allele cohort.
 
 The novelty reading behind the allele-only degradation curve this track relates to was tested
-against a no-novelty control (MHCflurry 2.2.1, which has seen every cohort allele) under a
-decision rule frozen before the control ran, and survived: the control is not distinguishable
-from flat rather than confirmed flat, and a residual intrinsic contribution up to about 16% of
-the reference slope's magnitude is not excluded. `observed`; see `novelty_control.md`.
+against MHCflurry 2.2.1 under a decision rule frozen before the control ran. Its models support
+every cohort allele, but direct training-allele overlap was not verified. The rule returned
+`novelty_effect`; this interpretation depends on the training-overlap assumption. The control
+is not distinguishable from flat rather than confirmed flat, and a residual intrinsic
+contribution up to about 16% of the reference slope's magnitude is not excluded. `observed`
+for the rule outcome; see `novelty_control.md`.
 
 ## Verify
 

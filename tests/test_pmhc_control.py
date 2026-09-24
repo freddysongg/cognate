@@ -148,10 +148,10 @@ def test_classify_returns_mixed_when_control_is_steep_but_shallower() -> None:
 def test_outcome_is_invariant_to_a_constant_offset_in_control_scores() -> None:
     """The slopes-only constraint, enforced structurally.
 
-    MHCflurry's training data overlaps these test rows, so its absolute AUC0.1 is partly
-    memorization and is not comparable to ours. Shifting every control score by a constant
-    must not change the outcome. This fails if the classifier is ever rewritten to consume
-    absolute performance.
+    MHCflurry's training-row overlap with this cohort was not verified. If present,
+    memorization could affect its absolute AUC0.1. Shifting every control score by a
+    constant must not change the outcome. This fails if the classifier is ever rewritten
+    to consume absolute performance.
     """
     distances = [0.05, 0.10, 0.15, 0.20, 0.25, 0.30]
     scores = [0.80, 0.76, 0.71, 0.67, 0.62, 0.58]
